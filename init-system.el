@@ -77,10 +77,11 @@
 
 ;;; Message buffer, scratch buffer.
 (setq messages-buffer-max-lines 100
-      initial-scratch-message   nil)
+      initial-scratch-message   nil
+      initial-major-mode        #'text-mode)
 
 
-;;;;; Other hackes ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Other hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Increase read chunck size. For faster file read and LSP performance.
 (setq read-process-output-max #x100000) ; 1 MiB

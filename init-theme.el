@@ -21,7 +21,7 @@
     :family *my-mono-font-family* :height *my-mono-font-height*))
 
 (add-hook 'minibuffer-setup-hook #'+my-minibuffer-font-setup)
-(+my-modeline-font-setup)
+;; (+my-modeline-font-setup) ;; Call after Emacs theme is loaded.
 
 ;;; Ligatures.
 (use-package hek-ligature
@@ -62,7 +62,7 @@
         doom-themes-enable-italic t)
   (load-theme 'doom-one t)
   :config
-  (doom-themes-visual-bell-config)
+  ;; (doom-themes-visual-bell-config)
   ;; (doom-themes-neotree-config) ;; for neotree
   ;; (setq doom-themes-treemacs-theme "doom-atom") (doom-themes-treemacs-config);; for treemacs
   ;; (doom-themes-org-config) ;; for org mode
@@ -86,3 +86,5 @@
 (use-package solaire-mode
   :init
   (solaire-global-mode 1))
+
+(+my-modeline-font-setup)

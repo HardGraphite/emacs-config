@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
-;; Use a dark background color before a theme is loaded.
-(set-background-color "#555")
+;; Use a gray background color before a theme is loaded.
+(set-background-color "#333")
 
 ;; Add package path.
 (add-to-list 'load-path

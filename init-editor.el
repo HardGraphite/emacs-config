@@ -3,24 +3,24 @@
 ;;;;; Mode line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; doom-modeline, https://github.com/seagle0128/doom-modeline
-(use-package doom-modeline
-  :init
-  (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-continuous-word-count-modes '()
-        doom-modeline-indent-info t
-        doom-modeline-gnus nil
-        doom-modeline-irc nil
-        doom-modeline-battery nil
-        doom-modeline-time nil
-        doom-modeline-env-version nil
-        doom-modeline-always-visible-segments '()
-        ))
-
-;; (use-package hek-modeline
-;;   :ensure nil ;; my code
+;; (use-package doom-modeline
+;;   :init
+;;   (doom-modeline-mode 1)
 ;;   :config
-;;   (hek-modeline-setup t))
+;;   (setq doom-modeline-continuous-word-count-modes '()
+;;         doom-modeline-indent-info t
+;;         doom-modeline-gnus nil
+;;         doom-modeline-irc nil
+;;         doom-modeline-battery nil
+;;         doom-modeline-time nil
+;;         doom-modeline-env-version nil
+;;         doom-modeline-always-visible-segments '()
+;;         ))
+
+(use-package hek-modeline
+  :ensure nil ;; my code
+  :config
+  (hek-modeline-mode 1))
 
 
 ;;;;; Scrolling ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -59,7 +59,7 @@
 ;;; Column indicator.
 (setq-default display-fill-column-indicator-column 80)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-(add-hook 'tex-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 
 ;;; Indentation indicator.
 (use-package highlight-indent-guides
@@ -260,3 +260,12 @@
 ;;         projectile-mode-line-prefix "PROJECT")
 ;;   :bind
 ;;   ("C-x p" . projectile-command-map))
+
+
+;;;;; Compilations ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun +compile-auto-hide (buf msg)
+  (unless (cl-search "abnormally" msg)
+    (quit-window nil (get-buffer-window buf))))
+
+(add-hook 'compilation-finish-functions #'+complile-auto-hide)

@@ -29,8 +29,8 @@
   (unless buffer-file-name
     (error "Not buffer file name."))
   (let ((cmd (list
-              hek-flymake-verilator-path
               "--lint-only" "-Wall" "--quiet-exit"
+              "--timing"
               buffer-file-name))
         (proj-root (when-let ((proj (project-current)))
                      (project-root proj))))
@@ -38,6 +38,7 @@
       (let ((file-dir (file-name-directory buffer-file-name)))
         (unless (file-equal-p proj-root file-dir)
           (push (concat "-I" (directory-file-name proj-root)) cmd))))
+    (push hek-flymake-verilator-path cmd)
     (setq-local hek-flymake-verilator--cmd cmd)))
 
 (defun hek-flymake-verilator--impl (report-fn &rest _args)
