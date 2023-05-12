@@ -3,7 +3,7 @@
 ;;;;; Frame and basic UI ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Title.
-(setq frame-title-format '("%b — GNU Emacs"))
+(setq frame-title-format '("%b — Emacs"))
 (setq icon-title-format frame-title-format)
 
 ;; Resize method.
@@ -28,8 +28,8 @@
 ;;;;; Emacs directories and files ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq user-emacs-directory        *my-emacs-data-dir*
-      package-user-dir            (concat *my-emacs-data-dir* "elpa")
-      auto-save-list-file-prefix  (concat *my-emacs-data-dir* "auto-save-list/saves-")
+      package-user-dir            (concat *my-emacs-data-dir* "packages")
+      auto-save-list-file-prefix  nil ;; (concat *my-emacs-data-dir* "auto-save-list/saves-")
       custom-file                 (expand-file-name "custom.el" *my-emacs-conf-dir*))
 
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" *my-emacs-conf-dir*))
@@ -64,7 +64,8 @@
   (when (member package-install-switch command-line-args)
     (setq command-line-args (delete package-install-switch command-line-args))
     (setq use-package-always-ensure t
-          use-package-verbose t)))
+          use-package-verbose t
+          native-comp-async-query-on-exit t)))
 
 
 ;;;;; Misc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -93,7 +94,7 @@
 (use-package gcmh
   :defer t
   :config
-  (setq gcmh-idle-delay 20
+  (setq gcmh-idle-delay 10
         gcmh-high-cons-threshold #x1000000) ; 16 MiB
   :hook
   (after-init . gcmh-mode))

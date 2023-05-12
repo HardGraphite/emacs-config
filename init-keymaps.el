@@ -23,9 +23,117 @@
      ("D" . eglot-find-declaration)
      ("i" . eglot-find-implementation)
      ("T" . eglot-find-typeDefinition)
-     ("s" . consult-imenu) ;; imenu
+     ("y" . consult-imenu) ;; imenu
      ("l" . consult-goto-line)
-     )))
+     ("m" . consult-mark))))
+
+(defvar +my-rectangle-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("s" . kill-rectangle)
+     ("y" . copy-rectangle-as-kill)
+     ("d" . delete-rectangle)
+     ("p" . yank-rectangle)
+     ("c" . clear-rectangle)
+     ("o" . open-rectangle)
+     ("t" . string-rectangle)
+     ("i" . string-insert-rectangle)
+     ("SPC" . rectangle-mark-mode))))
+
+(defvar +my-text-manip-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   `(("l" . downcase-dwim)
+     ("u" . upcase-dwim)
+     ("r" . query-replace)
+     ("R" . query-replace-regexp)
+     ("p" . consult-yank-from-kill-ring)
+     ("P" . consult-yank-pop)
+     ("t" . ,+my-rectangle-prefix-map))))
+
+(defvar +my-window-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("0" . delete-window)
+     ("1" . delete-other-windows)
+     ("." . delete-other-windows)
+     ("2" . split-window-below)
+     ("-" . split-window-below)
+     ("3" . split-window-right)
+     ("\\" . split-window-right)
+     ("4" . ctl-x-4-map)
+     ("5" . ctl-x-5-map)
+     ("o" . other-window)
+     ("w" . ace-select-window)
+     ("h" . windmove-left)
+     ("j" . windmove-down)
+     ("k" . windmove-up)
+     ("l" . windmove-right)
+     ("r" . ace-swap-window)
+     ("x" . delete-window)
+     ("H" . windmove-delete-left)
+     ("J" . windmove-delete-down)
+     ("K" . windmove-delete-up)
+     ("L" . windmove-delete-right)
+     ("^" . enlarge-window)
+     (">" . enlarge-window-horizontally)
+     ("v" . shrink-window)
+     ("<" . shrink-window-horizontally)
+     ("=" . balance-windows))))
+
+(defvar +my-buffer-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("b" . consult-buffer)
+     ("B" . list-buffers)
+     ("o" . mode-line-other-buffer)
+     ("j" . previous-buffer)
+     ("k" . next-buffer)
+     ("x" . kill-buffer)
+     ("s" . save-buffer)
+     ("n" . narrow-to-region)
+     ("N" . widen))))
+
+(defvar +my-file-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("f" . find-file)
+     ("r" . consult-recent-file)
+     ("s" . consult-find))))
+
+(defvar +my-register-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("r" . consult-register)
+     ("l" . consult-register-load)
+     ("s" . consult-register-store)
+     ("." . point-to-register)
+     ("w" . window-configuration-to-register)
+     ("k" . kmacro-to-register)
+     ("j" . jump-to-register)
+     ("y" . copy-to-register)
+     ("x" . copy-rectangle-to-register)
+     ("n" . number-to-register)
+     ("p" . insert-register)
+     ("A" . append-to-register)
+     ("I" . prepend-to-register)
+     ("+" . increment-register))))
+
+(defvar +my-kmacro-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("p" . consult-kmacro)
+     ("q" . kbd-macro-query)
+     ("d" . kmacro-delete-ring-head)
+     ("j" . kmacro-cycle-ring-next)
+     ("k" . kmacro-cycle-ring-previous)
+     ("e" . kmacro-edit-macro)
+     ("E" . kmacro-edit-lossage)
+     ("c" . kmacro-insert-counter)
+     ("C" . kmacro-set-counter)
+     ("+" . kmacro-add-counter)
+     ("F" . kmacro-set-format)
+     ("r" . kmacro-to-register))))
 
 (fmakunbound #'+my-define-keys)
 
@@ -70,14 +178,14 @@
     '("K" . meow-prev-expand)
     '("l" . meow-right)
     '("L" . meow-right-expand)
-    ;; -- word selections --
+    ;; -- word-based selections --
     '("b" . meow-back-word)
     '("B" . meow-back-symbol)
     '("e" . meow-next-word)
     '("E" . meow-next-symbol)
     '("w" . meow-mark-word)
     '("W" . meow-mark-symbol)
-    ;; -- line/block/join selections
+    ;; -- object-based selections --
     '("x" . meow-line)
     '("o" . meow-block)
     '("O" . meow-to-block)
@@ -94,16 +202,16 @@
     '(";" . meow-reverse)
     '("g" . meow-cancel-selection)
     '("z" . meow-pop-selection)
-    ;; -- deletions --
-    '("d" . meow-delete)
-    '("D" . meow-backward-delete)
-    ;; -- copying and pasting --
+    ;; -- kill, delete, copy & paste --
+    '("d" . (lambda () (interactive)
+              (call-interactively (if mark-active 'delete-region 'delete-char))))
     '("y" . meow-save)
     '("s" . meow-kill)
     '("p" . meow-yank)
     '("r" . meow-replace)
     ;; -- search/jump --
     '("/" . consult-line) ;; '("/" . meow-visit)
+    '("?" . avy-goto-char-2)
     '("n" . meow-search)
     '("X" . meow-goto-line)
     '("v" . scroll-up-command)
@@ -111,7 +219,6 @@
     ;; -- undo/redo --
     '("u" . meow-undo)
     '("U" . undo-redo) ;;'("U" . meow-undo-in-selection)
-    '("C-r" . undo-redo)
     ;; -- enter insert mode --
     '("a" . meow-append)
     '("A" . meow-open-below)
@@ -125,8 +232,6 @@
     ;; -- others --
     '("Q" . meow-quit)
     '("'" . repeat)
-    '("M-u" . scroll-up-command)
-    '("M-d" . scroll-down-command)
     '("<escape>" . ignore)
     )
   (setq meow-char-thing-table
@@ -161,7 +266,15 @@
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
     `("g" . ,+my-goto-prefix-map)
+    `("t" . ,+my-text-manip-prefix-map)
+    `("w" . ,+my-window-prefix-map)
+    `("b" . ,+my-buffer-prefix-map)
+    `("f" . ,+my-file-prefix-map)
+    `("r" . ,+my-register-prefix-map)
+    `("k" . ,+my-kmacro-prefix-map)
     `("p" . ,project-prefix-map)
+    '("TAB" . other-window)
+    '("`" . mode-line-other-buffer)
     '("/" . meow-keypad-describe-key)
     '("?" . meow-cheatsheet)
     )
@@ -176,8 +289,9 @@
   ;; --- behaviors ---
   (setq meow-keypad-message nil
         meow-keypad-self-insert-undefined nil
-        meow-keypad-meta-prefix ?m
-        meow-keypad-ctrl-meta-prefix ?M)
+        meow-keypad-start-keys '((?c . ?c) (?x . ?x))
+        meow-keypad-meta-prefix ?X
+        meow-keypad-ctrl-meta-prefix ?C)
   (setq meow-mode-state-list
         '((vterm-mode . +shell)))
   ;; --- visual elements ---
@@ -221,4 +335,7 @@
 ;;; which-key, https://github.com/justbur/emacs-which-key
 (use-package which-key
   :init
-  (which-key-mode 1))
+  (which-key-mode 1)
+  :config
+  (setq which-key-popup-type 'side-window
+        which-key-side-window-location 'right))

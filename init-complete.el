@@ -4,15 +4,20 @@
 
 ;;;;; Completion algorithm and category ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; orderless, https://github.com/oantolin/orderless
+;;; orderless, https://github.com/oantolin/orderless
 (use-package orderless
   :init
   ;(setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
   ;      orderless-component-separator #'orderless-escapable-split-on-space)
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+  )
 
+(dolist (name '(emacs21 emacs22 substring initials))
+  (setq completion-styles-alist (assq-delete-all name completion-styles-alist)))
+(setq completion-styles '(flex basic) ;; normal buffer
+      completion-category-defaults nil
+      completion-category-overrides '((file (styles partial-completion))))
+(add-hook 'minibuffer-setup-hook
+          (lambda () (setq-local completion-styles '(orderless basic)))) ;; minibuffer
 
 ;;;;; Minibuffer completion front-end ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -32,11 +37,11 @@
   :ensure nil
   :bind (:map vertico-map
          ("RET" . vertico-directory-enter)))
-(use-package vertico-indexed
-  :after vertico
-  :ensure nil
-  :init
-  (vertico-indexed-mode 1))
+;; (use-package vertico-indexed
+;;   :after vertico
+;;   :ensure nil
+;;   :init
+;;   (vertico-indexed-mode 1))
 ;; (use-package vertico-reverse
 ;;   :after vertico
 ;;   :ensure nil
@@ -94,18 +99,19 @@
         corfu-quit-no-match 'separator
         corfu-preselect 'valid
         corfu-echo-documentation t)
-  (set-face-attribute 'corfu-default nil
-    :family *my-term-font-family* :height (- *my-term-font-height* 5))
+  ;; (set-face-attribute 'corfu-default nil
+  ;;   :family *my-term-font-family* :height (- *my-term-font-height* 5))
   (set-face-attribute 'corfu-current nil
-    :background "#1a3826"
-    :family *my-term-font-family* :height (- *my-term-font-height* 5))
+    ;; :family *my-term-font-family* :height (- *my-term-font-height* 5)
+    :background "#1a3826")
   (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 2)
   (require 'kind-all-the-icons)
   (add-to-list 'corfu-margin-formatters
                #'kind-all-the-icons-margin-formatter)
   :bind
   (:map corfu-map
-        ("<escape>" . corfu-quit)
+        ("M-<escape>" . corfu-quit)
+        ("<escape>" . (lambda () (interactive) (meow-insert-exit) (corfu-quit))) ;; for meow-mode
         ("M-j" . corfu-next)
         ("M-k" . corfu-previous)
         ("M-v" . corfu-scroll-up)
@@ -159,10 +165,12 @@
 ;; ;;; TempEl :: code templates (snippets)
 ;; ;;; https://github.com/minad/tempel
 ;; (use-package tempel
-;;   :defer t)
-;; ;;; Replace YASnippet with TempEL in Eglot as the template expanding engine
-;; (use-package eglot-tempel
 ;;   :defer t
+;;   :bind
+;;   (:map tempel-map
+;;         ("M-[" . #'tempel-previous)
+;;         ("M-]" . #'tempel-next)))
+;; (use-package lsp-snippet-tempel
 ;;   :ensure nil ;; local
-;;   :hook
-;;   ((eglot-managed-mode . eglot-tempel-mode)))
+;;   :config
+;;     (lsp-snippet-tempel-eglot-init))

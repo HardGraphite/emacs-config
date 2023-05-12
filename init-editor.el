@@ -86,19 +86,46 @@
       show-paren-when-point-in-periphery t)
 (set-face-background 'show-paren-match 'unspecified)
 
+;;; rainbow-delimiters, https://github.com/Fanael/rainbow-delimiters
+(use-package rainbow-delimiters
+  :defer t
+  :config
+  (custom-set-faces
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "dark orange"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "deep pink"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "chartreuse"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "deep sky blue"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "yellow"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "orchid"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "spring green"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "sienna1")))))
+  :hook
+  (emacs-lisp-mode . rainbow-delimiters-mode))
 
-;;;;; Whitespaces and Coding style ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Whitespace and Coding style ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Basic whitespaces.
-(whitespace-mode 1)
+;;; Whitespace visualization.
 (setq whitespace-line-column nil
-      whitespace-style
-      '(face indentation tabs tab-mark spaces space-mark newline newline-mark
-        trailing lines-tail)
-      whitespace-display-mappings
-      '((tab-mark ?\t [?› ?\t])
-        (newline-mark ?\n [?¬ ?\n])
-        (space-mark ?\  [?·] [?.])))
+      whitespace-style '(face tabs tab-mark trailing missing-newline-at-eof)
+      whitespace-display-mappings '((tab-mark ?\t [?» ?\t])
+                                    (newline-mark ?\n [?↵ ?\n])
+                                    (space-mark ?\  [?·] [?.])))
+(add-hook 'prog-mode-hook #'whitespace-mode)
+(add-hook 'text-mode-hook #'whitespace-mode)
+
+;;; Delete trailing whitespace on save.
+(add-hook 'before-save-hook
+          (lambda ()
+            (when (derived-mode-p 'prog-mode 'text-mode)
+              (delete-trailing-whitespace))))
+
+;;; hungry-delete, https://github.com/nflath/hungry-delete
+(use-package hungry-delete
+  :init
+  (global-hungry-delete-mode)
+  :config
+  (setq hungry-delete-join-reluctantly nil
+        hungry-delete-chars-to-skip " \t"))
 
 ;;; Tab.
 (setq-default
@@ -168,7 +195,7 @@
 ;; TODO: Do grammar check with languagetool or ltex.
 
 
-;;;;; Auto save and revert ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; File save, revert and record ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; File auto save, backup and lock.
 (setq load-prefer-newer  t
@@ -181,6 +208,9 @@
 (setq auto-revert-verbose t
       auto-revert-use-notify t)
 
+;;; Recent files.
+(setq recentf-auto-cleanup 'never)
+(add-hook 'emacs-startup-hook #'recentf-mode)
 
 ;;;;; Search and navigation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -189,9 +219,17 @@
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+  (advice-add #'register-preview :override #'consult-register-window)
   :config
-  (setq consult-preview-key '(:debounce 0.75 any))
-  (consult-customize consult-goto-line consult-line :preview-key '(:debounce 0.3 any))
+  (setq consult-preview-key '(:debounce 0.3 any))
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   :preview-key "M-.")
   :bind
   (;; Replace default commands.
    ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
@@ -204,14 +242,15 @@
    ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
    ))
 
-;; ;;; avy, https://github.com/abo-abo/avy
-;; (use-package avy
-;;   :config
-;;   (setq avy-style 'at-full
-;;         avy-highlight-first t)
-;;   :bind
-;;   ("C-'" . avy-goto-char-2)
-;;   ("C-\"" . avy-goto-word-1))
+;;; avy, https://github.com/abo-abo/avy
+(use-package avy
+  :config
+  (setq avy-style 'at-full
+        avy-highlight-first t)
+  ;; :bind
+  ;; ("C-'" . avy-goto-char-2)
+  ;; ("C-\"" . avy-goto-word-1)
+  )
 
 ;;; ace-window, https://github.com/abo-abo/ace-window
 (use-package ace-window
@@ -268,4 +307,4 @@
   (unless (cl-search "abnormally" msg)
     (quit-window nil (get-buffer-window buf))))
 
-(add-hook 'compilation-finish-functions #'+complile-auto-hide)
+(add-hook 'compilation-finish-functions #'+compile-auto-hide)

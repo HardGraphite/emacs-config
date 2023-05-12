@@ -2,44 +2,78 @@
 
 ;;;;; Dashboard ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; emacs-dashboard, https://github.com/emacs-dashboard/emacs-dashboard
-(use-package dashboard
+;; ;;; emacs-dashboard, https://github.com/emacs-dashboard/emacs-dashboard
+;; (use-package dashboard
+;;   :init
+;;   (dashboard-setup-startup-hook)
+;;   (when (daemonp)
+;;     (setq initial-buffer-choice
+;;       (lambda ()
+;;         (dashboard-refresh-buffer)
+;;         ;;(get-buffer-create "*dashboard*")
+;;         )))
+;;   :config
+;;   (setq dashboard-display-icons-p t
+;;         dashboard-banner-logo-title nil
+;;         dashboard-items
+;;           '((recents . 5) (projects . 5) (bookmarks . 5) (agenda . 5) (registers . 5))
+;;         dashboard-projects-backend 'project-el ;; or projectile if installed
+;;         dashboard-center-content  t
+;;         dashboard-set-init-info   nil
+;;         dashboard-init-info       nil
+;;         dashboard-set-footer      t
+;;         dashboard-footer          nil
+;;         ;;dashboard-footer-icon     nil
+;;         dashboard-footer-messages nil)
+;;   (defun dashboard-display-icons-p ()
+;;     t)
+;;   (defun dashboard-insert-footer ()
+;;     (insert "\n")
+;;     (dashboard-insert-center
+;;       dashboard-footer-icon
+;;       " "
+;;       (propertize (concat "GNU Emacs " emacs-version (when (daemonp) " (client)"))
+;;         'face 'dashboard-footer)
+;;       "\n"))
+;;   (set-face-attribute 'dashboard-banner-logo-title nil
+;;     :family *my-text-font-family*)
+;;   (set-face-attribute 'dashboard-heading nil
+;;     :family *my-text-font-family* :height 170)
+;;   )
+
+(use-package hek-homepage
+  :ensure nil ;; my code
+  :if (or (not command-line-args)
+          (not (cdr command-line-args))) ;; No extra arguments.
   :init
-  (dashboard-setup-startup-hook)
-  (when (daemonp)
-    (setq initial-buffer-choice
-      (lambda ()
-        (dashboard-refresh-buffer)
-        ;;(get-buffer-create "*dashboard*")
-        )))
-  :config
-  (setq dashboard-display-icons-p t
-        dashboard-banner-logo-title nil
-        dashboard-items
-          '((recents . 5) (projects . 5) (bookmarks . 5) (agenda . 5) (registers . 5))
-        dashboard-projects-backend 'project-el ;; or projectile if installed
-        dashboard-center-content  t
-        dashboard-set-init-info   nil
-        dashboard-init-info       nil
-        dashboard-set-footer      t
-        dashboard-footer          nil
-        ;;dashboard-footer-icon     nil
-        dashboard-footer-messages nil)
-  (defun dashboard-display-icons-p ()
-    t)
-  (defun dashboard-insert-footer ()
-    (insert "\n")
-    (dashboard-insert-center
-      dashboard-footer-icon
-      " "
-      (propertize (concat "GNU Emacs " emacs-version (when (daemonp) " (client)"))
-        'face 'dashboard-footer)
-      "\n"))
-  (set-face-attribute 'dashboard-banner-logo-title nil
-    :family *my-text-font-family*)
-  (set-face-attribute 'dashboard-heading nil
-    :family *my-text-font-family* :height 170)
-  )
+  (setq initial-major-mode #'fundamental-mode
+        inhibit-startup-screen t)
+  (defun +hek-homepage-init ()
+    (when (string-equal (buffer-name) "*scratch*")
+      (setq hek-homepage-logo (concat *my-emacs-conf-dir* "misc/gnu_emacs.png")
+            hek-homepage-banner "Hello, world!"
+            hek-homepage-links
+            `((("Scratch as Lisp playground" "l" .
+                ,(lambda () (interactive) (hek-homepage-cleanup #'lisp-interaction-mode)))
+               ("Scratch as text pad" "t" .
+                ,(lambda () (interactive) (hek-homepage-cleanup #'text-mode))))
+              (("Find file" "f" . find-file)
+               ("Open recent file" "r" . consult-recent-file)
+               ("Switch to project" "p" . project-switch-project))))
+      (hek-homepage-setup)
+      (when (boundp meow-mode)
+        (meow-mode -1))
+      (when (boundp solaire-mode)
+        (solaire-mode -1))))
+  (add-hook 'emacs-startup-hook #'+hek-homepage-init 80))
+
+
+;;;;; Directory view ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; all-the-icons-dired, https://github.com/jtbm37/all-the-icons-dired
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook (dired-mode . all-the-icons-dired-mode))
 
 
 ;;;;; Terminal ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -88,4 +122,3 @@
   ((prog-mode tex-mode markdown-mode) . diff-hl-mode)
   (magit-pre-refresh diff-hl-magit-pre-refresh)
   (magit-post-refresh diff-hl-magit-post-refresh))
-

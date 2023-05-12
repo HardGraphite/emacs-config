@@ -11,13 +11,14 @@
 
 ;; Disable unwanted GUI elements.
 (setq default-frame-alist
-  '((menu-bar-lines . 0)
-    (tool-bar-lines . 0)
-    (vertical-scroll-bars)))
+      '((background-color . "#3a223d") ;; Use a dark background color before a theme is loaded.
+        (menu-bar-lines . 0)
+        (tool-bar-lines . 0)
+        (vertical-scroll-bars)))
 (setq menu-bar-mode   nil
       tool-bar-mode   nil
-      scroll-bar-mode nil)
-(setq use-dialog-box nil)
+      scroll-bar-mode nil
+      use-dialog-box  nil)
 
 ;; Simplify startup messages.
 (setq inhibit-startup-screen t)
