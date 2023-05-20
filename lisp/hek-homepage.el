@@ -52,7 +52,7 @@ LABEL is a string; KEY is a key sequence; TARGET is a function or a command.")
   (when buf
     (switch-to-buffer buf t))
   (major-mode-suspend)
-  ;;(fundamental-mode)
+  (fundamental-mode)
   (erase-buffer)
   (when (bound-and-true-p whitespace-mode)
     (whitespace-mode -1))

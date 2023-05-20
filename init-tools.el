@@ -53,18 +53,20 @@
       (setq hek-homepage-logo (concat *my-emacs-conf-dir* "misc/gnu_emacs.png")
             hek-homepage-banner "Hello, world!"
             hek-homepage-links
-            `((("Scratch as Lisp playground" "l" .
+            `((("Scratch as Lisp playground" "i" .
                 ,(lambda () (interactive) (hek-homepage-cleanup #'lisp-interaction-mode)))
                ("Scratch as text pad" "t" .
                 ,(lambda () (interactive) (hek-homepage-cleanup #'text-mode))))
               (("Find file" "f" . find-file)
                ("Open recent file" "r" . consult-recent-file)
-               ("Switch to project" "p" . project-switch-project))))
+               ("Switch to project" "p" . project-switch-project))
+              (("Quit" "Q" . save-buffers-kill-terminal))))
       (hek-homepage-setup)
       (when (boundp meow-mode)
         (meow-mode -1))
-      (when (boundp solaire-mode)
-        (solaire-mode -1))))
+      ;; (when (boundp solaire-mode)
+      ;;   (solaire-mode -1))
+      ))
   (add-hook 'emacs-startup-hook #'+hek-homepage-init 80))
 
 
@@ -120,5 +122,5 @@
   :hook
   (dired-mode . diff-hl-dired-mode)
   ((prog-mode tex-mode markdown-mode) . diff-hl-mode)
-  (magit-pre-refresh diff-hl-magit-pre-refresh)
-  (magit-post-refresh diff-hl-magit-post-refresh))
+  (magit-pre-refresh . diff-hl-magit-pre-refresh)
+  (magit-post-refresh . diff-hl-magit-post-refresh))

@@ -13,6 +13,7 @@
 /eln-cache/
 /elpa/
 /eshell/
+/package-quickstart.*
 
 /legacy/
 /custom.el

@@ -77,7 +77,10 @@
 
 ;;; Auto insert pairs.
 (electric-pair-mode 1)
-(setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+(defun +electric-pair-inhibit (char)
+  (or (eq char (char-after))
+      (eq (char-syntax (following-char)) ?w)))
+(setq electric-pair-inhibit-predicate '+electric-pair-inhibit)
 
 ;;; Show parenthesis.
 (show-paren-mode 1)

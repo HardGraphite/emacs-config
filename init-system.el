@@ -1,34 +1,10 @@
 ;; --- Emacs system setups -*- lexical-binding: t -*-
 
-;;;;; Frame and basic UI ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Title.
-(setq frame-title-format '("%b — Emacs"))
-(setq icon-title-format frame-title-format)
-
-;; Resize method.
-(setq frame-resize-pixelwise t
-      window-resize-pixelwise nil)
-
-;; Full screen.
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; Minibuffer tweak.
-(setq enable-recursive-minibuffers t)
-(setq echo-keystrokes 0.5)
-
-;; Disable tooltip.
-(when (bound-and-true-p tooltip-mode) (tooltip-mode -1))
-
-;; Cursor.
-(setq x-stretch-cursor t)
-(blink-cursor-mode -1)
-
-
 ;;;;; Emacs directories and files ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq user-emacs-directory        *my-emacs-data-dir*
       package-user-dir            (concat *my-emacs-data-dir* "packages")
+      package-quickstart-file     (concat *my-emacs-data-dir* "package-quickstart.el")
       auto-save-list-file-prefix  nil ;; (concat *my-emacs-data-dir* "auto-save-list/saves-")
       custom-file                 (expand-file-name "custom.el" *my-emacs-conf-dir*))
 
@@ -50,6 +26,7 @@
       ((eq *my-package-mirror* nil) ;; original
        (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
       (t (error "illegal value of *my-package-mirror*")))
+(setq package-quickstart t)
 (package-initialize)
 
 ;;; Prepare `use-package'.
@@ -65,7 +42,35 @@
     (setq command-line-args (delete package-install-switch command-line-args))
     (setq use-package-always-ensure t
           use-package-verbose t
-          native-comp-async-query-on-exit t)))
+          native-comp-async-query-on-exit t)
+    (when package-quickstart
+      (add-hook 'kill-emacs-hook #'package-quickstart-refresh))))
+
+
+;;;;; Frame and basic UI ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Title.
+(setq frame-title-format '("%b — Emacs"))
+(setq icon-title-format frame-title-format)
+
+;; Resize method.
+(setq frame-resize-pixelwise t
+      window-resize-pixelwise nil)
+
+;; Full screen.
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Minibuffer tweak.
+(setq enable-recursive-minibuffers t)
+(setq echo-keystrokes 0.5)
+
+;; Disable tooltip.
+(when (bound-and-true-p tooltip-mode)
+  (tooltip-mode -1))
+
+;; Cursor.
+(setq x-stretch-cursor t)
+(blink-cursor-mode -1)
 
 
 ;;;;; Misc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -79,7 +84,7 @@
 ;;; Message buffer, scratch buffer.
 (setq messages-buffer-max-lines 100
       initial-scratch-message   nil
-      initial-major-mode        #'text-mode)
+      initial-major-mode        #'fundamental-mode)
 
 
 ;;;;; Other hacks ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -93,8 +98,9 @@
 ;;; Clever carbage collection.
 (use-package gcmh
   :defer t
-  :config
-  (setq gcmh-idle-delay 10
-        gcmh-high-cons-threshold #x1000000) ; 16 MiB
   :hook
-  (after-init . gcmh-mode))
+  (emacs-startup
+   . (lambda ()
+       (setq gcmh-idle-delay 10
+             gcmh-high-cons-threshold #x1000000) ;; 16 MiB
+       (gcmh-mode 1))))

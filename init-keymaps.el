@@ -85,12 +85,15 @@
   (+my-define-keys
    (make-sparse-keymap)
    '(("b" . consult-buffer)
-     ("B" . list-buffers)
+     ("B" . consult-buffer-other-window)
+     ("l" . list-buffers)
      ("o" . mode-line-other-buffer)
      ("j" . previous-buffer)
      ("k" . next-buffer)
      ("x" . kill-buffer)
      ("s" . save-buffer)
+     ("S" . save-some-buffers)
+     ("R" . read-only-mode)
      ("n" . narrow-to-region)
      ("N" . widen))))
 
@@ -98,8 +101,12 @@
   (+my-define-keys
    (make-sparse-keymap)
    '(("f" . find-file)
+     ("F" . find-file-other-window)
+     ("R" . find-file-read-only)
      ("r" . consult-recent-file)
-     ("s" . consult-find))))
+     ("s" . consult-find)
+     ("d" . dired)
+     ("D" . dired-other-window))))
 
 (defvar +my-register-prefix-map
   (+my-define-keys
@@ -136,6 +143,19 @@
      ("r" . kmacro-to-register))))
 
 (fmakunbound #'+my-define-keys)
+
+
+;;;;; Modify pre-defined keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(let ((map global-map)
+      (defs `((,(kbd "C-M-v") . scroll-other-window-down)
+              (,(kbd "C-M-S-v") . scroll-other-window)
+              ("\C-xm" . nil)
+              ("\C-x4m" . nil)
+              ("\C-x5m" . nil))))
+  (dolist (def defs)
+    (define-key map (car def) (cdr def))))
+
 
 ;;;;; Modal editing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -203,10 +223,10 @@
     '("g" . meow-cancel-selection)
     '("z" . meow-pop-selection)
     ;; -- kill, delete, copy & paste --
-    '("d" . (lambda () (interactive)
+    '("d" . meow-kill)
+    '("D" . (lambda () (interactive)
               (call-interactively (if mark-active 'delete-region 'delete-char))))
     '("y" . meow-save)
-    '("s" . meow-kill)
     '("p" . meow-yank)
     '("r" . meow-replace)
     ;; -- search/jump --
@@ -286,6 +306,7 @@
     '("M-b" . forward-word)
     '("M-e" . backword-word)
     )
+  (setf (alist-get 'meow-kill meow-selection-command-fallback) #'delete-char)
   ;; --- behaviors ---
   (setq meow-keypad-message nil
         meow-keypad-self-insert-undefined nil
@@ -337,5 +358,7 @@
   :init
   (which-key-mode 1)
   :config
-  (setq which-key-popup-type 'side-window
-        which-key-side-window-location 'right))
+  (setq which-key-idle-delay 1.6
+        which-key-popup-type 'side-window
+        which-key-side-window-location 'right
+        which-key-sort-order 'which-key-description-order))

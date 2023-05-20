@@ -2,19 +2,27 @@
 
 ;; Defer garbage collection during initialization.
 ;; Make sure that package `gcmh' has been installed and will be loaded.
-;; See the last line of file `init.el'.
 (setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (eql gc-cons-threshold most-positive-fixnum)
+              (setq gc-cons-threshold #x1000000) ;; 16 MiB
+              (error "Package `gcmh' might not be loaded.")))
+          98)
 
 ;; Do not auto load packages.
-(setq package-enable-at-startup nil
-      package-quickstart        nil)
+(setq package-enable-at-startup nil)
 
-;; Disable unwanted GUI elements.
+;; Set the `default-frame-alist'.
 (setq default-frame-alist
-      '((background-color . "#3a223d") ;; Use a dark background color before a theme is loaded.
+      '(;; Use a dark background color before a theme is loaded.
+        (background-color . "#282c34")
+        (foreground-color . "#bbc2cf")
+        ;; Disable unwanted GUI elements.
         (menu-bar-lines . 0)
         (tool-bar-lines . 0)
         (vertical-scroll-bars)))
+;; Inhibit some modes before they are enabled.
 (setq menu-bar-mode   nil
       tool-bar-mode   nil
       scroll-bar-mode nil
