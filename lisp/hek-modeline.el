@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(require 'all-the-icons)
+(require 'nerd-icons)
 (require 'cl-lib)
 
 ;;; === utilities ===
@@ -35,15 +35,15 @@
 (defvar-local hek-modeline--bufinfo-cache nil)
 (defun hek-modeline--seg-bufinfo-init ()
   (setq hek-modeline--bufinfo-cache
-        (propertize "%b " 'face '(all-the-icons-purple italic))))
+        (propertize "%b " 'face '(nerd-icons-purple italic))))
 
 (defvar hek-modeline--seg-fileinfo ;; single
   '(:eval (hek-modeline--seg-fileinfo)))
 (defconst hek-modeline--seg-fileinfo-icons
-  (vector (all-the-icons-material "lock" :face 'all-the-icons-red)
-          (all-the-icons-material "save" :face 'all-the-icons-green)
-          (all-the-icons-material "edit" :face 'all-the-icons-yellow)
-          (all-the-icons-material "airplay")))
+  (vector (nerd-icons-faicon "nf-fa-lock" :face 'nerd-icons-red)
+          (nerd-icons-faicon "nf-fa-save" :face 'nerd-icons-green)
+          (nerd-icons-faicon "nf-fa-edit" :face 'nerd-icons-yellow)
+          (nerd-icons-faicon "nf-fa-server")))
 (defun hek-modeline--seg-fileinfo ()
   (cons (aref hek-modeline--seg-fileinfo-icons
               (if (buffer-modified-p) 2 (if buffer-read-only 0 1)))
@@ -53,7 +53,7 @@
         (list
          hek-modeline--thinspc
          ;; file icon
-         (all-the-icons-icon-for-file buffer-file-name :v-adjust 0)
+         (nerd-icons-icon-for-file buffer-file-name :v-adjust 0)
          hek-modeline--thinspc
          ;; remote icon
          (when (file-remote-p buffer-file-name)
@@ -63,7 +63,7 @@
            (concat
             (propertize
              (concat (project-name proj) "/")
-             'face 'all-the-icons-lcyan)
+             'face 'nerd-icons-lcyan)
             (propertize
              (substring
               (replace-regexp-in-string
@@ -71,11 +71,11 @@
                "/\\1"
                (concat "/" (file-name-directory (file-relative-name buffer-file-name (project-root proj)))))
               1 nil)
-             'face 'all-the-icons-dcyan)))
+             'face 'nerd-icons-dcyan)))
          ;; file name
          (propertize
           (concat (file-name-nondirectory buffer-file-name) " ")
-          'face 'all-the-icons-cyan
+          'face 'nerd-icons-cyan
           'help-echo buffer-file-truename)))
   (setq hek-modeline--bufinfo-cache
         (list (apply #'concat (remove nil hek-modeline--bufinfo-cache)))))
@@ -102,10 +102,10 @@
    '(:eval hek-modeline--eglot-cache)))
 
 (defconst hek-modeline--seg-minormodes-icons
-  (vector (all-the-icons-material "check_circle" :face 'all-the-icons-dgreen)
-          (all-the-icons-material "info_outline" :face 'all-the-icons-maroon)
-          (all-the-icons-material "error_outline" :face 'all-the-icons-red)
-          (all-the-icons-faicon "rocket" :face 'all-the-icons-purple :v-adjust 0)))
+  (vector (nerd-icons-faicon "nf-fa-check_circle" :face 'nerd-icons-dgreen)
+          (nerd-icons-faicon "nf-fa-info_circle" :face 'nerd-icons-maroon)
+          (nerd-icons-faicon "nf-fa-warning" :face 'nerd-icons-red)
+          (nerd-icons-faicon "nf-fa-rocket" :face 'nerd-icons-purple :v-adjust 0)))
 (defun hek-modeline--seg-minormodes-use-icon (icon-index text text-face)
   (concat (aref hek-modeline--seg-minormodes-icons icon-index)
           hek-modeline--thinspc
@@ -132,12 +132,12 @@
           (cond
            ((> diag-cnt 0)
             (hek-modeline--seg-minormodes-use-icon
-             2 (number-to-string diag-cnt) 'all-the-icons-red))
+             2 (number-to-string diag-cnt) 'nerd-icons-red))
            ((> note-cnt 0)
             (hek-modeline--seg-minormodes-use-icon
-             1 (number-to-string note-cnt) 'all-the-icons-maroon))
+             1 (number-to-string note-cnt) 'nerd-icons-maroon))
            (t
-            (hek-modeline--seg-minormodes-use-icon 0 "" 'all-the-icons-green))))))
+            (hek-modeline--seg-minormodes-use-icon 0 "" 'nerd-icons-green))))))
 (advice-add #'flymake--handle-report :after #'hek-modeline--flymake-update)
 
 (defvar-local hek-modeline--eglot-cache nil)
@@ -150,14 +150,14 @@
                (if-let ((end-pos (string-match "[-_/]" name)))
                    (substring name 0 end-pos)
                  name))
-             'all-the-icons-purple)
+             'nerd-icons-purple)
           nil)))
 (add-hook 'eglot-managed-mode-hook #'hek-modeline--eglot-update)
 
 ;;; === segment: major mode ===
 
 (defvar hek-modeline--seg-majormode ;; signal
-  '(:propertize mode-name face all-the-icons-lorange))
+  '(:propertize mode-name face nerd-icons-lorange))
 
 ;;; === mode line format ===
 

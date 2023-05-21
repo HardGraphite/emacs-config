@@ -49,8 +49,15 @@
   :hook
   ((prog-mode . hek-ligature-mode)))
 
-;;; all-the-icons, https://github.com/domtronn/all-the-icons.el
-(use-package all-the-icons)
+;; ;;; all-the-icons, https://github.com/domtronn/all-the-icons.el
+;; (use-package all-the-icons)
+
+;;; nerd-icons :: use Nerd Font icons, an alternative to `all-the-icons'
+;;; https://github.com/rainstormstudio/nerd-icons.el
+(use-package nerd-icons
+  :defer t
+  :init
+  (setq nerd-icons-font-family *my-nerd-font-family*))
 
 
 ;;;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

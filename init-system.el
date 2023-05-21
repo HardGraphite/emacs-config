@@ -44,7 +44,8 @@
           use-package-verbose t
           native-comp-async-query-on-exit t)
     (when package-quickstart
-      (add-hook 'kill-emacs-hook #'package-quickstart-refresh))))
+      (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
+    (package-refresh-contents)))
 
 
 ;;;;; Frame and basic UI ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

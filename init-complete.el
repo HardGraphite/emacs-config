@@ -105,9 +105,9 @@
     ;; :family *my-term-font-family* :height (- *my-term-font-height* 5)
     :background "#1a3826")
   (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 2)
-  (require 'kind-all-the-icons)
+  (require 'hek-corfu-nerd-icons)
   (add-to-list 'corfu-margin-formatters
-               #'kind-all-the-icons-margin-formatter)
+               #'hek-corfu-nerd-icons-margin-formatter)
   :bind
   (:map corfu-map
         ("M-<escape>" . corfu-quit)

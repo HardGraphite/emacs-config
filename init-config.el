@@ -17,5 +17,6 @@
 (defconst *my-term-font-height*  170)               ;; Similar to code font.
 (defconst *my-text-font-family*  "sans")            ;; Sans font for other text.
 (defconst *my-text-font-height*  160)               ;; As you like.
+(defconst *my-nerd-font-family*  "Symbols Nerd Font")
 
 (defconst *my-shell* "/usr/bin/fish")
