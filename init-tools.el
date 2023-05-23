@@ -60,7 +60,8 @@
               (("Find file" "f" . find-file)
                ("Open recent file" "r" . consult-recent-file)
                ("Switch to project" "p" . project-switch-project))
-              (("Quit" "Q" . save-buffers-kill-terminal))))
+              (("Other buffer" "b" . consult-buffer)
+               ("Quit" "Q" . save-buffers-kill-terminal))))
       (hek-homepage-setup)
       (when (boundp meow-mode)
         (meow-mode -1))
@@ -76,6 +77,23 @@
 ;; (use-package all-the-icons-dired
 ;;   :after all-the-icons
 ;;   :hook (dired-mode . all-the-icons-dired-mode))
+
+;;; dirvish :: an improved version of `dired'
+;;; https://github.com/alexluigit/dirvish
+(use-package dirvish
+  :defer t
+  :config
+  (setq dirvish-use-header-line 'global
+        dirvish-attributes '(vc-state subtree-state nerd-icons file-time file-size)
+        dirvish-subtree-state-style 'nerd
+        dirvish-subtree-always-show-state t)
+  :bind
+  (:map dirvish-mode-map
+        ("TAB" . dirvish-subtree-toggle)
+        ("`" . dirvish-layout-toggle)
+        ("/" . dired-isearch-filenames))
+  :hook
+  (after-init . dirvish-override-dired-mode))
 
 
 ;;;;; Terminal ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -120,7 +138,7 @@
 (use-package diff-hl
   :defer t
   :hook
-  (dired-mode . diff-hl-dired-mode)
+  ;; (dired-mode . diff-hl-dired-mode) ;; use `dirvish-vc' instead
   ((prog-mode tex-mode markdown-mode) . diff-hl-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh))
