@@ -149,28 +149,37 @@
 
 ;;;;; Code templates ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; YASnippet, https://github.com/joaotavora/yasnippet
-(use-package yasnippet
-  :defer t
-  :init
-  ;; I really don't like yasnippet's way of storing snippets.
-  (setq yas-snippet-dirs nil)
-  ;; ;; So, let me do it myself.
-  ;; (let ((my-snippet-dir (concat *my-emacs-conf-dir* "snippets")))
-  ;;   (load (expand-file-name "snippet-util" my-snippet-dir))
-  ;;   (snippet-util-load-to-yasnippet my-snippet-dir))
-  :hook
-  ((prog-mode tex-mode) . yas-minor-mode))
-
-;; ;;; TempEl :: code templates (snippets)
-;; ;;; https://github.com/minad/tempel
-;; (use-package tempel
+;; ;;; YASnippet, https://github.com/joaotavora/yasnippet
+;; (use-package yasnippet
 ;;   :defer t
-;;   :bind
-;;   (:map tempel-map
-;;         ("M-[" . #'tempel-previous)
-;;         ("M-]" . #'tempel-next)))
-;; (use-package lsp-snippet-tempel
-;;   :ensure nil ;; local
-;;   :config
-;;     (lsp-snippet-tempel-eglot-init))
+;;   :init
+;;   ;; I really don't like yasnippet's way of storing snippets.
+;;   (setq yas-snippet-dirs nil)
+;;   ;; ;; So, let me do it myself.
+;;   ;; (let ((my-snippet-dir (concat *my-emacs-conf-dir* "snippets")))
+;;   ;;   (load (expand-file-name "snippet-util" my-snippet-dir))
+;;   ;;   (snippet-util-load-to-yasnippet my-snippet-dir))
+;;   :hook
+;;   ((prog-mode tex-mode) . yas-minor-mode))
+
+;;; TempEl :: code templates (snippets)
+;;; https://github.com/minad/tempel
+(use-package tempel
+  :defer t
+  :config
+  (setq hek-tempel-snippets-dir (concat *my-emacs-conf-dir* "snippets/"))
+  (require 'hek-tempel-snippets)
+  (push #'hek-tempel-snippets tempel-template-sources)
+  :bind
+  (("M-=" . tempel-insert)
+   :map tempel-map
+        ("S-TAB" . tempel-previous)
+        ("TAB" . tempel-next)
+        ("M-<escape>" . tempel-done)))
+
+;;; lsp-snippet :: bridge between TempEl and Eglot
+;;; https://github.com/svaante/lsp-snippet
+(use-package lsp-snippet-tempel
+  :ensure nil ;; local
+  :config
+    (lsp-snippet-tempel-eglot-init))
