@@ -25,7 +25,8 @@
      ("T" . eglot-find-typeDefinition)
      ("y" . consult-imenu) ;; imenu
      ("l" . consult-goto-line)
-     ("m" . consult-mark))))
+     ("m" . consult-mark)
+     ("G" . meow-pop-grab))))
 
 (defvar +my-rectangle-prefix-map
   (+my-define-keys
@@ -142,6 +143,26 @@
      ("F" . kmacro-set-format)
      ("r" . kmacro-to-register))))
 
+(defvar +my-pair-edit-prefix-map
+  (+my-define-keys
+   (make-sparse-keymap)
+   '(("'" . insert-pair)
+     ("\"" . insert-pair)
+     ("(" . insert-pair)
+     ("[" . insert-pair)
+     ("{" . insert-pair)
+     ("<" . insert-pair)
+     ("x" . delete-pair)
+     ("d" . (lambda (beg end)
+              (interactive "r")
+              (when (and (use-region-p) (< beg end))
+                (save-excursion
+                  (goto-char end)
+                  (delete-char -1)
+                  (goto-char beg)
+                  (delete-char 1)))))
+     )))
+
 (fmakunbound #'+my-define-keys)
 
 
@@ -175,6 +196,13 @@
   ;; --- start meow ! ---
   (meow-global-mode 1)
   :config
+  ;; --- functions ---
+  (defun +meow-reverse-or-negarg ()
+    (interactive)
+    (call-interactively (if mark-active #'meow-reverse #'negative-argument)))
+  (defun +meow-delete-region-or-char ()
+    (interactive)
+    (call-interactively (if mark-active 'delete-region 'delete-char)))
   ;; --- key bindings ---
   (meow-normal-define-key
     ;; -- numbers --
@@ -188,7 +216,7 @@
     '("3" . meow-expand-3)
     '("2" . meow-expand-2)
     '("1" . meow-expand-1)
-    '("-" . negative-argument)
+    '("-" . +meow-reverse-or-negarg)
     ;; -- basic cursor moving --
     '("h" . meow-left)
     '("H" . meow-left-expand)
@@ -206,7 +234,7 @@
     '("w" . meow-mark-word)
     '("W" . meow-mark-symbol)
     ;; -- object-based selections --
-    '("x" . meow-line)
+    '("z" . meow-line)
     '("o" . meow-block)
     '("O" . meow-to-block)
     '("m" . meow-join)
@@ -219,13 +247,12 @@
     '("f" . meow-find)
     '("t" . meow-till)
     ;; -- selection manipulating --
-    '(";" . meow-reverse)
-    '("g" . meow-cancel-selection)
-    '("z" . meow-pop-selection)
+    ;;'("-" . meow-reverse)
+    '("x" . meow-cancel-selection)
+    '("X" . meow-pop-selection)
     ;; -- kill, delete, copy & paste --
     '("d" . meow-kill)
-    '("D" . (lambda () (interactive)
-              (call-interactively (if mark-active 'delete-region 'delete-char))))
+    '("D" . +meow-delelete-region-or-char)
     '("y" . meow-save)
     '("p" . meow-yank)
     '("r" . meow-replace)
@@ -233,9 +260,10 @@
     '("/" . consult-line) ;; '("/" . meow-visit)
     '("?" . avy-goto-char-2)
     '("n" . meow-search)
-    '("X" . meow-goto-line)
+    '("Z" . meow-goto-line)
     '("v" . scroll-up-command)
     '("V" . scroll-down-command)
+    `("g" . ,+my-goto-prefix-map)
     ;; -- undo/redo --
     '("u" . meow-undo)
     '("U" . undo-redo) ;;'("U" . meow-undo-in-selection)
@@ -252,6 +280,7 @@
     ;; -- others --
     '("Q" . meow-quit)
     '("'" . repeat)
+    `("\"" . ,+my-pair-edit-prefix-map)
     '("<escape>" . ignore)
     )
   (setq meow-char-thing-table
@@ -261,17 +290,22 @@
       (?\] . square)
       (?\{ . curly)
       (?\} . curly)
-      (?' . string)
+      (?'  . string)
+      (?\" . string)
       (?y . symbol)
       (?w . window)
       (?b . buffer)
       (?p . paragraph)
       (?l . line)
-      (?d . defun)
+      (?f . defun)
       (?. . sentence)))
   (meow-motion-overwrite-define-key
-    '("j" . meow-next)
-    '("k" . meow-prev)
+    ;; '("j" . meow-next)
+    ;; '("k" . meow-prev)
+    '("M-h" . backward-char)
+    '("M-j" . next-line)
+    '("M-k" . previous-line)
+    '("M-l" . forward-char)
     '("<escape>" . ignore)
     )
   (meow-leader-define-key
@@ -312,7 +346,8 @@
         meow-keypad-self-insert-undefined nil
         meow-keypad-start-keys '((?c . ?c) (?x . ?x))
         meow-keypad-meta-prefix ?X
-        meow-keypad-ctrl-meta-prefix ?C)
+        meow-keypad-ctrl-meta-prefix ?C
+        meow-select-on-change nil)
   (setq meow-mode-state-list
         '((vterm-mode . +shell)))
   ;; --- visual elements ---
