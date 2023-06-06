@@ -1,5 +1,20 @@
 ;;; Code snippets for LaTeX.
 
+;; Inline math.
+(m
+"\\( " q " \\)"
+)
+
+;; Display math.
+(dm
+"\\[ " q " \\]"
+)
+
+;; Fraction.
+(f
+"\\frac{" p "}{" p "} " q
+)
+
 ;; Figure.
 (fig
 "\\begin{figure}[" (p "h") "]"
@@ -95,5 +110,31 @@ n
 n> "\\label{equ:" p "}"
 n> q
 n "\\end{equation}"
+n
+)
+
+;; Code.
+(code
+"\\begin{lstlisting}[language=" p "]"
+n q
+"\\end{lstlisting}"
+n
+)
+
+;; Code from file.
+(codef
+"\\lstinputlisting[language=" p "]{" p "}"
+n q
+)
+
+;; Define command.
+(cmd
+"\\newcommand{\\" p "}[" p "]{" q "}"
+n
+)
+
+;; Define command without argument.
+(cmd0
+"\\newcommand{\\" p "}{" q "}"
 n
 )
