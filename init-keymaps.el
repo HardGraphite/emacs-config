@@ -234,7 +234,7 @@
     '("w" . meow-mark-word)
     '("W" . meow-mark-symbol)
     ;; -- object-based selections --
-    '("z" . meow-line)
+    '("x" . meow-line)
     '("o" . meow-block)
     '("O" . meow-to-block)
     '("m" . meow-join)
@@ -248,8 +248,8 @@
     '("t" . meow-till)
     ;; -- selection manipulating --
     ;;'("-" . meow-reverse)
-    '("x" . meow-cancel-selection)
-    '("X" . meow-pop-selection)
+    '("g" . meow-cancel-selection)
+    '("z" . meow-pop-selection)
     ;; -- kill, delete, copy & paste --
     '("d" . meow-kill)
     '("D" . +meow-delelete-region-or-char)
@@ -260,10 +260,9 @@
     '("/" . consult-line) ;; '("/" . meow-visit)
     '("?" . avy-goto-char-2)
     '("n" . meow-search)
-    '("Z" . meow-goto-line)
+    '("X" . meow-goto-line)
     '("v" . scroll-up-command)
     '("V" . scroll-down-command)
-    `("g" . ,+my-goto-prefix-map)
     ;; -- undo/redo --
     '("u" . meow-undo)
     '("U" . undo-redo) ;;'("U" . meow-undo-in-selection)
@@ -277,6 +276,7 @@
     '("G" . meow-grab)
     '("Y" . meow-sync-grab)
     '("R" . meow-swap-grab)
+    '("Z" . meow-pop-grab)
     ;; -- others --
     '("Q" . meow-quit)
     '("'" . repeat)
