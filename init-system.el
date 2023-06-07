@@ -34,7 +34,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (setq use-package-expand-minimally t))
 
 ;;; Install packages.
 (let ((package-install-switch "--install-packages"))
