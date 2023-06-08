@@ -2,23 +2,8 @@
 
 ;;;;; Mode line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; doom-modeline, https://github.com/seagle0128/doom-modeline
-;; (use-package doom-modeline
-;;   :init
-;;   (doom-modeline-mode 1)
-;;   :config
-;;   (setq doom-modeline-continuous-word-count-modes '()
-;;         doom-modeline-indent-info t
-;;         doom-modeline-gnus nil
-;;         doom-modeline-irc nil
-;;         doom-modeline-battery nil
-;;         doom-modeline-time nil
-;;         doom-modeline-env-version nil
-;;         doom-modeline-always-visible-segments '()
-;;         ))
-
-(use-package hek-modeline
-  :ensure nil ;; my code
+(hek-usepkg hek-modeline
+  :from local
   :config
   (hek-modeline-mode 1))
 
@@ -62,15 +47,15 @@
 (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 
 ;;; Indentation indicator.
-(use-package highlight-indent-guides
-  :defer t
+(hek-usepkg highlight-indent-guides
+  :from package
   :config
   (setq highlight-indent-guides-method 'bitmap ;; Emacs with xpm support is required.
         highlight-indent-guides-bitmap-function #'highlight-indent-guides--bitmap-line
         highlight-indent-guides-responsive 'top
         highlight-indent-guides-delay 0.5)
   :hook
-  ((prog-mode tex-mode) . highlight-indent-guides-mode))
+  ((prog-mode-hook tex-mode-hook) . highlight-indent-guides-mode))
 
 
 ;;;;; Brackets and pairs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -90,8 +75,8 @@
 (set-face-background 'show-paren-match 'unspecified)
 
 ;;; rainbow-delimiters, https://github.com/Fanael/rainbow-delimiters
-(use-package rainbow-delimiters
-  :defer t
+(hek-usepkg rainbow-delimiters
+  :from package
   :config
   (custom-set-faces
    '(rainbow-delimiters-depth-1-face ((t (:foreground "dark orange"))))
@@ -103,7 +88,7 @@
    '(rainbow-delimiters-depth-7-face ((t (:foreground "spring green"))))
    '(rainbow-delimiters-depth-8-face ((t (:foreground "sienna1")))))
   :hook
-  (emacs-lisp-mode . rainbow-delimiters-mode))
+  (emacs-lisp-mode-hook . rainbow-delimiters-mode))
 
 ;;;;; Whitespace and Coding style ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -123,7 +108,8 @@
               (delete-trailing-whitespace))))
 
 ;;; hungry-delete, https://github.com/nflath/hungry-delete
-(use-package hungry-delete
+(hek-usepkg hungry-delete
+  :from package
   :init
   (global-hungry-delete-mode)
   :config
@@ -186,7 +172,7 @@
 (setq c-default-style '((java-mode . "java") (other . "my")))
 
 ;;; editorconfig, https://github.com/editorconfig/editorconfig-emacs.
-(use-package editorconfig
+(hek-usepkg editorconfig
   :init (editorconfig-mode 1))
 
 ;;;;; Spell / grammar check ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -218,7 +204,8 @@
 ;;;;; Search and navigation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; consult, https://github.com/minad/consult
-(use-package consult
+(hek-usepkg consult
+  :from package
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -246,22 +233,24 @@
    ))
 
 ;;; avy, https://github.com/abo-abo/avy
-(use-package avy
+(hek-usepkg avy
+  :from package
   :config
   (setq avy-style 'at-full
         avy-highlight-first t)
   ;; :bind
-  ;; ("C-'" . avy-goto-char-2)
-  ;; ("C-\"" . avy-goto-word-1)
+  ;; (("C-'" . avy-goto-char-2)
+  ;;  ("C-\"" . avy-goto-word-1))
   )
 
 ;;; ace-window, https://github.com/abo-abo/ace-window
-(use-package ace-window
+(hek-usepkg ace-window
+  :from package
   :config
   (setq aw-minibuffer-flag t
         aw-ignore-current  t)
   :bind
-  ("C-x o" . ace-window))
+  (("C-x o" . ace-window)))
 
 ;;; Xref search
 (setq xref-search-program 'ripgrep)
@@ -269,8 +258,8 @@
 
 ;;;;; Project ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package project
-  :ensure nil ;; built-in
+(hek-usepkg project
+  :from builtin
   :config
   ;; --- hacks ---
   ;; -- add a project find function
@@ -288,20 +277,6 @@
   (add-to-list 'project-find-functions #'+project-root-marker-file-find-root)
   ;; --- hacks end ---
   )
-
-;; ;;; Projectile, https://github.com/bbatsov/projectile
-;; (use-package projectile
-;;   :init
-;;   (projectile-mode 1)
-;;   :config
-;;   (setq projectile-require-project-root t
-;;         projectile-auto-discover nil
-;;         projectile-completion-system 'default ;; vertico
-;;         projectile-sort-order 'recently-active
-;;         projectile-switch-project-action #'projectile-dired
-;;         projectile-mode-line-prefix "PROJECT")
-;;   :bind
-;;   ("C-x p" . projectile-command-map))
 
 
 ;;;;; Compilations ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

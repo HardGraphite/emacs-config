@@ -3,9 +3,8 @@
 ;;;;; LSP (language server protocol) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Eglot, https://github.com/joaotavora/eglot
-(use-package eglot
-  ;; :ensure nil ;; built-in
-  :defer t
+(hek-usepkg eglot
+  :from package ;; FIXME: builtin after Emacs 29
   :init
   (setq eglot-autoshutdown t
         eglot-events-buffer-size 0)
@@ -16,41 +15,41 @@
       (lua-mode "lua-language-server")
       ((tex-mode bibtex-mode) "texlab")))
   :hook
-  ((c-mode c++-mode
-    python-mode
-    lua-mode
-    tex-mode bibtex-mode)
+  ((c-mode-hook c++-mode-hook
+    python-mode-hook
+    lua-mode-hook
+    tex-mode-hook bibtex-mode-hook)
    . eglot-ensure))
 
 ;;;;; Tree-sitter ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; ELisp Tree-sitter, https://github.com/emacs-tree-sitter/elisp-tree-sitter
-(use-package tree-sitter
-  ;; :ensure nil ;; built-in
-  :defer t
+(hek-usepkg tree-sitter
+  :from package
   :hook
-  ((sh-mode
-    ;; c-mode c++-mode ;; <-- clangd provides highlight info
-    ;; csharp-mode
-    css-mode
-    ;; go-mode
-    ;; haskell-mode
-    html-mode
-    java-mode
-    javascript-mode
-    ;; json-mode
-    ;; julia-mode
-    ;; lua-mode
-    ;; php-mode
-    python-mode
-    rust-mode
-    ;; toml-mode
-    ;; yaml-mode
-    verilog-mode
-    markdown-mode)
+  ((sh-mode-hook
+    ;; c-mode-hook c++-mode-hook ;; <-- clangd provides highlight info
+    ;; csharp-mode-hook
+    css-mode-hook
+    ;; go-mode-hook
+    ;; haskell-mode-hook
+    html-mode-hook
+    java-mode-hook
+    javascript-mode-hook
+    ;; json-mode-hook
+    ;; julia-mode-hook
+    ;; lua-mode-hook
+    ;; php-mode-hook
+    python-mode-hook
+    rust-mode-hook
+    ;; toml-mode-hook
+    ;; yaml-mode-hook
+    verilog-mode-hook
+    markdown-mode-hook)
    . tree-sitter-mode)
   (tree-sitter-after-on . tree-sitter-hl-mode))
-(use-package tree-sitter-langs
+(hek-usepkg tree-sitter-langs
+  :from package
   :after tree-sitter)
 ;; See `https://github.com/nvim-treesitter/nvim-treesitter/tree/master/queries'
 ;; for query definitions from Nvim's tree sitter plugin.
@@ -59,14 +58,16 @@
 
 ;; --- Markdown ---
 ;; Markdown mode, https://github.com/jrblevin/markdown-mode
-(use-package markdown-mode
+(hek-usepkg markdown-mode
+  :from package
   :defer t
-  :init
-  (setq markdown-command '("pandoc" "--from=markdown" "--to=html5" "--standalone" "--mathjax")))
+  :config
+  (setq markdown-command
+        '("pandoc" "--from=markdown" "--to=html5" "--standalone" "--mathjax")))
 
 ;; --- Verilog HDL / SystemVerilog ---
-(use-package verilog-mode
-  :ensure nil ;; built-in
+(hek-usepkg verilog-mode
+  :from builtin
   :defer t
   :config
   (setq verilog-align-ifelse t
@@ -90,8 +91,5 @@
         )
   ;; (setq verilog-linter "verilator -–lint-only -Wall")
   (require 'hek-flymake-verilator)
-  (defun +verilog-mode-setup ()
-    (hek-flymake-verilator-setup)
-    (flymake-mode 1))
-  :hook
-  ((verilog-mode . +verilog-mode-setup)))
+  (hek-flymake-verilator-setup)
+  (flymake-mode 1))

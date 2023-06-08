@@ -180,15 +180,9 @@
 
 ;;;;; Modal editing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ;;; evil, https://github.com/emacs-evil/evil
-;; (use-package evil
-;;   :preface
-;;   (setq evil-undo-system 'undo-redo)
-;;   :init
-;;   (evil-mode 1))
-
 ;;; Meow, https://github.com/meow-edit/meow
-(use-package meow
+(hek-usepkg meow
+  :from package
   :init
   ;; --- pre-start configs ---
   (setq meow-use-cursor-position-hack t
@@ -389,7 +383,8 @@
 ;;;;; Keymap tools ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; which-key, https://github.com/justbur/emacs-which-key
-(use-package which-key
+(hek-usepkg which-key
+  :from package
   :init
   (which-key-mode 1)
   :config

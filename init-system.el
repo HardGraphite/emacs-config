@@ -29,21 +29,17 @@
 (setq package-quickstart t)
 (package-initialize)
 
-;;; Prepare `use-package'.
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;;; Prepare `hek-usepkg', which helps to setup packages.
 (eval-when-compile
-  (require 'use-package)
-  (setq use-package-expand-minimally t))
+  (require 'hek-usepkg))
 
 ;;; Install packages.
 (let ((package-install-switch "--install-packages"))
   (when (member package-install-switch command-line-args)
-    (setq command-line-args (delete package-install-switch command-line-args))
-    (setq use-package-always-ensure t
-          use-package-verbose t
-          native-comp-async-query-on-exit t)
+    (setq command-line-args (delete package-install-switch command-line-args)) ;; Remove the switch.
+    (setq hek-usepkg-ensure t
+          hek-usepkg-debug t)
+    (setq native-comp-async-query-on-exit t)
     (when package-quickstart
       (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
     (package-refresh-contents)))
@@ -98,11 +94,12 @@
 (setq redisplay-skip-fontification-on-input t)
 
 ;;; Clever carbage collection.
-(use-package gcmh
-  :defer t
+(hek-usepkg gcmh
+  :from package
+  :init
+  (defun +gcmh-setup ()
+    (setq gcmh-idle-delay 10
+          gcmh-high-cons-threshold #x1000000) ;; 16 MiB
+    (gcmh-mode 1))
   :hook
-  (emacs-startup
-   . (lambda ()
-       (setq gcmh-idle-delay 10
-             gcmh-high-cons-threshold #x1000000) ;; 16 MiB
-       (gcmh-mode 1))))
+  (emacs-startup-hook . +gcmh-setup))

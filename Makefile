@@ -21,8 +21,7 @@ debug:
 
 .PHONY: get-pkgs
 get-pkgs:
-	@emacs --install-packages --eval '(switch-to-buffer "*Messages*")'
-	# See "Package management" section in init-system.el
+	@emacs --install-packages --debug-init --eval '(switch-to-buffer "*Messages*")'
 
 .PHONY: ls-inits
 ls-inits:
@@ -38,4 +37,4 @@ ls-heads:
 .PHONY: ls-pkgs
 ls-pkgs:
 	@grep ${GREP_FLAGS} --perl-regexp \
-		'\(use-package\s+\K([a-zA-Z0-9\-_]+)' ${INIT_XXX_FILES}
+		'\(hek-usepkg\s+\K([a-zA-Z0-9\-_]+)' ${INIT_XXX_FILES}

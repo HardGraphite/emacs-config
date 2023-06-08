@@ -5,10 +5,11 @@
 ;;;;; Completion algorithm and category ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; orderless, https://github.com/oantolin/orderless
-(use-package orderless
+(hek-usepkg orderless
+  :from package
   :init
-  ;(setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
-  ;      orderless-component-separator #'orderless-escapable-split-on-space)
+  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+  ;;      orderless-component-separator #'orderless-escapable-split-on-space)
   )
 
 (dolist (name '(emacs21 emacs22 substring initials))
@@ -22,72 +23,34 @@
 ;;;;; Minibuffer completion front-end ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; vertico, https://github.com/minad/vertico
-(use-package vertico
+(hek-usepkg vertico
+  :from package
   :init
   (setq vertico-scroll-margin 2
         vertico-count 10
         vertico-cycle t)
   (vertico-mode 1)
   :bind
-  (:map vertico-map
-        ("M-j" . vertico-next)
-        ("M-k" . vertico-previous)))
-(use-package vertico-directory
+  (vertico-map
+   ("M-j" . vertico-next)
+   ("M-k" . vertico-previous)))
+(hek-usepkg vertico-directory
   :after vertico
-  :ensure nil
-  :bind (:map vertico-map
-         ("RET" . vertico-directory-enter)))
-;; (use-package vertico-indexed
-;;   :after vertico
-;;   :ensure nil
-;;   :init
-;;   (vertico-indexed-mode 1))
-;; (use-package vertico-reverse
-;;   :after vertico
-;;   :ensure nil
-;;   :init
-;;   (vertico-reverse-mode 1)
-;;   :bind
-;;   (:map vertico-reverse-map
-;;         ("M-k" . vertico-next)
-;;         ("M-j" . vertico-previous)))
+  :bind
+  (vertico-map
+   ("RET" . vertico-directory-enter)))
 
 ;;; marginalia, https://github.com/minad/marginalia
-(use-package marginalia
+(hek-usepkg marginalia
+  :from package
   :init
   (marginalia-mode 1))
 
 ;;;;; Code (in-buffer) completion ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ;;; company-mode, https://github.com/company-mode/company-mode
-;; (use-package company
-;;   :init
-;;   (global-company-mode 1)
-;;   :config
-;;   (set-face-attribute 'company-tooltip nil
-;;     :family *my-term-font-family* :height *my-term-font-height*)
-;;   (setq company-idle-delay 0.1
-;;         company-minimum-prefix-length 1
-;;         completion-ignore-case t
-;;         company-tooltip-align-annotations t
-;;         company-frontends
-;;           '(company-pseudo-tooltip-frontend
-;;             company-echo-metadata-frontend)
-;;         company-backends
-;;           '((company-capf :with company-yasnippet)
-;;             company-dabbrev)
-;;         company-dabbrev-other-buffers nil
-;;         company-dabbrev-ignore-case nil
-;;         company-dabbrev-downcase nil)
-;;   :bind
-;;   (:map company-active-map
-;;         ("C-n" . company-select-next)
-;;         ("M-j" . company-select-next)
-;;         ("C-p" . company-select-previous)
-;;         ("M-k" . company-select-previous)))
-
 ;;; corfu, https://github.com/minad/corfu
-(use-package corfu
+(hek-usepkg corfu
+  :from package
   :init
   (global-corfu-mode 1)
   :config
@@ -109,16 +72,17 @@
   (add-to-list 'corfu-margin-formatters
                #'hek-corfu-nerd-icons-margin-formatter)
   :bind
-  (:map corfu-map
-        ("M-<escape>" . corfu-quit)
-        ("<escape>" . (lambda () (interactive) (meow-insert-exit) (corfu-quit))) ;; for meow-mode
-        ("M-j" . corfu-next)
-        ("M-k" . corfu-previous)
-        ("M-v" . corfu-scroll-up)
-        ("M-V" . corfu-scroll-down)))
+  (corfu-map
+   ("M-<escape>" . corfu-quit)
+   ("<escape>" . (lambda () (interactive) (meow-insert-exit) (corfu-quit))) ;; for meow-mode
+   ("M-j" . corfu-next)
+   ("M-k" . corfu-previous)
+   ("M-v" . corfu-scroll-up)
+   ("M-V" . corfu-scroll-down)))
 
 ;;; cape, https://github.com/minad/cape
-(use-package cape
+(hek-usepkg cape
+  :from package
   :init
   (dolist (capf
            '(cape-dabbrev
@@ -149,37 +113,27 @@
 
 ;;;;; Code templates ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ;;; YASnippet, https://github.com/joaotavora/yasnippet
-;; (use-package yasnippet
-;;   :defer t
-;;   :init
-;;   ;; I really don't like yasnippet's way of storing snippets.
-;;   (setq yas-snippet-dirs nil)
-;;   ;; ;; So, let me do it myself.
-;;   ;; (let ((my-snippet-dir (concat *my-emacs-conf-dir* "snippets")))
-;;   ;;   (load (expand-file-name "snippet-util" my-snippet-dir))
-;;   ;;   (snippet-util-load-to-yasnippet my-snippet-dir))
-;;   :hook
-;;   ((prog-mode tex-mode) . yas-minor-mode))
-
 ;;; TempEl :: code templates (snippets)
 ;;; https://github.com/minad/tempel
-(use-package tempel
-  :defer t
+(hek-usepkg tempel
+  :from package
   :config
   (setq hek-tempel-snippets-dir (concat *my-emacs-conf-dir* "snippets/"))
   (require 'hek-tempel-snippets)
   (push #'hek-tempel-snippets tempel-template-sources)
   :bind
-  (("M-=" . tempel-insert)
-   :map tempel-map
-        ("S-TAB" . tempel-previous)
-        ("TAB" . tempel-next)
-        ("M-<escape>" . tempel-done)))
+  (("M-=" . tempel-insert))
+  :bind~
+  (tempel-map
+   ("S-TAB" . tempel-previous)
+   ("TAB" . tempel-next)
+   ("M-<escape>" . tempel-done)))
 
 ;;; lsp-snippet :: bridge between TempEl and Eglot
 ;;; https://github.com/svaante/lsp-snippet
-(use-package lsp-snippet-tempel
-  :ensure nil ;; local
+(hek-usepkg lsp-snippet-tempel
+  ;; :from package-vc "https://github.com/svaante/lsp-snippet"
+  :from local
+  :after eglot
   :config
-    (lsp-snippet-tempel-eglot-init))
+  (eglot lsp-snippet-tempel-eglot-init))

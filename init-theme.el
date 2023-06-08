@@ -24,8 +24,9 @@
 ;; (+my-modeline-font-setup) ;; Call after Emacs theme is loaded.
 
 ;;; Ligatures.
-(use-package hek-ligature
-  :ensure nil ;; my code
+(hek-usepkg hek-ligature
+  :from local
+  :defer 0
   :init
   (setq hek-ligature-table
     '((prog-mode
@@ -47,15 +48,12 @@
         (?# . ".\\(?:#+}\\|[([{]\\)")
         (?_ . "._+"))))
   :hook
-  ((prog-mode . hek-ligature-mode)))
-
-;; ;;; all-the-icons, https://github.com/domtronn/all-the-icons.el
-;; (use-package all-the-icons)
+  (prog-mode-hook . hek-ligature-mode))
 
 ;;; nerd-icons :: use Nerd Font icons, an alternative to `all-the-icons'
 ;;; https://github.com/rainstormstudio/nerd-icons.el
-(use-package nerd-icons
-  :defer t
+(hek-usepkg nerd-icons
+  :from package
   :init
   (setq nerd-icons-font-family *my-nerd-font-family*))
 
@@ -63,7 +61,8 @@
 ;;;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; doom-themes, https://github.com/doomemacs/themes
-(use-package doom-themes
+(hek-usepkg doom-themes
+  :from package
   :init
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
@@ -76,8 +75,8 @@
   )
 
 ;; ;;; Dark/light themes.
-;; (use-package hek-yinyang
-;;   :ensure nil ;; my code
+;; (hek-usepkg hek-yinyang
+;;   :from local
 ;;   :init
 ;;   (setq hek-yinyang-dark-theme  'doom-vibrant
 ;;         hek-yinyang-light-theme 'doom-one-light
@@ -90,7 +89,7 @@
 
 ;;; Solaire mode :: different background darkness between special / file buffers
 ;;; https://github.com/hlissner/emacs-solaire-mode
-(use-package solaire-mode
+(hek-usepkg solaire-mode
   :init
   (solaire-global-mode 1))
 
