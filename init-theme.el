@@ -26,7 +26,6 @@
 ;;; Ligatures.
 (hek-usepkg hek-ligature
   :from local
-  :defer 0
   :init
   (setq hek-ligature-table
     '((prog-mode
@@ -47,6 +46,7 @@
         (?. . ".\\.+")
         (?# . ".\\(?:#+}\\|[([{]\\)")
         (?_ . "._+"))))
+  (autoload 'hek-ligature-mode "hek-ligature")
   :hook
   (prog-mode-hook . hek-ligature-mode))
 
@@ -63,11 +63,10 @@
 ;;; doom-themes, https://github.com/doomemacs/themes
 (hek-usepkg doom-themes
   :from package
-  :init
+  :config
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
   (load-theme 'doom-one t)
-  :config
   ;; (doom-themes-visual-bell-config)
   ;; (doom-themes-neotree-config) ;; for neotree
   ;; (setq doom-themes-treemacs-theme "doom-atom") (doom-themes-treemacs-config);; for treemacs
@@ -90,7 +89,8 @@
 ;;; Solaire mode :: different background darkness between special / file buffers
 ;;; https://github.com/hlissner/emacs-solaire-mode
 (hek-usepkg solaire-mode
-  :init
+  :from package
+  :config
   (solaire-global-mode 1))
 
 (+my-modeline-font-setup)

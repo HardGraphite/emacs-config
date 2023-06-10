@@ -173,6 +173,7 @@
 
 ;;; editorconfig, https://github.com/editorconfig/editorconfig-emacs.
 (hek-usepkg editorconfig
+  :from package
   :init (editorconfig-mode 1))
 
 ;;;;; Spell / grammar check ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
