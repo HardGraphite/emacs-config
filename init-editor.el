@@ -252,6 +252,19 @@
   :bind
   (("C-x o" . ace-window)))
 
+;;; Tab bar (builtin)
+(defun +tab-bar-setup ()
+  (setq tab-bar-close-button-show nil
+        tab-bar-new-button-show t
+        tab-bar-format '(tab-bar-format-tabs tab-bar-separator)
+        tab-bar-separator "  "
+        tab-bar-new-tab-choice "*scratch*")
+  (set-face-attribute 'tab-bar nil
+     :family *my-text-font-family* :height (- *my-text-font-height* 20))
+  (set-face-attribute 'tab-bar-tab-inactive nil
+     :slant 'italic))
+(add-hook 'tab-bar-mode-hook #'+tab-bar-setup)
+
 ;;; Xref search
 (setq xref-search-program 'ripgrep)
 

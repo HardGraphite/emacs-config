@@ -2,7 +2,9 @@
 
 ;;;;; Customized keymaps ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun +my-define-keys (map key-def-pairs)
+(defun +my-define-keys (key-def-pairs &optional map)
+  (when (null map)
+    (setq map (make-sparse-keymap)))
   (dolist (pair key-def-pairs)
     (define-key map
       (let ((key (car pair)))
@@ -12,7 +14,6 @@
 
 (defvar +my-goto-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("d" . xref-find-definitions)
      ("r" . xref-find-references)
      ("o" . xref-pop-marker-stack)
@@ -28,33 +29,48 @@
      ("m" . consult-mark)
      ("G" . meow-pop-grab))))
 
-(defvar +my-rectangle-prefix-map
+(defvar +my-editing-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
-   '(("s" . kill-rectangle)
-     ("y" . copy-rectangle-as-kill)
-     ("d" . delete-rectangle)
-     ("p" . yank-rectangle)
-     ("c" . clear-rectangle)
-     ("o" . open-rectangle)
-     ("t" . string-rectangle)
-     ("i" . string-insert-rectangle)
-     ("SPC" . rectangle-mark-mode))))
-
-(defvar +my-text-manip-prefix-map
-  (+my-define-keys
-   (make-sparse-keymap)
    `(("l" . downcase-dwim)
      ("u" . upcase-dwim)
      ("r" . query-replace)
      ("R" . query-replace-regexp)
      ("p" . consult-yank-from-kill-ring)
-     ("P" . consult-yank-pop)
-     ("t" . ,+my-rectangle-prefix-map))))
+     ("P" . clipboard-yank)
+     ("Y" . clipboard-kill-ring-save)
+     ("e" . ,(+my-define-keys
+              '(("d" . kill-rectangle)
+                ("y" . copy-rectangle-as-kill)
+                ("D" . delete-rectangle)
+                ("p" . yank-rectangle)
+                ("C" . clear-rectangle)
+                ("o" . open-rectangle)
+                ("c" . string-rectangle)
+                ("i" . string-insert-rectangle)
+                ("SPC" . rectangle-mark-mode))))
+     )))
+
+(defvar +my-tabbar-prefix-map
+  (+my-define-keys
+   '(("T" . tab-bar-mode)
+     ("t" . tab-switch)
+     ("D" . dired-other-tab)
+     ("F" . find-file-other-tab)
+     ("b" . switch-to-buffer-other-tab)
+     ("SPC" . other-tab-prefix)
+     ("+" . tab-new)
+     ("*" . tab-duplicate)
+     ("=" . tab-rename)
+     ("x" . tab-close)
+     ("." . tab-close-other)
+     ("u" . tab-undo)
+     ("m" . tab-move)
+     ("[" . tab-previous)
+     ("]" . tab-next)
+     ("l" . tab-list))))
 
 (defvar +my-window-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("0" . delete-window)
      ("1" . delete-other-windows)
      ("." . delete-other-windows)
@@ -84,7 +100,6 @@
 
 (defvar +my-buffer-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("b" . consult-buffer)
      ("B" . consult-buffer-other-window)
      ("l" . list-buffers)
@@ -100,7 +115,6 @@
 
 (defvar +my-file-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("f" . find-file)
      ("F" . find-file-other-window)
      ("R" . find-file-read-only)
@@ -111,7 +125,6 @@
 
 (defvar +my-register-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("r" . consult-register)
      ("l" . consult-register-load)
      ("s" . consult-register-store)
@@ -129,7 +142,6 @@
 
 (defvar +my-kmacro-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("p" . consult-kmacro)
      ("q" . kbd-macro-query)
      ("d" . kmacro-delete-ring-head)
@@ -145,7 +157,6 @@
 
 (defvar +my-pair-edit-prefix-map
   (+my-define-keys
-   (make-sparse-keymap)
    '(("'" . insert-pair)
      ("\"" . insert-pair)
      ("(" . insert-pair)
@@ -314,7 +325,8 @@
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
     `("g" . ,+my-goto-prefix-map)
-    `("t" . ,+my-text-manip-prefix-map)
+    `("e" . ,+my-editing-prefix-map)
+    `("t" . ,+my-tabbar-prefix-map)
     `("w" . ,+my-window-prefix-map)
     `("b" . ,+my-buffer-prefix-map)
     `("f" . ,+my-file-prefix-map)
@@ -385,10 +397,9 @@
 ;;; which-key, https://github.com/justbur/emacs-which-key
 (hek-usepkg which-key
   :from package
-  :init
-  (which-key-mode 1)
   :config
-  (setq which-key-idle-delay 1.6
+  (setq which-key-idle-delay 1.5
         which-key-popup-type 'side-window
         which-key-side-window-location 'right
-        which-key-sort-order 'which-key-description-order))
+        which-key-sort-order 'which-key-description-order)
+  (which-key-mode 1))
