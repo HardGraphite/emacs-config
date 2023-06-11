@@ -157,22 +157,18 @@
 
 (defvar +my-pair-edit-prefix-map
   (+my-define-keys
-   '(("'" . insert-pair)
-     ("\"" . insert-pair)
-     ("(" . insert-pair)
-     ("[" . insert-pair)
-     ("{" . insert-pair)
-     ("<" . insert-pair)
-     ("x" . delete-pair)
-     ("d" . (lambda (beg end)
-              (interactive "r")
-              (when (and (use-region-p) (< beg end))
-                (save-excursion
-                  (goto-char end)
-                  (delete-char -1)
-                  (goto-char beg)
-                  (delete-char 1)))))
-     )))
+   '(("'" . hek-surround-region)
+     ("\"" . hek-surround-region)
+     ("`" . hek-surround-region)
+     ("(" . hek-surround-region)
+     ("[" . hek-surround-region)
+     ("{" . hek-surround-region)
+     ("<" . hek-surround-region)
+     ("s" . hek-surround-region)
+     ("x" . hek-unsurround-region)
+     ("d" . hek-unsurround-region))))
+(autoload 'hek-surround-region "hek-surround")
+(autoload 'hek-unsurround-region "hek-surround")
 
 (fmakunbound #'+my-define-keys)
 
