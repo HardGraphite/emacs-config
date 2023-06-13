@@ -136,4 +136,4 @@
   :from local
   :after eglot
   :config
-  (eglot lsp-snippet-tempel-eglot-init))
+  (lsp-snippet-tempel-eglot-init))
