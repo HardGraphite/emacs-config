@@ -131,9 +131,23 @@
 
 ;;; lsp-snippet :: bridge between TempEl and Eglot
 ;;; https://github.com/svaante/lsp-snippet
-(hek-usepkg lsp-snippet-tempel
-  ;; :from package-vc "https://github.com/svaante/lsp-snippet"
-  :from local
-  :after eglot
-  :config
-  (lsp-snippet-tempel-eglot-init))
+;; (hek-usepkg lsp-snippet-tempel
+;;   ;; :from package-vc "https://github.com/svaante/lsp-snippet"
+;;   :from local
+;;   :after eglot
+;;   :config
+;;   (lsp-snippet-tempel-eglot-init))
+
+;; FIXME: Since `lsp-snippet' is not so stable until now, while `eglot' itself
+;; only supports `yasnippet' as the template engine, I use `yasnippet' for
+;; `eglot' completion only at present, until there is a better solution.
+
+;;; YASnippet :: A template system
+;;; https://github.com/joaotavora/yasnippet
+(hek-usepkg yasnippet
+  :from package
+  :defer t
+  :init
+  (setq yas-snippet-dirs nil)
+  :hook
+  (eglot-managed-mode-hook . yas-minor-mode))
