@@ -184,6 +184,19 @@
 
 ;; TODO: Do grammar check with languagetool or ltex.
 
+;;; hl-todo :: Highlight TODO keywords
+;;; https://github.com/tarsius/hl-todo
+(hek-usepkg hl-todo
+  :from package
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        '(("TODO"    warning bold italic underline)
+          ("XXX"     warning bold italic underline)
+          ("FIXME"   error   bold italic underline)
+          ("NOTE"    success bold italic underline)))
+  :hook
+  (prog-mode-hook . hl-todo-mode))
 
 ;;;;; File save, revert and record ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
