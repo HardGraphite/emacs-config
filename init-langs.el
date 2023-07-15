@@ -45,7 +45,8 @@
     ;; toml-mode-hook
     ;; yaml-mode-hook
     verilog-mode-hook
-    markdown-mode-hook)
+    ;;markdown-mode-hook
+    )
    . tree-sitter-mode)
   (tree-sitter-after-on . tree-sitter-hl-mode))
 (hek-usepkg tree-sitter-langs
@@ -56,16 +57,32 @@
 
 ;;;;; Specific languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; --- Markdown ---
-;; Markdown mode, https://github.com/jrblevin/markdown-mode
+;;; --- Markdown ---
+
+;;; Markdown mode
+;;; https://github.com/jrblevin/markdown-mode
 (hek-usepkg markdown-mode
   :from package
   :defer t
   :config
-  (setq markdown-command
-        '("pandoc" "--from=markdown" "--to=html5" "--standalone" "--mathjax")))
+  (setq markdown-split-window-direction 'right
+        markdown-enable-math t
+        markdown-enable-wiki-links t
+        markdown-mouse-follow-link nil
+        markdown-command
+        '("pandoc" "--from=markdown" "--to=html5" "--standalone" "--mathjax"
+          "--metadata" "title=PREVIEW")
+        markdown-fontify-code-blocks-natively t
+        markdown-code-lang-modes
+        '(("c" . c-mode)
+          ("c++" . c++-mode)
+          ("cpp" . c++-mode)
+          ("python" . python-mode)
+          ("sh" . sh-mode)
+          ("shell" . sh-mode))))
 
-;; --- Verilog HDL / SystemVerilog ---
+;;; --- Verilog HDL / SystemVerilog ---
+
 (hek-usepkg verilog-mode
   :from builtin
   :defer t
