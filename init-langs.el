@@ -57,6 +57,52 @@
 
 ;;;;; Specific languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; --- C-like languages ---
+
+(with-eval-after-load "cc-mode"
+
+  (defconst +my-c-style
+    '((fill-column . 80)
+      (indent-tabs-mode . nil)
+      (c-basic-offset . 4)
+      (c++-indent-level . 4)
+      (c-comment-only-line-offset . (0 . 0))
+      (c-block-comment-prefix . "")
+      (c-hanging-braces-alist
+       . ((defun-open after)
+          (substatement-open after)
+          (brace-list-open after)))
+      (c-offsets-alist
+       . ((arglist-intro . +) ;; c-lineup-arglist-intro-after-paren
+          (arglist-cont-nonempty . 0)
+          (arglist-cont . 0)
+          (arglist-close . 0) ;; c-lineup-arglist
+          (statement-block-intro . +)
+          (statement-case-open . +)
+          (statement-cont . +)
+          (substatement-open . 0)
+          (substatement-label . 0)
+          (label . 0)
+          (brace-list-open . 0)
+          (brace-list-intro . +)
+          (topmost-intro . 0)
+          (topmost-intro-cont . 0)
+          (inline-open . 0)
+          (member-init-intro . +)
+          (innamespace . 0)
+          (template-args-cont . +)
+          ))
+      (c-special-indent-hook
+       . ())
+      ))
+
+  (c-add-style "my" +my-c-style)
+  (setq c-default-style
+        '((java-mode . "java")
+          (awk-mode  . "awk")
+          (other     . "my")))
+  )
+
 ;;; --- Markdown ---
 
 ;;; Markdown mode

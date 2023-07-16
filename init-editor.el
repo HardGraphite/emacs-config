@@ -121,56 +121,6 @@
   indent-tabs-mode  nil
   tab-width         8)
 
-;;; C style (cc-mode).
-(defun +llvm-lineup-statement (langelem)
-  (let ((in-assign (c-lineup-assignments langelem)))
-    (if (not in-assign)
-        '++
-      (aset in-assign 0
-            (+ (aref in-assign 0)
-               (* 2 c-basic-offset)))
-      in-assign)))
-(defconst +my-c-style
-  ;; GNU (built-in) +
-  ;; LLVM (llvm-project/llvm/utils/emacs/emacs.el) +
-  ;; customization
-  '((fill-column . 80)
-    (indent-tabs-mode . nil)
-    (c-basic-offset . 4)
-    (c++-indent-level . 4)
-    (c-comment-only-line-offset . (0 . 0))
-    (c-hanging-braces-alist
-     . ((substatement-open before after)
-        (arglist-cont-nonempty)))
-    (c-offsets-alist
-     . ((statement-block-intro . +)
-        (statement-case-open . +)
-        (statement-cont . +llvm-lineup-statement)
-        (substatement-open . +)
-        (substatement-label . 0)
-        (label . 0)
-        (knr-argdecl-intro . +)
-        (arglist-intro . ++) ;; . c-lineup-arglist-intro-after-paren
-        (arglist-close . c-lineup-arglist)
-        (inline-open . 0)
-        (member-init-intro . ++)
-        (innamespace . 0)
-        (brace-list-open . +)
-        (brace-list-intro
-         . (first
-            c-lineup-2nd-brace-entry-in-arglist
-            c-lineup-class-decl-init-+ +))
-        (topmost-intro-cont
-         . (first
-            c-lineup-topmost-intro-cont
-            c-lineup-gnu-DEFUN-intro-cont))))
-    (c-special-indent-hook
-     . ())
-    (c-block-comment-prefix . "")))
-(require 'llvm-c-style)
-(c-add-style "my" +my-c-style)
-(setq c-default-style '((java-mode . "java") (other . "my")))
-
 ;;; editorconfig, https://github.com/editorconfig/editorconfig-emacs.
 (hek-usepkg editorconfig
   :from package
