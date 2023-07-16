@@ -98,6 +98,8 @@
       whitespace-display-mappings '((tab-mark ?\t [?» ?\t])
                                     (newline-mark ?\n [?↵ ?\n])
                                     (space-mark ?\  [?·] [?.])))
+(custom-set-faces
+ '(trailing-whitespace ((t (:strike-through "#ff6c6b" :background nil)))))
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (add-hook 'text-mode-hook #'whitespace-mode)
 
