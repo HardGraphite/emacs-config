@@ -16,7 +16,9 @@
   (setq completion-styles-alist (assq-delete-all name completion-styles-alist)))
 (setq completion-styles '(flex basic) ;; normal buffer
       completion-category-defaults nil
-      completion-category-overrides '((file (styles partial-completion))))
+      completion-category-overrides
+      '((consult-location (styles orderless basic))
+        (file (styles partial-completion))))
 (add-hook 'minibuffer-setup-hook
           (lambda () (setq-local completion-styles '(orderless basic)))) ;; minibuffer
 
