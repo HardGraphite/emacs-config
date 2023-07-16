@@ -10,14 +10,16 @@
         eglot-events-buffer-size 0)
   :config
   (setq eglot-server-programs
-    '(((c-mode c++-mode) "clangd")
-      (python-mode "pyright-langserver" "--stdio")
-      (lua-mode "lua-language-server")
-      ((tex-mode bibtex-mode) "texlab")))
+        '(((c-mode c++-mode) "clangd")
+          (cmake-mode "cmake-language-server")
+          (lua-mode "lua-language-server")
+          (python-mode "pyright-langserver" "--stdio")
+          ((tex-mode bibtex-mode) "texlab")))
   :hook
   ((c-mode-hook c++-mode-hook
-    python-mode-hook
+    cmake-mode-hook
     lua-mode-hook
+    python-mode-hook
     tex-mode-hook bibtex-mode-hook)
    . eglot-ensure))
 
@@ -102,6 +104,19 @@
           (awk-mode  . "awk")
           (other     . "my")))
   )
+
+;;; --- CMake ---
+
+;;; CMake mode
+;;; https://gitlab.kitware.com/cmake/cmake/-/blob/master/Auxiliary/cmake-mode.el
+(hek-usepkg cmake-mode
+  :from package
+  :defer t
+  :config
+  (setq cmake-tab-width 4)
+  :bind~
+  (cmake-mode-map
+   ("C-c C-h" . cmake-help)))
 
 ;;; --- Markdown ---
 
