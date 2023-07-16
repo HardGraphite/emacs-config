@@ -58,6 +58,10 @@
 ;; Full screen.
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;; Window split.
+(setq split-width-threshold  (* 2 72)
+      split-height-threshold (* 2 25))
+
 ;; Minibuffer tweak.
 (setq enable-recursive-minibuffers t)
 (setq echo-keystrokes 0.5)
