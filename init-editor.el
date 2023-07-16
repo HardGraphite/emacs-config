@@ -72,7 +72,9 @@
 (setq show-paren-highlight-openparen t
       show-paren-when-point-inside-paren t
       show-paren-when-point-in-periphery t)
-(set-face-background 'show-paren-match 'unspecified)
+(set-face-attribute 'show-paren-match nil
+  :foreground 'unspecified :background 'unspecified
+  :weight 'ultra-bold :underline (face-attribute 'show-paren-match :foreground))
 
 ;;; rainbow-delimiters, https://github.com/Fanael/rainbow-delimiters
 (hek-usepkg rainbow-delimiters
