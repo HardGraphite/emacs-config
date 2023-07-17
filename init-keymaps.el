@@ -367,12 +367,14 @@
     (set-face-attribute (car pair) nil
        :weight 'bold :foreground (cdr pair) :inverse-video t))
   (dolist (pair `((meow-normal-cursor . ,(face-attribute 'cursor :background))
+                  (meow-motion-cursor . "#CC7149")
                   (meow-insert-cursor . "#7AA874")
                   (meow-beacon-cursor . "#C060A1")))
     (set-face-attribute (car pair) nil :inherit 'unspecified) ;; Unset inherit attr first.
     (set-face-background (car pair) (cdr pair)))
   (setq meow-cursor-type-insert '(bar . 3)
-        meow-cursor-type-region-cursor '(bar . 1))
+        meow-cursor-type-region-cursor '(bar . 1)
+        meow-cursor-type-motion 'hollow)
   ;;(meow-setup-indicator) ;; Rendered by doom-modeline.
   ;;(meow-setup-line-number)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

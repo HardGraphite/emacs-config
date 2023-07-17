@@ -72,6 +72,7 @@
 
 ;; Cursor.
 (setq x-stretch-cursor t)
+(setq-default cursor-in-non-selected-windows nil)
 (blink-cursor-mode -1)
 
 
