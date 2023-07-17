@@ -22,24 +22,25 @@
 ;;;;; Line & column ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Line number.
-;(global-display-line-numbers-mode t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
-(setq display-line-numbers-type 'relative)
-(setq-default display-line-numbers-width 4)
+;; (setq display-line-numbers-type 'relative)
+;; (setq-default display-line-numbers-width 4)
 (set-face-attribute 'line-number nil
-  :family *my-mono-font-family* :height *my-mono-font-height* :slant 'italic)
+  :family *my-mono-font-family* :height (- *my-mono-font-height* 5)
+  :slant 'italic)
 (set-face-attribute 'line-number-current-line nil
-  :family *my-mono-font-family* :height *my-mono-font-height* :slant 'normal)
+  :family *my-mono-font-family* :height (- *my-mono-font-height* 5)
+  :slant 'normal :foreground "#778871")
 
 ;;; Highlight current line.
-;(global-hl-line-mode 1)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'text-mode-hook #'hl-line-mode)
+(setq hl-line-sticky-flag nil) ;; Don't show highlights in all windows.
 
 ;;; Column number.
-(column-number-mode 1)
-(setq column-number-indicator-zero-based nil) ;; 1 = 1.
+;; (column-number-mode 1)
+;; (setq column-number-indicator-zero-based nil) ;; 1 = 1.
 
 ;;; Column indicator.
 (setq-default display-fill-column-indicator-column 80)
