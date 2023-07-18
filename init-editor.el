@@ -26,6 +26,7 @@
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 ;; (setq display-line-numbers-type 'relative)
 ;; (setq-default display-line-numbers-width 4)
+(setq display-line-numbers-width-start 500)
 (set-face-attribute 'line-number nil
   :family *my-mono-font-family* :height (- *my-mono-font-height* 5)
   :slant 'italic)
