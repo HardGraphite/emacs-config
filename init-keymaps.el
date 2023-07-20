@@ -18,26 +18,31 @@
      ("r" . xref-find-references)
      ("o" . xref-pop-marker-stack)
      ("O" . xref-pop-to-location)
-     ("E" . flymake-goto-next-error)
      ("e" . flymake-goto-next-error)
-     ("H" . eldoc-doc-buffer)
+     ("E" . flymake-goto-prev-error)
+     ("h" . eldoc-doc-buffer)
      ("D" . eglot-find-declaration)
-     ("i" . eglot-find-implementation)
+     ("I" . eglot-find-implementation)
      ("T" . eglot-find-typeDefinition)
      ("y" . consult-imenu) ;; imenu
      ("l" . consult-goto-line)
-     ("m" . consult-mark)
-     ("G" . meow-pop-grab))))
+     ("m" . consult-mark))))
 
 (defvar +my-editing-prefix-map
   (+my-define-keys
    `(("l" . downcase-dwim)
      ("u" . upcase-dwim)
+     ("U" . capitalize-dwim)
+     ("j" . join-line)
+     ("s" . isearch-forward)
+     ("S" . isearch-forward-regexp)
      ("r" . query-replace)
      ("R" . query-replace-regexp)
      ("p" . consult-yank-from-kill-ring)
      ("P" . clipboard-yank)
      ("Y" . clipboard-kill-ring-save)
+     ("/" . comment-line)
+     ("?" . comment-or-uncomment-region)
      ("e" . ,(+my-define-keys
               '(("d" . kill-rectangle)
                 ("y" . copy-rectangle-as-kill)
@@ -60,7 +65,7 @@
      ("SPC" . other-tab-prefix)
      ("+" . tab-new)
      ("*" . tab-duplicate)
-     ("=" . tab-rename)
+     ("n" . tab-rename)
      ("x" . tab-close)
      ("." . tab-close-other)
      ("u" . tab-undo)
@@ -80,7 +85,7 @@
      ("\\" . split-window-right)
      ("4" . ctl-x-4-map)
      ("5" . ctl-x-5-map)
-     ("o" . other-window)
+     ("o" . other-window-prefix)
      ("w" . ace-select-window)
      ("h" . windmove-left)
      ("j" . windmove-down)
@@ -120,6 +125,10 @@
      ("R" . find-file-read-only)
      ("r" . consult-recent-file)
      ("s" . consult-find)
+     ("h" . hexl-find-file)
+     ("H" . hexl-mode)
+     ("n" . rename-file)
+     ("p" . copy-file)
      ("d" . dired)
      ("D" . dired-other-window))))
 
@@ -144,6 +153,7 @@
   (+my-define-keys
    '(("p" . consult-kmacro)
      ("q" . kbd-macro-query)
+     ("n" . kmacro-name-last-macro)
      ("d" . kmacro-delete-ring-head)
      ("j" . kmacro-cycle-ring-next)
      ("k" . kmacro-cycle-ring-previous)
@@ -253,17 +263,19 @@
     '("z" . meow-pop-selection)
     ;; -- kill, delete, copy & paste --
     '("d" . meow-kill)
-    '("D" . +meow-delelete-region-or-char)
+    '("D" . +meow-delete-region-or-char)
     '("y" . meow-save)
     '("p" . meow-yank)
     '("r" . meow-replace)
     ;; -- search/jump --
-    '("/" . consult-line) ;; '("/" . meow-visit)
-    '("?" . avy-goto-char-2)
+    '("/" . consult-line)
+    '("?" . avy-goto-line)
+    '(";" . avy-goto-word-or-subword-1)
+    '(":" . avy-goto-char-timer)
     '("n" . meow-search)
-    '("X" . meow-goto-line)
     '("v" . scroll-up-command)
     '("V" . scroll-down-command)
+    '("M" . recenter-top-bottom)
     ;; -- undo/redo --
     '("u" . meow-undo)
     '("U" . undo-redo) ;;'("U" . meow-undo-in-selection)
@@ -279,7 +291,8 @@
     '("R" . meow-swap-grab)
     '("Z" . meow-pop-grab)
     ;; -- others --
-    '("Q" . meow-quit)
+    '("q" . meow-quit)
+    '("Q" . kill-current-buffer)
     '("'" . repeat)
     `("\"" . ,+my-pair-edit-prefix-map)
     '("<escape>" . ignore)
@@ -321,6 +334,7 @@
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
     `("g" . ,+my-goto-prefix-map)
+    `("j" . ,+my-goto-prefix-map)
     `("e" . ,+my-editing-prefix-map)
     `("t" . ,+my-tabbar-prefix-map)
     `("w" . ,+my-window-prefix-map)
@@ -345,10 +359,12 @@
   (setf (alist-get 'meow-kill meow-selection-command-fallback) #'delete-char)
   ;; --- behaviors ---
   (setq meow-keypad-message nil
+        meow-display-thing-help nil
+        meow-keypad-describe-delay 2
         meow-keypad-self-insert-undefined nil
         meow-keypad-start-keys '((?c . ?c) (?x . ?x))
-        meow-keypad-meta-prefix ?X
-        meow-keypad-ctrl-meta-prefix ?C
+        meow-keypad-meta-prefix ?M
+        meow-keypad-ctrl-meta-prefix ?m
         meow-select-on-change nil)
   (setq meow-mode-state-list
         '((vterm-mode . +shell)))
@@ -399,5 +415,5 @@
   (setq which-key-idle-delay 1.5
         which-key-popup-type 'side-window
         which-key-side-window-location 'right
-        which-key-sort-order 'which-key-description-order)
+        which-key-sort-order 'which-key-prefix-then-key-order)
   (which-key-mode 1))

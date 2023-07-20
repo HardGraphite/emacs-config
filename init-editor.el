@@ -205,15 +205,16 @@
    ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
    ))
 
-;;; avy, https://github.com/abo-abo/avy
+;;; avy :: Jump to things in Emacs tree-style
+;;; https://github.com/abo-abo/avy
 (hek-usepkg avy
   :from package
   :config
   (setq avy-style 'at-full
+        avy-timeout-seconds 0.4
         avy-highlight-first t)
   ;; :bind
-  ;; (("C-'" . avy-goto-char-2)
-  ;;  ("C-\"" . avy-goto-word-1))
+  ;; key bindings are defined in `init-keymaps.el'.
   )
 
 ;;; ace-window, https://github.com/abo-abo/ace-window
