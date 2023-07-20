@@ -137,6 +137,9 @@
 ;;; Spell check
 (add-hook 'prog-mode-hook #'flyspell-prog-mode) ;; TODO: Check spells in identifiers.
 (add-hook 'text-mode-hook #'flyspell-mode)
+(with-eval-after-load "flyspell"
+  (require 'hek-spell)
+  (hek-spell-mode 1))
 
 ;; TODO: Do grammar check with languagetool or ltex.
 
