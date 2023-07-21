@@ -376,15 +376,15 @@
       (insert . "I")
       (beacon . "B")))
   (dolist (pair '((meow-normal-indicator . "#9BA3EB")
+                  (meow-insert-indicator . "#7AA874")
                   (meow-motion-indicator . "#A9907E")
                   (meow-keypad-indicator . "#D6D5A8")
-                  (meow-insert-indicator . "#7AA874")
                   (meow-beacon-indicator . "#C060A1")))
     (set-face-attribute (car pair) nil
        :weight 'bold :foreground (cdr pair) :inverse-video t))
-  (dolist (pair `((meow-normal-cursor . ,(face-attribute 'cursor :background))
-                  (meow-motion-cursor . "#CC7149")
+  (dolist (pair `((meow-normal-cursor . "#9BA3EB") ;; (face-attribute 'cursor :background)
                   (meow-insert-cursor . "#7AA874")
+                  (meow-motion-cursor . "#CC7149")
                   (meow-beacon-cursor . "#C060A1")))
     (set-face-attribute (car pair) nil :inherit 'unspecified) ;; Unset inherit attr first.
     (set-face-background (car pair) (cdr pair)))
