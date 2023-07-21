@@ -3,15 +3,14 @@
 ;;;;; Emacs directories and files ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq user-emacs-directory        *my-emacs-data-dir*
+      custom-theme-directory      (concat *my-emacs-conf-dir* "themes/")
       package-user-dir            (concat *my-emacs-data-dir* "packages")
       package-quickstart-file     (concat *my-emacs-data-dir* "package-quickstart.el")
       auto-save-list-file-prefix  nil ;; (concat *my-emacs-data-dir* "auto-save-list/saves-")
-      custom-file                 (expand-file-name "custom.el" *my-emacs-conf-dir*))
-
-(add-to-list 'custom-theme-load-path (expand-file-name "themes" *my-emacs-conf-dir*))
+      custom-file                 (concat *my-emacs-conf-dir* "custom.el"))
 
 (when (boundp 'native-comp-eln-load-path)
-  (startup-redirect-eln-cache (expand-file-name "eln-cache" *my-emacs-data-dir*)))
+  (startup-redirect-eln-cache (concat *my-emacs-data-dir* "eln-cache/")))
 
 
 ;;;;; Package management ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
