@@ -1,4 +1,4 @@
-;; --- Emacs system setups -*- lexical-binding: t -*-
+;; --- Emacs system setups -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; Emacs directories and files ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

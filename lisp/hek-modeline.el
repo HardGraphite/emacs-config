@@ -9,6 +9,24 @@
 (require 'nerd-icons)
 (require 'cl-lib)
 
+(defvar flymake--state)
+(declare-function eglot-current-server "eglot")
+(declare-function eglot-managed-p "eglot")
+(declare-function flymake--diag-type "flymake")
+(declare-function flymake--handle-report "flymake")
+(declare-function flymake--lookup-type-property "flymake")
+(declare-function flymake--state-diags "flymake")
+(declare-function jsonrpc--process "jsonrpc")
+(declare-function package-installed-p "package")
+(declare-function project-name "project")
+(declare-function project-root "project")
+(declare-function warning-numeric-level "warnings")
+
+(defgroup hek-modeline nil
+  "Hek's mode line."
+  :group 'mode-line
+  :prefix "hek-modeline-")
+
 ;;; === utilities ===
 
 (defconst hek-modeline--thinspc

@@ -1,4 +1,4 @@
-;; --- Editing replated functions -*- lexical-binding: t -*-
+;; --- Editing replated functions -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; Mode line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

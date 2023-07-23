@@ -1,4 +1,4 @@
-;; --- Configuration definitions -*- lexical-binding: t -*-
+;; --- Configuration definitions -*- lexical-binding: t; no-byte-compile: t -*-
 
 (unless (eq system-type 'gnu/linux)
   (error "expecting GNU/Linux system!"))

@@ -9,6 +9,7 @@
 
 (defgroup hek-yinyang nil
   "Auto dark/light theme switcher."
+  :group 'faces
   :prefix "hek-yinyang-")
 
 (defcustom hek-yinyang-dark-theme

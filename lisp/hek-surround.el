@@ -20,8 +20,8 @@
   "Surrounding pairs.")
 
 (defun hek-surround-region (region pair)
-  "Add surrounding PAIR to the REGION. Both REGION and PAIR are cons. REGION
-is the beginning and end points; PAIR is the left and write characters or strings.
+  "Add surrounding PAIR to the REGION. Both REGION and PAIR are cons. REGION is
+the beginning and end points; PAIR is the left and write characters or strings.
 When called interactively, REGION is the selected region; PAIR is the inferred
 from `last-command-event' and `hek-surround-pairs'."
   (interactive
@@ -44,10 +44,11 @@ from `last-command-event' and `hek-surround-pairs'."
     (- (point) (car region))))
 
 (defun hek-unsurround-region (region pair)
-  "Remove surrounding at the beginning and end of REGION. Both REGION and PAIR are cons.
-REGION is the beginning and end points; PAIR is the number of characters to delete
-at the beginning and end. When called interactively, REGION is the selected region;
-PAIR is '(1 . 1)' if the first and last characters are in `hek-surround-pairs'."
+  "Remove surrounding at the beginning and end of REGION. Both REGION and PAIR
+are cons. REGION is the beginning and end points; PAIR is the number of
+characters to delete at the beginning and end. When called interactively,
+REGION is the selected region; PAIR is '(1 . 1)' if the first and last
+characters are in `hek-surround-pairs'."
   (interactive
    (list (if (use-region-p)
              (cons (region-beginning) (region-end))

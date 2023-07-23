@@ -6,6 +6,11 @@
 
 ;;; Code:
 
+(defgroup hek-homepage nil
+  "A startup homepage."
+  :group 'applications
+  :prefix "hek-homepage-")
+
 (defvar hek-homepage-logo nil)
 
 (defvar hek-homepage-banner nil)
@@ -22,7 +27,7 @@ LABEL is a string; KEY is a key sequence; TARGET is a function or a command.")
 
 (defface hek-homepage-button
   '((t :background "#383c44" :box t))
-  "")
+  "Homepage button face.")
 
 (defun hek-homepage--center-line ()
   (let* ((line-beg-pos (line-beginning-position))

@@ -1,4 +1,4 @@
-;; --- Programming language supports -*- lexical-binding: t -*-
+;; --- Programming language supports -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; LSP (language server protocol) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -1,4 +1,4 @@
-;; --- Compat code for future features and different platforms -*- lexical-binding: t -*-
+;; --- Compat code for future features and different platforms -*- lexical-binding: t; no-byte-compile: t -*-
 
 (unless (>= emacs-major-version 29) ;; before Emacs 29
 

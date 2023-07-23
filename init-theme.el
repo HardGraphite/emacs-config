@@ -1,4 +1,4 @@
-;; --- Fonts and color theme -*- lexical-binding: t -*-
+;; --- Fonts and color theme -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; Fonts ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -1,4 +1,4 @@
-;; --- Completion facilities -*- lexical-binding: t -*-
+;; --- Completion facilities -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;; TODO: consult, consult-flycheck, embark, embark-consult, wgrep
 

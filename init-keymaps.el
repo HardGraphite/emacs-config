@@ -1,4 +1,4 @@
-;; --- Key bindings and modal editing -*- lexical-binding: t -*-
+;; --- Key bindings and modal editing -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; Customized keymaps ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

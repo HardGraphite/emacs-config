@@ -7,6 +7,13 @@
 
 ;;; Code:
 
+(require 'flyspell)
+
+(defgroup hek-spell nil
+  "Enhanced spell checks."
+  :group 'processes
+  :prefix "hek-spell-")
+
 (defconst hek-spell--flyspell-popup/operations
   '(("* Save word"        . save)
     ("* Accept (session)" . session)
@@ -19,7 +26,7 @@
       completion
     (if (= ?* (string-to-char completion)) "Operation" "Correction")))
 
-(defun hek-spell--flyspell-popup (event poss word)
+(defun hek-spell--flyspell-popup (_event poss word)
   ;; This function overrides `flyspell-emacs-popup' and shall produce the first
   ;; argument for function `flyspell-do-correct'.
   (let* ((orig-word (car poss))

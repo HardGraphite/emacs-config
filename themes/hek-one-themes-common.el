@@ -45,102 +45,6 @@ float between 0 and 1)"
 between 0 and 1)."
   (hek-one-blend color "#FFFFFF" (- 1 alpha)))
 
-(defun hek-one--make-face-form (name-and-attr)
-  ;; `(name :k1 v1 :k2 v2 ...)' => `(name ((t :k1 v1 ...)))'
-  ;; `(name (&dark :k1 v1 ...) (&light :k1 v1 ...))' => `(name (((background dark) ...) ...))'
-  (let ((name (car name-and-attr))
-        (attr (cdr name-and-attr)))
-    (if (symbolp (car attr))
-        `(list ',name (list (list t ,(cons 'list attr))))
-      (let ((spec '()))
-        (dolist (form attr)
-          (push (list
-                 'list
-                 (list
-                  'quote
-                  (list
-                   (cond
-                    ((eq (car form) '&dark)
-                     '(background dark))
-                    ((eq (car form) '&light)
-                     '(background light))
-                    (t
-                     (error "bad type `%S' in `%S'" (car form) name-and-attr)))))
-                 (cons 'list (cdr form)))
-                spec))
-        (push 'list spec)
-        `(list ',name ,spec)))))
-
-(defun hek-one--make-var-form (name-and-exp)
-  ;; `(name exp)' => `(name exp)'
-  (let ((name (car name-and-exp))
-        (exp  (cdr name-and-exp)))
-    `(list ',name ,@exp)))
-
-(defun hek-one--merge-faces-make-forms (new base)
-  ;; Faces in NEW that marked `&override' (like `(name &override attr...)') will
-  ;; only override mentioned attributes while keep other attributes from BASE.
-  ;; Other faces re-write the face.
-  (cl-loop
-   for base-def in base
-   for (base-def-name . base-def-attr) = base-def
-   for new-def = (assq base-def-name new)
-   when new-def
-   do (setq new (assq-delete-all base-def-name new))
-   collect (hek-one--make-face-form
-            (if (null new-def)
-                base-def
-              (let ((new-def-attr (cdr new-def)))
-                (when (eq (car new-def-attr) '&override)
-                  (setq new-def-attr (cdr new-def-attr))
-                  (unless (keywordp (car new-def-attr))
-                    (error "cannot merge complex face def: `%S'" new-def-attr))
-                  (cl-loop
-                   for (key base-val) on base-def-attr by #'cddr
-                   unless (plist-get new-def-attr key)
-                   do (push base-val new-def-attr) (push key new-def-attr)))
-                (cons base-def-name new-def-attr))))
-   into forms
-   finally (dolist (new-def new)
-             (push (hek-one--make-face-form new-def) forms))
-   finally return forms))
-
-(defun hek-one--merge-vars-make-forms (new base)
-  (cl-loop
-   for base-def in base
-   for (base-def-name base-def-exp) = base-def
-   for new-def = (assq base-def-name new)
-   when new-def
-   do (setq new (assq-delete-all base-def-name new))
-   collect (hek-one--make-var-form
-            (if new-def (cons base-def-name (cdr new-def)) base-def))
-   into forms
-   finally (dolist (new-def new)
-             (push new-def (hek-one--make-var-form forms)))
-   finally return forms))
-
-(defmacro hek-one-def-theme (name colors colors2 faces vars)
-  "Define a hek one theme."
-  (setq name (intern (concat "hek-one-" (symbol-name name))))
-  `(progn
-     (deftheme ,name)
-     (let (,@colors)
-       (let ((custom--inhibit-theme-enable nil)
-             ,@colors2)
-         (custom-theme-set-faces
-          ',name ,@(hek-one--merge-faces-make-forms faces hek-one--base-faces))
-         (custom-theme-set-variables
-          ',name ,@(hek-one--merge-vars-make-forms vars hek-one--base-vars))))
-     (provide-theme ',name)))
-
-(defun hek-one--clean-up ()
-  (mapc #'makunbound
-        '(hek-one--base-faces hek-one--base-vars))
-  (mapc #'fmakunbound
-        '( hek-one--make-face-form hek-one--make-var-form
-           hek-one--merge-faces-make-forms hek-one--merge-vars-make-forms
-           hek-one-def-theme hek-one--clean-up )))
-
 (defconst hek-one--base-faces
  '((bold :weight 'bold)
    (bold-italic :inherit '(bold italic))
@@ -737,6 +641,102 @@ between 0 and 1)."
    (vc-annotate-background bg)
    ;;;; --- END Package variables --------------
    ))
+
+(defun hek-one--make-face-form (name-and-attr)
+  ;; `(name :k1 v1 :k2 v2 ...)' => `(name ((t :k1 v1 ...)))'
+  ;; `(name (&dark :k1 v1 ...) (&light :k1 v1 ...))' => `(name (((background dark) ...) ...))'
+  (let ((name (car name-and-attr))
+        (attr (cdr name-and-attr)))
+    (if (symbolp (car attr))
+        `(list ',name (list (list t ,(cons 'list attr))))
+      (let ((spec '()))
+        (dolist (form attr)
+          (push (list
+                 'list
+                 (list
+                  'quote
+                  (list
+                   (cond
+                    ((eq (car form) '&dark)
+                     '(background dark))
+                    ((eq (car form) '&light)
+                     '(background light))
+                    (t
+                     (error "bad type `%S' in `%S'" (car form) name-and-attr)))))
+                 (cons 'list (cdr form)))
+                spec))
+        (push 'list spec)
+        `(list ',name ,spec)))))
+
+(defun hek-one--make-var-form (name-and-exp)
+  ;; `(name exp)' => `(name exp)'
+  (let ((name (car name-and-exp))
+        (exp  (cdr name-and-exp)))
+    `(list ',name ,@exp)))
+
+(defun hek-one--merge-faces-make-forms (new base)
+  ;; Faces in NEW that marked `&override' (like `(name &override attr...)') will
+  ;; only override mentioned attributes while keep other attributes from BASE.
+  ;; Other faces re-write the face.
+  (cl-loop
+   for base-def in base
+   for (base-def-name . base-def-attr) = base-def
+   for new-def = (assq base-def-name new)
+   when new-def
+   do (setq new (assq-delete-all base-def-name new))
+   collect (hek-one--make-face-form
+            (if (null new-def)
+                base-def
+              (let ((new-def-attr (cdr new-def)))
+                (when (eq (car new-def-attr) '&override)
+                  (setq new-def-attr (cdr new-def-attr))
+                  (unless (keywordp (car new-def-attr))
+                    (error "cannot merge complex face def: `%S'" new-def-attr))
+                  (cl-loop
+                   for (key base-val) on base-def-attr by #'cddr
+                   unless (plist-get new-def-attr key)
+                   do (push base-val new-def-attr) (push key new-def-attr)))
+                (cons base-def-name new-def-attr))))
+   into forms
+   finally (dolist (new-def new)
+             (push (hek-one--make-face-form new-def) forms))
+   finally return forms))
+
+(defun hek-one--merge-vars-make-forms (new base)
+  (cl-loop
+   for base-def in base
+   for (base-def-name _base-def-exp) = base-def
+   for new-def = (assq base-def-name new)
+   when new-def
+   do (setq new (assq-delete-all base-def-name new))
+   collect (hek-one--make-var-form
+            (if new-def (cons base-def-name (cdr new-def)) base-def))
+   into forms
+   finally (dolist (new-def new)
+             (push (hek-one--make-var-form new-def) forms))
+   finally return forms))
+
+(defmacro hek-one-def-theme (name colors colors2 faces vars)
+  "Define a hek one theme."
+  (setq name (intern (concat "hek-one-" (symbol-name name))))
+  `(progn
+     (deftheme ,name)
+     (let (,@colors)
+       (let ((custom--inhibit-theme-enable nil)
+             ,@colors2)
+         (custom-theme-set-faces
+          ',name ,@(hek-one--merge-faces-make-forms faces hek-one--base-faces))
+         (custom-theme-set-variables
+          ',name ,@(hek-one--merge-vars-make-forms vars hek-one--base-vars))))
+     (provide-theme ',name)))
+
+(defun hek-one--clean-up ()
+  (mapc #'makunbound
+        '(hek-one--base-faces hek-one--base-vars))
+  (mapc #'fmakunbound
+        '( hek-one--make-face-form hek-one--make-var-form
+           hek-one--merge-faces-make-forms hek-one--merge-vars-make-forms
+           hek-one-def-theme hek-one--clean-up )))
 
 (provide 'hek-one-themes-common)
 ;;; hek-one-themes-common.el ends here

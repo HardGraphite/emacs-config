@@ -1,4 +1,4 @@
-;; --- Extra utilities -*- lexical-binding: t -*-
+;; --- Extra utilities -*- lexical-binding: t; no-byte-compile: t -*-
 
 ;;;;; Dashboard ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

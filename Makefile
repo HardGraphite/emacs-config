@@ -6,6 +6,8 @@ INIT_XXX_FILES = $(wildcard init-*.el)
 help:
 	@echo 'make version    --- Print Emacs version info'
 	@echo 'make debug      --- Start Emacs with `--debug-init` and `debug-on-error=t`'
+	@echo 'make compile    --- byte compile lisp/*.el and themes/*.el files'
+	@echo 'make clean      --- delete *.elc and *.eln files'
 	@echo 'make get-pkgs   --- Install packages'
 	@echo 'make ls-inits   --- List init-*.el files'
 	@echo 'make ls-heads   --- List heading titles in configurations'
@@ -18,6 +20,21 @@ version:
 .PHONY: debug
 debug:
 	@emacs --debug-init --eval '(setq debug-on-error t)'
+
+.PNONY: compile
+compile:
+	@emacs --batch \
+		--directory 'lisp' \
+		--load 'init-compat.el' \
+		--load 'init-config.el' \
+		--load 'init-system.el' \
+		--eval '(require `cus-edit)' \
+		--eval '(batch-byte-compile t)' \
+		lisp/*.el themes/*.el
+
+.PHONY: clean
+clean:
+	@rm lisp/*.elc themes/*.elc
 
 .PHONY: get-pkgs
 get-pkgs:

@@ -8,6 +8,7 @@
 
 (defgroup hek-ligature nil
   "Font ligatures."
+  :group 'display
   :prefix "hek-ligature-")
 
 (defvar hek-ligature-table nil
