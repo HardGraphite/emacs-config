@@ -49,9 +49,13 @@
          (* (caddr time) 60)))))
 
 (defun hek-yinyang--reload-theme ()
-  (load-theme
-    (if hek-yinyang--state hek-yinyang-light-theme hek-yinyang-dark-theme)
-    t)
+  (let ((theme (if hek-yinyang--state
+                   hek-yinyang-light-theme hek-yinyang-dark-theme)))
+    (unless (memq theme custom-known-themes)
+      (load-theme theme t t))
+    (disable-theme hek-yinyang-light-theme)
+    (disable-theme hek-yinyang-dark-theme)
+    (enable-theme theme))
   (run-hooks 'hek-yinyang-update-hook))
 
 (defun hek-yinyang-update (force-reload)
