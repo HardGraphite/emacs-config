@@ -84,6 +84,8 @@
             (setq sunrise-time-dur (+ sunrise-time-dur day-time-dur)))
           (when (< sunset-time-dur 0)
             (setq sunset-time-dur (+ sunset-time-dur day-time-dur)))
+          (setq hek-yinyang--state
+                (< sunset-time-dur sunrise-time-dur))
           (setq hek-yinyang--timer
                 (cons (run-at-time sunrise-time-dur day-time-dur #'hek-yinyang-switch-to t)
                       (run-at-time sunset-time-dur  day-time-dur #'hek-yinyang-switch-to nil)))))
