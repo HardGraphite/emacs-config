@@ -60,31 +60,19 @@
 
 ;;;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; doom-themes, https://github.com/doomemacs/themes
-(hek-usepkg doom-themes
-  :from package
-  :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
-  (load-theme 'doom-one t)
-  ;; (doom-themes-visual-bell-config)
-  ;; (doom-themes-neotree-config) ;; for neotree
-  ;; (setq doom-themes-treemacs-theme "doom-atom") (doom-themes-treemacs-config);; for treemacs
-  ;; (doom-themes-org-config) ;; for org mode
-  )
+;; (load-theme 'hek-one-dark t)
 
-;; ;;; Dark/light themes.
-;; (hek-usepkg hek-yinyang
-;;   :from local
-;;   :init
-;;   (setq hek-yinyang-dark-theme  'doom-vibrant
-;;         hek-yinyang-light-theme 'doom-one-light
-;;         hek-yinyang-sunrise     '(08 . 00)
-;;         hek-yinyang-sunset      '(16 . 00))
-;;   :config
-;;   ;; Set mode line fonts.
-;;   (add-hook 'hek-yinyang-update-hook +my-modeline-font-setup)
-;;   (hek-yinyang-mode t))
+;;; Dark/light themes.
+(hek-usepkg hek-yinyang
+  :from local
+  :init
+  (setq hek-yinyang-dark-theme  'hek-one-dark
+        hek-yinyang-light-theme 'hek-one-light
+        hek-yinyang-sunrise     '(08 . 00)
+        hek-yinyang-sunset      '(17 . 00))
+  :config
+  (add-hook 'hek-yinyang-switch-hook #'+my-modeline-font-setup)
+  (hek-yinyang-mode t))
 
 ;;; Solaire mode :: different background darkness between special / file buffers
 ;;; https://github.com/hlissner/emacs-solaire-mode
@@ -92,5 +80,3 @@
   :from package
   :config
   (solaire-global-mode 1))
-
-(+my-modeline-font-setup)
