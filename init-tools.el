@@ -2,34 +2,46 @@
 
 ;;;;; Dashboard ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(hek-usepkg hek-homepage
-  :from local
-  :when (or (not command-line-args)
-            (not (cdr command-line-args))) ;; No extra arguments.
-  :init
-  (setq initial-major-mode #'fundamental-mode
-        inhibit-startup-screen t)
-  (defun +hek-homepage-init ()
-    (when (string-equal (buffer-name) "*scratch*")
-      (setq hek-homepage-logo (concat *my-emacs-conf-dir* "misc/gnu_emacs.png")
-            hek-homepage-banner "Hello, world!"
-            hek-homepage-links
-            `((("Scratch as Lisp playground" "i" .
-                ,(lambda () (interactive) (hek-homepage-cleanup #'lisp-interaction-mode)))
-               ("Scratch as text pad" "t" .
-                ,(lambda () (interactive) (hek-homepage-cleanup #'text-mode))))
-              (("Find file" "f" . find-file)
-               ("Open recent file" "r" . consult-recent-file)
-               ("Switch to project" "p" . project-switch-project))
-              (("Other buffer" "b" . consult-buffer)
-               ("Quit" "Q" . save-buffers-kill-terminal))))
-      (hek-homepage-setup)
-      (when (boundp meow-mode)
-        (meow-mode -1))
-      ;; (when (boundp solaire-mode)
-      ;;   (solaire-mode -1))
-      ))
-  (add-hook 'emacs-startup-hook #'+hek-homepage-init 80))
+;; Do not use dashboard now. Instead, put contents in scratch buffer at startup,
+;; and erase buffer after first key stroke. Make sure `inhibit-startup-screen'
+;; is non-nil so that the contents in scratch buffer is visible at startup.
+
+(defun +my-scratch-hello-clear ()
+  (remove-hook 'pre-command-hook #'+my-scratch-hello-clear)
+  (with-current-buffer "*scratch*"
+    (erase-buffer)
+    (lisp-interaction-mode)
+    (insert ";; " (buffer-name) " :: " mode-name ?\n ?\n ?\n)
+    (backward-char)))
+
+(defun +my-scratch-hello-setup ()
+  (remove-hook 'emacs-startup-hook #'+my-scratch-hello-setup)
+  (with-current-buffer "*scratch*"
+    (require 'hek-subr)
+    (add-hook 'pre-command-hook #'+my-scratch-hello-clear)
+    (insert ?\n)
+
+    ;; Emacs logo.
+    (insert-image (create-image (concat *my-emacs-conf-dir* "misc/gnu_emacs.png")))
+    (hek-center-line)
+    (insert ?\n)
+
+    ;; Emacs version.
+    (insert (propertize
+             (concat "GNU Emacs "
+                     emacs-version
+                     (when (daemonp) " (client)"))
+             'face '(variable-pitch
+                     (:slant italic :height 120))))
+    (hek-center-line)
+    (insert ?\n ?\n)
+
+    (goto-char (point-min))))
+
+(if (and command-line-args (cdr command-line-args)) ;; has extra arguments
+    (+my-scratch-hello-clear)
+  (setq initial-major-mode #'fundamental-mode)
+  (add-hook 'emacs-startup-hook #'+my-scratch-hello-setup))
 
 
 ;;;;; Directory view ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
