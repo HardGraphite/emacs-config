@@ -22,74 +22,46 @@
   "Light theme."
   :type 'symbol)
 
-(defcustom hek-yinyang-sunset
-  '(17 . 00)
-  "Time of sunset, after which dark theme will be used."
-  :type '(cons natnum natnum))
-
 (defcustom hek-yinyang-sunrise
-  '(07 . 00)
+  '(06 . 00)
   "Time of sunset, after which light theme will be used."
   :type '(cons natnum natnum))
 
-(defvar hek-yinyang-update-hook
+(defcustom hek-yinyang-sunset
+  '(18 . 00)
+  "Time of sunset, after which dark theme will be used."
+  :type '(cons natnum natnum))
+
+(defvar hek-yinyang-switch-hook
   nil
-  "Hooks that will be called after theme reloaded.")
+  "Hook run after theme switched.")
 
 (defvar hek-yinyang--state nil) ;; t for light, nil for dark.
-(defvar hek-yinyang--timer nil)
+(defvar hek-yinyang--timer nil) ;; (timer1 . timer2)
 
-(defun hek-yinyang--time-of-day (&optional hr-and-min-pair)
-  "Represent time of a day with an integer (min + hr * 60)."
-  (if hr-and-min-pair
-    (+ (cdr hr-and-min-pair)
-       (* (car hr-and-min-pair) 60))
-    (let ((time (decode-time)))
-      (+ (cadr time)
-         (* (caddr time) 60)))))
+(defun hek-yinyang-ensure-theme ()
+  "Make sure the current theme respects `hek-yinyang--state'."
+  (let ((expected-theme (if hek-yinyang--state
+                            hek-yinyang-light-theme hek-yinyang-dark-theme))
+        (another-theme  (if hek-yinyang--state
+                            hek-yinyang-dark-theme hek-yinyang-light-theme)))
+    (unless (custom-theme-p expected-theme)
+      (load-theme expected-theme t t))
+    (disable-theme another-theme) ;; `disable-theme' will check whether the theme is enabled
+    (unless (eq expected-theme (car custom-enabled-themes))
+      (enable-theme expected-theme)
+      (run-hooks 'hek-yinyang-switch-hook)
+      (message "Use theme `%s'" expected-theme))))
 
-(defun hek-yinyang--reload-theme ()
-  (let ((theme (if hek-yinyang--state
-                   hek-yinyang-light-theme hek-yinyang-dark-theme)))
-    (unless (memq theme custom-known-themes)
-      (load-theme theme t t))
-    (disable-theme hek-yinyang-light-theme)
-    (disable-theme hek-yinyang-dark-theme)
-    (enable-theme theme))
-  (run-hooks 'hek-yinyang-update-hook))
-
-(defun hek-yinyang-update (force-reload)
-  "Switch to the expected theme according to current time.
-  Return time (in sec) to next expected update."
-  (let ((current-time (hek-yinyang--time-of-day))
-        (sunset-time  (hek-yinyang--time-of-day hek-yinyang-sunset))
-        (sunrise-time (hek-yinyang--time-of-day hek-yinyang-sunrise)))
-    (unless (eq hek-yinyang--state
-                (and (< sunrise-time current-time)
-                     (<= current-time sunset-time)))
-      (setq hek-yinyang--state (not hek-yinyang--state))
-      (setq force-reload t))
-    (when force-reload
-      (hek-yinyang--reload-theme))
-    (let ((next-update
-            (if hek-yinyang--state
-              (- sunset-time current-time)
-              (- sunrise-time current-time))))
-      (if (> next-update 0)
-        next-update
-        (+ next-update (hek-yinyang--time-of-day '(24 . 00)))))))
+(defun hek-yinyang-switch-to (light/dark)
+  "Switch to light (`t') or dark (`nil') theme."
+  (setq hek-yinyang--state light/dark)
+  (hek-yinyang-ensure-theme))
 
 (defun hek-yinyang-toggle ()
   "Toggle between dark and light themes."
   (interactive)
-  (setq hek-yinyang--state (not hek-yinyang--state))
-  (hek-yinyang--reload-theme))
-
-(defun hek-yinyang--auto-update ()
-  (setq hek-yinyang--timer
-    (run-with-timer
-      (+ (hek-yinyang-update t) 5) nil
-      #'hek-yinyang--auto-update)))
+  (hek-yinyang-switch-to (not hek-yinyang--state)))
 
 (define-minor-mode hek-yinyang-mode
   "Auto dark/light theme switcher."
@@ -97,11 +69,29 @@
   :group  'hek-yinyang
   (if hek-yinyang-mode
     (unless hek-yinyang--timer
-      (hek-yinyang--auto-update))
+      (let ((current-time (let ((time (decode-time)))
+                            (+ (decoded-time-second time)
+                               (* 60 (decoded-time-minute time))
+                               (* 60 60 (decoded-time-hour time)))))
+            (sunrise-time (+ (* 60 (cdr hek-yinyang-sunrise))
+                             (* 60 60 (car hek-yinyang-sunrise))))
+            (sunset-time  (+ (* 60 (cdr hek-yinyang-sunset))
+                             (* 60 60 (car hek-yinyang-sunset)))))
+        (let ((sunrise-time-dur (- sunrise-time current-time))
+              (sunset-time-dur  (- sunset-time  current-time))
+              (day-time-dur     (* 24 60 60)))
+          (when (< sunrise-time-dur 0)
+            (setq sunrise-time-dur (+ sunrise-time-dur day-time-dur)))
+          (when (< sunset-time-dur 0)
+            (setq sunset-time-dur (+ sunset-time-dur day-time-dur)))
+          (setq hek-yinyang--timer
+                (cons (run-at-time sunrise-time-dur day-time-dur #'hek-yinyang-switch-to t)
+                      (run-at-time sunset-time-dur  day-time-dur #'hek-yinyang-switch-to nil)))))
+      (hek-yinyang-ensure-theme))
     (when hek-yinyang--timer
-      (cancel-timer hek-yinyang--timer)
+      (cancel-timer (car hek-yinyang--timer))
+      (cancel-timer (cdr hek-yinyang--timer))
       (setq hek-yinyang--timer nil))))
 
 (provide 'hek-yinyang)
-
 ;;; hek-yinyang.el ends here
