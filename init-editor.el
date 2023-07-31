@@ -27,12 +27,9 @@
 ;; (setq display-line-numbers-type 'relative)
 ;; (setq-default display-line-numbers-width 4)
 (setq display-line-numbers-width-start 500)
-(set-face-attribute 'line-number nil
-  :family *my-mono-font-family* :height (- *my-mono-font-height* 5)
-  :slant 'italic)
-(set-face-attribute 'line-number-current-line nil
-  :family *my-mono-font-family* :height (- *my-mono-font-height* 5)
-  :slant 'normal :foreground "#778871")
+(custom-set-faces
+ `(line-number ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 5) :slant italic)))
+ `(line-number-current-line ((t :inherit line-number :slant normal :foreground "olive drab"))))
 
 ;;; Highlight current line.
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -74,9 +71,10 @@
 (setq show-paren-highlight-openparen t
       show-paren-when-point-inside-paren t
       show-paren-when-point-in-periphery t)
-(set-face-attribute 'show-paren-match nil
-  :foreground 'unspecified :background 'unspecified
-  :weight 'ultra-bold :underline (face-attribute 'show-paren-match :foreground))
+(custom-set-faces
+ '(show-paren-match
+   ((t :foreground unspecified :background unspecified
+       :weight ultra-bold :underline t))))
 
 ;;; rainbow-delimiters :: highlights delimiters such as parentheses according to the depth
 ;;; https://github.com/Fanael/rainbow-delimiters
@@ -224,10 +222,9 @@
         tab-bar-format '(tab-bar-format-tabs tab-bar-separator)
         tab-bar-separator "  "
         tab-bar-new-tab-choice "*scratch*")
-  (set-face-attribute 'tab-bar nil
-     :family *my-text-font-family* :height (- *my-text-font-height* 20))
-  (set-face-attribute 'tab-bar-tab-inactive nil
-     :slant 'italic))
+  (custom-set-faces
+   `(tab-bar ((t :family ,*my-text-font-family* :height ,(- *my-text-font-height* 20))))
+   '(tab-bar-tab-inactive ((t :slant italic)))))
 (add-hook 'tab-bar-mode-hook #'+tab-bar-setup)
 
 ;;; Xref search

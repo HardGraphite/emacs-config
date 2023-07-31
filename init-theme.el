@@ -3,8 +3,8 @@
 ;;;;; Fonts ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Global default font.
-(set-face-attribute 'default nil
-  :family *my-code-font-family* :height *my-code-font-height*)
+(custom-set-faces
+ `(default ((t :family ,*my-code-font-family* :height ,*my-code-font-height*))))
 
 ;;; Minibuffer default font.
 (defconst +my-minibuffer-font-remapping-alist
@@ -14,14 +14,12 @@
        +my-minibuffer-font-remapping-alist))
 
 ;;; Mode line defualt font.
-(defun +my-modeline-font-setup ()
-  (set-face-attribute 'mode-line nil;; TODO: mode-line-active instead of mode-line for Emacs 29+
-    :family *my-mono-font-family* :height *my-mono-font-height*)
-  (set-face-attribute 'mode-line-inactive nil
-    :family *my-mono-font-family* :height *my-mono-font-height*))
+(custom-set-faces
+  ;; TODO: mode-line-active instead of mode-line for Emacs 29+
+  `(mode-line ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*)))
+  `(mode-line-inactive ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
 
 (add-hook 'minibuffer-setup-hook #'+my-minibuffer-font-setup)
-;; (+my-modeline-font-setup) ;; Call after Emacs theme is loaded.
 
 ;;; Ligatures.
 (hek-usepkg hek-ligature
@@ -71,7 +69,6 @@
         hek-yinyang-sunrise     '(08 . 00)
         hek-yinyang-sunset      '(17 . 00))
   :config
-  (add-hook 'hek-yinyang-switch-hook #'+my-modeline-font-setup)
   (hek-yinyang-mode t))
 
 ;;; Solaire mode :: different background darkness between special / file buffers

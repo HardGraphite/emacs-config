@@ -64,11 +64,6 @@
         corfu-quit-no-match 'separator
         corfu-preselect 'valid
         corfu-echo-documentation t)
-  ;; (set-face-attribute 'corfu-default nil
-  ;;   :family *my-term-font-family* :height (- *my-term-font-height* 5))
-  (set-face-attribute 'corfu-current nil
-    ;; :family *my-term-font-family* :height (- *my-term-font-height* 5)
-    :background "#1a3826")
   (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 2)
   (require 'hek-corfu-nerd-icons)
   (add-to-list 'corfu-margin-formatters

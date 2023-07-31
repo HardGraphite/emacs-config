@@ -375,19 +375,19 @@
       (keypad . "K")
       (insert . "I")
       (beacon . "B")))
-  (dolist (pair '((meow-normal-indicator . "#9BA3EB")
-                  (meow-insert-indicator . "#7AA874")
-                  (meow-motion-indicator . "#A9907E")
-                  (meow-keypad-indicator . "#D6D5A8")
-                  (meow-beacon-indicator . "#C060A1")))
-    (set-face-attribute (car pair) nil
-       :weight 'bold :foreground (cdr pair) :inverse-video t))
-  (dolist (pair `((meow-normal-cursor . "#9BA3EB") ;; (face-attribute 'cursor :background)
-                  (meow-insert-cursor . "#7AA874")
-                  (meow-motion-cursor . "#CC7149")
-                  (meow-beacon-cursor . "#C060A1")))
-    (set-face-attribute (car pair) nil :inherit 'unspecified) ;; Unset inherit attr first.
-    (set-face-background (car pair) (cdr pair)))
+  (custom-set-faces
+   ;; indicators
+   '(meow-normal-indicator ((t :weight bold :foreground "#9BA3EB" :inverse-video t)))
+   '(meow-insert-indicator ((t :weight bold :foreground "#7AA874" :inverse-video t)))
+   '(meow-motion-indicator ((t :weight bold :foreground "#A9907E" :inverse-video t)))
+   '(meow-keypad-indicator ((t :weight bold :foreground "#D6D5A8" :inverse-video t)))
+   '(meow-beacon-indicator ((t :weight bold :foreground "#C060A1" :inverse-video t)))
+   ;; cursors
+   `(meow-normal-cursor ((t :background ,(face-attribute 'cursor :background))))
+   '(meow-insert-cursor ((t :background "#7AA874")))
+   '(meow-motion-cursor ((t :background "#CC7149")))
+   '(meow-beacon-cursor ((t :background "#C060A1")))
+   )
   (setq meow-cursor-type-insert '(bar . 3)
         meow-cursor-type-region-cursor '(bar . 1)
         meow-cursor-type-motion 'hollow)

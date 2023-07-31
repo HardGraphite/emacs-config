@@ -185,7 +185,9 @@ between 0 and 1)."
    (bookmark-face :background (hek-one-blend highlight bg 0.1) :extend t)
    ;;;; corfu
    (corfu-default :inherit 'tooltip)
-   (corfu-current :background bg :foreground fg)
+   (corfu-current
+    (&light :foreground fg :background (hek-one-lighten (hek-one-blend green blue 0.6) 0.65))
+    (&dark  :foreground fg :background (hek-one-darken (hek-one-blend green blue 0.3) 0.72)))
     ;;;; circe
    (circe-fool :foreground doc-comments)
    (circe-highlight-nick-face :weight 'bold :foreground constants)
