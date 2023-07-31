@@ -151,6 +151,11 @@ t (use a new buffer) or a buffer object or name (use this buffer)."
   (unless (eval (car args) t)
     (cons nil '(disable))))
 
+(defun hek-usepkg--when-ensure (_pkg-name args _flags)
+  "Code after installing the package."
+  (when hek-usepkg-ensure
+    (cons `(progn ,@args) nil)))
+
 (defun hek-usepkg--from (pkg-name args flags)
   "Specify package source. Syntax: ':from SRC [ARGS...]'.
 Available sources are listed in `hek-usepkg-sources'."
@@ -254,6 +259,7 @@ will be evaluated after package loaded."
         (:preface . hek-usepkg--preface)
         (:when . hek-usepkg--when)
         (:from . hek-usepkg--from)
+        (:when-ensure . hek-usepkg--when-ensure)
         (:defer . hek-usepkg--defer)
         (:after . hek-usepkg--after)
         (:init . hek-usepkg--init)
