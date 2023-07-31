@@ -4,7 +4,7 @@
 
 ;;; Eglot, https://github.com/joaotavora/eglot
 (hek-usepkg eglot
-  :from package ;; FIXME: builtin after Emacs 29
+  :from builtin
   :init
   (setq eglot-autoshutdown t
         eglot-events-buffer-size 0)
