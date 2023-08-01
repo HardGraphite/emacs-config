@@ -155,9 +155,9 @@
       create-lockfiles   nil)
 
 ;;; File auto revert.
-(global-auto-revert-mode 1)
 (setq auto-revert-verbose t
-      auto-revert-use-notify t)
+      auto-revert-interval 30)
+(global-auto-revert-mode 1)
 
 ;;; Recent files.
 (setq recentf-auto-cleanup 'never)
