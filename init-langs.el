@@ -11,7 +11,7 @@
         eglot-events-buffer-size 0)
   ;; LSP servers
   (setq eglot-server-programs
-        '(((c-mode c++-base c-ts-mode c++-ts-mode) "clangd")
+        '(((c-mode c++-mode c-ts-mode c++-ts-mode) "clangd")
           ((cmake-mode cmake-ts-mode) "cmake-language-server")
           (python-base-mode "pyright-langserver" "--stdio")
           ((tex-mode bibtex-mode) "texlab")))
