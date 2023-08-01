@@ -55,12 +55,12 @@ returns the code which will be used by the macro. The handler can be nil.")
   "Declare package and the configurations.
 
 PKG-NAME is the name (a symbol) of the package to use. OPTIONS is a list that
-contains option names (keywords) and the values (others) like ':opt val1 val2'.
+contains option names (keywords) and the values (others) like `:opt val1 val2'.
 Available keywords are listed in `hek-usepkg-keywords'.
 
-If `hek-usepkg-ensure' is non-nil, flag 'ensure' will be used.
-If flag 'no-require' never appears, package will be required at the end.
-If flag 'disable' is given, the macro will generate nothing."
+If `hek-usepkg-ensure' is non-nil, flag `ensure' will be used.
+If flag `no-require' never appears, package will be required at the end.
+If flag `disable' is given, the macro will generate nothing."
   (if (not options)
       `(require ',pkg-name)
     (let* ((flags (if hek-usepkg-ensure (list 'ensure) nil))
@@ -136,7 +136,7 @@ t (use a new buffer) or a buffer object or name (use this buffer)."
 ;; ===== Keywords ======
 
 (defun hek-usepkg--flag (_pkg-name args _flags)
-  "Use flags. Syntax: ':flags FLAG1 FLAG2 ...'."
+  "Use flags. Syntax: `:flags FLAG1 FLAG2 ...'."
   (cons nil args))
 
 (defun hek-usepkg--preface (_pkg-name args _flags)
@@ -144,7 +144,7 @@ t (use a new buffer) or a buffer object or name (use this buffer)."
   (cons (cons 'progn args) nil))
 
 (defun hek-usepkg--when (pkg-name args _flags)
-  "Conditionally enable the package. Syntax: ':when SPEC'."
+  "Conditionally enable the package. Syntax: `:when SPEC'."
   (when hek-usepkg-debug
     (unless (and (consp args) (null (cdr args)))
       (hek-usepkg--error pkg-name :when "bad syntax" args)))
@@ -157,7 +157,7 @@ t (use a new buffer) or a buffer object or name (use this buffer)."
     (cons `(progn ,@args) nil)))
 
 (defun hek-usepkg--from (pkg-name args flags)
-  "Specify package source. Syntax: ':from SRC [ARGS...]'.
+  "Specify package source. Syntax: `:from SRC [ARGS...]'.
 Available sources are listed in `hek-usepkg-sources'."
   (when hek-usepkg-debug
     (unless (and (consp args) (symbolp (car args)))
@@ -171,9 +171,9 @@ Available sources are listed in `hek-usepkg-sources'."
       (hek-usepkg--error pkg-name :from "unrecognized package source" src-name))))
 
 (defun hek-usepkg--defer (pkg-name args _flags)
-  "Defer package loading. Syntax: ':defer t' or ':defer TIME'.
+  "Defer package loading. Syntax: `:defer t' or `:defer TIME'.
 Argument t means do not load package here. This is unnecessary when some other
-keywords like ':after', ':hook', ':bind', etc. are specified.
+keywords like `:after', `:hook', `:bind', etc. are specified.
 Argument TIME is a non negative integer which force loading the package after
 TIME seconds of idle time."
   (when hek-usepkg-debug
@@ -203,7 +203,7 @@ TIME seconds of idle time."
   (cons (cons 'progn args) nil))
 
 (defun hek-usepkg--hook (_pkg-name args _flags)
-  "Add hooks. Syntax: ':hook (HOOK . FUNC)' or ':hook ((HOOK1 HOOK2 ...) . FUNC)'."
+  "Add hooks. Syntax: `:hook (HOOK . FUNC)' or `:hook ((HOOK1 HOOK2 ...) . FUNC)'."
   (let ((add-hooks))
     (dolist (x args)
       (let ((hook (car x))
@@ -215,7 +215,7 @@ TIME seconds of idle time."
     (cons (cons 'progn add-hooks) '(no-require))))
 
 (defun hek-usepkg--bind (_pkg-name args _flags)
-  "Add key bindings. Syntax: ':bind ([MAP] (KEY1 . CMD1) (KEY2 . CMD2) ...)'."
+  "Add key bindings. Syntax: `:bind ([MAP] (KEY1 . CMD1) (KEY2 . CMD2) ...)'."
   (let ((def-keys))
     (dolist (x args)
       (let ((map))
@@ -245,7 +245,7 @@ the package is loaded."
 
 (defun hek-usepkg--config (pkg-name args flags)
   "Code after package loaded.
-If flag 'no-require' is not given, package will be loaded; otherwise, the code
+If flag `no-require' is not given, package will be loaded; otherwise, the code
 will be evaluated after package loaded."
   (if (memq 'no-require flags)
       (cons `(eval-after-load ',pkg-name '(progn ,@args))
