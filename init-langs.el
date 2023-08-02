@@ -169,5 +169,5 @@
         )
   ;; (setq verilog-linter "verilator -–lint-only -Wall")
   (require 'hek-flymake-verilator)
-  (hek-flymake-verilator-setup)
-  (flymake-mode 1))
+  (when (ignore-errors (hek-flymake-verilator-setup) t)
+    (flymake-mode 1)))

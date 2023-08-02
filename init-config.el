@@ -11,12 +11,15 @@
 
 (defconst *my-code-font-family*  "JetBrains Mono")  ;; Mono font for coding.
 (defconst *my-code-font-height*  150)               ;; A comfortable size.
-(defconst *my-mono-font-family*  "Source Code Pro") ;; Mono font for UI.
-(defconst *my-mono-font-height*  140)               ;; Smaller than code font.
+(defconst *my-mono-font-family*  "Iosevka Fixed Slab") ;; Mono font for UI.
+(defconst *my-mono-font-height*  145)               ;; Smaller than code font.
 (defconst *my-term-font-family*  "Ubuntu Mono")     ;; Mono font for terminal.
 (defconst *my-term-font-height*  170)               ;; Similar to code font.
 (defconst *my-text-font-family*  "sans")            ;; Sans font for other text.
 (defconst *my-text-font-height*  160)               ;; As you like.
 (defconst *my-nerd-font-family*  "Symbols Nerd Font")
+
+(defconst *my-fontset-fonts*
+  '((han . (font-spec :family "Source Han Sans CN"))))
 
 (defconst *my-shell* "/usr/bin/fish")
