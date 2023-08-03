@@ -96,7 +96,7 @@ between 0 and 1)."
    (mode-line-buffer-id :weight 'bold)
    (header-line :inherit 'mode-line)
    (header-line-highlight :inherit 'mode-line-highlight)
-   ;;;; tab-line/tab-bar (Emacs 27+)
+   ;;;; tab-line (Emacs 27+)
    (tab-line :background bg-alt :foreground bg-alt)
    (tab-line-tab :background bg :foreground fg)
    (tab-line-tab-inactive :inherit 'tab-line-tab :background bg-alt :foreground fg-alt)
@@ -105,9 +105,10 @@ between 0 and 1)."
    ;; (tab-line-special )
    (tab-line-highlight :inherit 'tab-line-tab)
    (tab-line-close-highlight :foreground highlight)
-   (tab-bar :inherit 'tab-line)
-   (tab-bar-tab :inherit 'tab-line-tab)
-   (tab-bar-tab-inactive :inherit 'tab-line-tab-inactive)
+   ;;;; tab-bar (Emacs 27+)
+   (tab-bar :background bg-alt :foreground bg-alt)
+   (tab-bar-tab :background bg :foreground fg)
+   (tab-bar-tab-inactive :inherit 'tab-bar-tab :background bg-alt :foreground fg-alt)
    ;;;; Line numbers
    ;; 1. Line number faces must explicitly disable its text style attributes
    ;;    because nearby faces may "bleed" into the line numbers otherwise.

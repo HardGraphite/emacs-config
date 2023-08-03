@@ -221,16 +221,18 @@
   (("C-x o" . ace-window)))
 
 ;;; Tab bar (builtin)
-(defun +tab-bar-setup ()
+(hek-usepkg tab-bar
+  :from builtin
+  :config
   (setq tab-bar-close-button-show nil
         tab-bar-new-button-show t
+        tab-bar-auto-width nil
         tab-bar-format '(tab-bar-format-tabs tab-bar-separator)
         tab-bar-separator "  "
         tab-bar-new-tab-choice "*scratch*")
   (custom-set-faces
-   `(tab-bar ((t :family ,*my-text-font-family* :height ,(- *my-text-font-height* 20))))
-   '(tab-bar-tab-inactive ((t :slant italic)))))
-(add-hook 'tab-bar-mode-hook #'+tab-bar-setup)
+   `(tab-bar-tab ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height* :overline t)))
+   '(tab-bar-tab-inactive ((t :slant italic :overline nil)))))
 
 ;;; Xref search
 (setq xref-search-program 'ripgrep)
