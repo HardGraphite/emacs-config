@@ -38,7 +38,9 @@
     (setq command-line-args (delete package-install-switch command-line-args)) ;; Remove the switch.
     (setq hek-usepkg-ensure t
           hek-usepkg-debug t)
-    (setq native-comp-async-query-on-exit t)
+    (setq package-native-compile t)
+    (setq native-comp-async-query-on-exit t
+          native-comp-verbose 2)
     (when package-quickstart
       (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
     (package-refresh-contents)))

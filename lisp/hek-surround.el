@@ -47,7 +47,7 @@ from `last-command-event' and `hek-surround-pairs'."
   "Remove surrounding at the beginning and end of REGION. Both REGION and PAIR
 are cons. REGION is the beginning and end points; PAIR is the number of
 characters to delete at the beginning and end. When called interactively,
-REGION is the selected region; PAIR is '(1 . 1)' if the first and last
+REGION is the selected region; PAIR is `(1 . 1)' if the first and last
 characters are in `hek-surround-pairs'."
   (interactive
    (list (if (use-region-p)

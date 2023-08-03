@@ -2,60 +2,51 @@
 
 ;;;;; LSP (language server protocol) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Eglot, https://github.com/joaotavora/eglot
+;;; Eglot
 (hek-usepkg eglot
-  :from package ;; FIXME: builtin after Emacs 29
+  :from builtin
   :init
+  ;; eglot options
   (setq eglot-autoshutdown t
         eglot-events-buffer-size 0)
-  :config
+  ;; LSP servers
   (setq eglot-server-programs
-        '(((c-mode c++-mode) "clangd")
-          (cmake-mode "cmake-language-server")
-          (lua-mode "lua-language-server")
-          (python-mode "pyright-langserver" "--stdio")
+        '(((c-mode c++-mode c-ts-mode c++-ts-mode) "clangd")
+          ((cmake-mode cmake-ts-mode) "cmake-language-server")
+          (python-base-mode "pyright-langserver" "--stdio")
           ((tex-mode bibtex-mode) "texlab")))
-  :hook
-  ((c-mode-hook c++-mode-hook
-    cmake-mode-hook
-    lua-mode-hook
-    python-mode-hook
-    tex-mode-hook bibtex-mode-hook)
-   . eglot-ensure))
+  ;; mode hooks
+  (dolist (config eglot-server-programs)
+    (let ((mode-list (car config)))
+      (unless (listp mode-list)
+        (setq mode-list (list mode-list)))
+      (dolist (mode mode-list)
+        (add-hook (intern (concat (symbol-name mode) "-hook"))
+                  #'eglot-ensure))))
+  :hook ;; DO NOT delete this line.
+  )
 
 ;;;;; Tree-sitter ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; ELisp Tree-sitter, https://github.com/emacs-tree-sitter/elisp-tree-sitter
-(hek-usepkg tree-sitter
-  :from package
-  :hook
-  ((sh-mode-hook
-    ;; c-mode-hook c++-mode-hook ;; <-- clangd provides highlight info
-    ;; csharp-mode-hook
-    css-mode-hook
-    ;; go-mode-hook
-    ;; haskell-mode-hook
-    html-mode-hook
-    java-mode-hook
-    javascript-mode-hook
-    ;; json-mode-hook
-    ;; julia-mode-hook
-    ;; lua-mode-hook
-    ;; php-mode-hook
-    python-mode-hook
-    rust-mode-hook
-    ;; toml-mode-hook
-    ;; yaml-mode-hook
-    verilog-mode-hook
-    ;;markdown-mode-hook
-    )
-   . tree-sitter-mode)
-  (tree-sitter-after-on . tree-sitter-hl-mode))
-(hek-usepkg tree-sitter-langs
-  :from package
-  :after tree-sitter)
-;; See `https://github.com/nvim-treesitter/nvim-treesitter/tree/master/queries'
-;; for query definitions from Nvim's tree sitter plugin.
+;;; Tree-sitter
+(hek-usepkg treesit
+  :from builtin
+  :when-ensure
+  (setq treesit-language-source-alist
+        '(;; (bash "https://github.com/tree-sitter/tree-sitter-bash")
+          ;; (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (verilog "https://github.com/tree-sitter/tree-sitter-verilog")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+  (mapc #'treesit-install-language-grammar
+        (mapcar #'car treesit-language-source-alist))
+  :init
+  (setq major-mode-remap-alist
+        '((js-json-mode . json-ts-mode)
+          (python-mode . python-ts-mode)))
+  )
 
 ;;;;; Specific languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -1,5 +1,7 @@
 ;; --- Editing replated functions -*- lexical-binding: t; no-byte-compile: t -*-
 
+(require 'hek-subr)
+
 ;;;;; Mode line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (hek-usepkg hek-modeline
@@ -16,8 +18,11 @@
       auto-window-vscroll nil
       mouse-wheel-scroll-amount '(2 ((shift) . hscroll))
       mouse-wheel-scroll-amount-horizontal 5)
-(pixel-scroll-precision-mode 1)
 
+(pixel-scroll-precision-mode 1)
+(setq pixel-scroll-precision-interpolate-page t)
+(defalias 'scroll-up-command #'hek-scroll-down)
+(defalias 'scroll-down-command #'hek-scroll-up)
 
 ;;;;; Line & column ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -92,7 +97,7 @@
                                     (newline-mark ?\n [?↵ ?\n])
                                     (space-mark ?\  [?·] [?.])))
 (custom-set-faces
- '(trailing-whitespace ((t (:strike-through "#ff6c6b" :background nil)))))
+ '(trailing-whitespace ((t (:strike-through "#ff6c6b" :background unspecified)))))
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (add-hook 'text-mode-hook #'whitespace-mode)
 
