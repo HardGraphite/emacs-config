@@ -44,6 +44,24 @@
   (add-hook 'emacs-startup-hook #'+my-scratch-hello-setup))
 
 
+;;;;; Input methods ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hek-usepkg hek-exim
+  :from local
+  :init
+  (autoload 'hek-exim-toggle "hek-exim")
+  :config
+  ;; Fcitx 5, D-Bus
+  (require 'dbus)
+  (setq hek-exim-sources '((nil . 1) (t . 2)) ;; off and on
+        hek-exim-get-source-function #'hek-exim-fcitx5-dbus-get-state
+        hek-exim-set-source-function #'hek-exim-fcitx5-dbus-set-state)
+  (when (featurep 'meow)
+    (add-hook 'meow-insert-exit-hook (lambda () (hek-exim-switch nil))))
+  :bind
+  (("<f9>" . hek-exim-toggle)))
+
+
 ;;;;; Directory view ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; dirvish :: an improved version of `dired'
