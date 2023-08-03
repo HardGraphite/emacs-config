@@ -72,7 +72,7 @@
 
  ;;;;; ===== faces =====
  ( ;;;; Base theme face overrides
-  (font-lock-comment-face &override :background (if hek-one-brighter-comments base0))
+  (font-lock-comment-face &override :background (if hek-one-brighter-comments base0 'unspecified))
   (font-lock-doc-face &override :slant 'italic)
   (line-number &override :foreground (hek-one-lighten base4 0.15))
   (line-number-current-line &override :foreground base8)
@@ -124,8 +124,8 @@
    ;;;; wgrep <built-in>
   (wgrep-face :background base1)
    ;;;; whitespace
-  (whitespace-tab &override :background (unless (default-value 'indent-tabs-mode) base0))
-  (whitespace-indentation &override :background (if (default-value 'indent-tabs-mode) base0)))
+  (whitespace-tab &override :background (if (default-value 'indent-tabs-mode) 'unspecified base0))
+  (whitespace-indentation &override :background (if (default-value 'indent-tabs-mode) base0 'unspecified)))
 
  ;;;;; ===== vars =====
  ()

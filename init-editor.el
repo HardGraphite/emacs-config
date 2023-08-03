@@ -97,7 +97,7 @@
                                     (newline-mark ?\n [?↵ ?\n])
                                     (space-mark ?\  [?·] [?.])))
 (custom-set-faces
- '(trailing-whitespace ((t (:strike-through "#ff6c6b" :background nil)))))
+ '(trailing-whitespace ((t (:strike-through "#ff6c6b" :background unspecified)))))
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (add-hook 'text-mode-hook #'whitespace-mode)
 

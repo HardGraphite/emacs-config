@@ -74,7 +74,7 @@
  (;;;; Base theme face overrides
   (line-number &override :foreground base4)
   (line-number-current-line &override :foreground fg)
-  (font-lock-comment-face &override :background (if hek-one-brighter-comments (hek-one-lighten bg 0.05)))
+  (font-lock-comment-face &override :background (if hek-one-brighter-comments (hek-one-lighten bg 0.05) 'unspecified))
   (mode-line :background modeline-bg :foreground modeline-fg)
   (mode-line-inactive :background modeline-bg-inactive :foreground modeline-fg-alt)
   (mode-line-emphasis :foreground (if hek-one-brighter-modeline base8 highlight))
