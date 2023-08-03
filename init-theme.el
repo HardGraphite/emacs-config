@@ -15,8 +15,7 @@
 
 ;;; Mode line defualt font.
 (custom-set-faces
-  ;; TODO: mode-line-active instead of mode-line for Emacs 29+
-  `(mode-line ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*)))
+  `(mode-line-active ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*)))
   `(mode-line-inactive ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
 
 (add-hook 'minibuffer-setup-hook #'+my-minibuffer-font-setup)
