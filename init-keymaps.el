@@ -186,8 +186,8 @@
 ;;;;; Modify pre-defined keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (let ((map global-map)
-      (defs `((,(kbd "C-M-v") . scroll-other-window-down)
-              (,(kbd "C-M-S-v") . scroll-other-window)
+      (defs `((,(kbd "C-M-v") . scroll-other-window)
+              (,(kbd "C-M-S-v") . scroll-other-window-down)
               ("\C-xm" . nil)
               ("\C-x4m" . nil)
               ("\C-x5m" . nil))))

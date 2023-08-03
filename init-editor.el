@@ -1,5 +1,7 @@
 ;; --- Editing replated functions -*- lexical-binding: t; no-byte-compile: t -*-
 
+(require 'hek-subr)
+
 ;;;;; Mode line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (hek-usepkg hek-modeline
@@ -19,8 +21,8 @@
 
 (pixel-scroll-precision-mode 1)
 (setq pixel-scroll-precision-interpolate-page t)
-(defalias 'scroll-up-command 'pixel-scroll-interpolate-down)
-(defalias 'scroll-down-command 'pixel-scroll-interpolate-up)
+(defalias 'scroll-up-command #'hek-scroll-down)
+(defalias 'scroll-down-command #'hek-scroll-up)
 
 ;;;;; Line & column ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
