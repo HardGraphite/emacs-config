@@ -52,6 +52,7 @@
             (push (cons lig-mode cft) hek-ligature-cft--cache)
             cft))))))
 
+;;;###autoload
 (define-minor-mode hek-ligature-mode
   "Font ligature."
   :global  nil

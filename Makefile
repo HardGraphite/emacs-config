@@ -1,29 +1,33 @@
-GREP_FLAGS = --with-filename --line-number --only-matching --color=auto
+EMACS ?= emacs
 
-INIT_XXX_FILES = $(wildcard init-*.el)
+HEK_XXX_DIR        = lisp
+HEK_XXX_FILES      = $(wildcard ${HEK_XXX_DIR}/hek-*.el)
+HEK_LOADDEFS_FILE  = ${HEK_XXX_DIR}/hek-loaddefs.el
+HEK_XXX_FILES     := $(filter-out ${HEK_LOADDEFS_FILE},${HEK_XXX_FILES})
 
 .PHONY: help
 help:
 	@echo 'make version    --- Print Emacs version info'
 	@echo 'make debug      --- Start Emacs with `--debug-init` and `debug-on-error=t`'
+	@echo 'make loaddefs   --- Generate autoload file for lisp/*.el files'
 	@echo 'make compile    --- byte compile lisp/*.el and themes/*.el files'
-	@echo 'make clean      --- delete *.elc and *.eln files'
-	@echo 'make get-pkgs   --- Install packages'
-	@echo 'make ls-inits   --- List init-*.el files'
-	@echo 'make ls-heads   --- List heading titles in configurations'
-	@echo 'make ls-pkgs    --- List package names mentioned in `use-package`'
+	@echo 'make clean      --- delete generated files'
+	@echo 'make packages   --- Install packages'
 
 .PHONY: version
 version:
-	@emacs --version | head -n 2
+	@"${EMACS}" --version | head -n 2
 
 .PHONY: debug
 debug:
-	@emacs --debug-init --eval '(setq debug-on-error t)'
+	@"${EMACS}" --debug-init --eval '(setq debug-on-error t)'
+
+.PNONY: loaddefs
+loaddefs: ${HEK_LOADDEFS_FILE}
 
 .PNONY: compile
 compile:
-	@emacs --batch \
+	@"${EMACS}" --batch \
 		--directory 'lisp' \
 		--load 'init-compat.el' \
 		--load 'init-config.el' \
@@ -34,24 +38,17 @@ compile:
 
 .PHONY: clean
 clean:
-	@rm lisp/*.elc themes/*.elc
+	@rm lisp/*.elc themes/*.elc "${HEK_LOADDEFS_FILE}"
 
-.PHONY: get-pkgs
-get-pkgs:
-	@emacs --install-packages --debug-init --eval '(switch-to-buffer "*Messages*")'
+.PHONY: packages
+packages:
+	@"${EMACS}" \
+		--install-packages \
+		--debug-init \
+		--eval '(switch-to-buffer "*Messages*")'
 
-.PHONY: ls-inits
-ls-inits:
-	@for name in $(patsubst init-%.el,%,${INIT_XXX_FILES}); do \
-		echo $$name; \
-	done;
-
-.PHONY: ls-heads
-ls-heads:
-	@grep ${GREP_FLAGS} --perl-regexp \
-		';{4,6}\s+\K([A-Za-z0-9 ]+)\s+;+' ${INIT_XXX_FILES}
-
-.PHONY: ls-pkgs
-ls-pkgs:
-	@grep ${GREP_FLAGS} --perl-regexp \
-		'\(hek-usepkg\s+\K([a-zA-Z0-9\-_]+)' ${INIT_XXX_FILES}
+${HEK_LOADDEFS_FILE}: ${HEK_XXX_FILES}
+	@"${EMACS}" --batch \
+		--chdir "${HEK_XXX_DIR}" \
+		--funcall loaddefs-generate-batch \
+		"$(notdir $@)" .

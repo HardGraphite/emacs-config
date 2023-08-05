@@ -53,7 +53,6 @@
            (?. . ".\\.+")
            (?# . ".\\(?:#+}\\|[([{]\\)")
            (?_ . "._+"))))
-  (autoload 'hek-ligature-mode "hek-ligature")
   :hook
   (prog-mode-hook . hek-ligature-mode))
 

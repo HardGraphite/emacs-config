@@ -1,16 +1,24 @@
 ;; -*- lexical-binding: t; no-byte-compile: t -*-
 
-;; Add package path.
-(add-to-list 'load-path
-  (concat (file-name-directory load-file-name) "lisp"))
-
-;; Load initialization scripts.
-(let ((init-prefix (concat (file-name-directory load-file-name) "init-"))
-      (init-list '("config" "compat" "system" "theme"
-                   "complete" "editor" "langs" "tools" "keymaps"))
+(let ((init-dir (file-name-directory load-file-name))
       (file-name-handler-alist nil))
-  (dolist (name init-list)
-    (load (concat init-prefix name) nil t nil t))
-  (load custom-file t t))
+
+  ;; Add package path and define auto-loads.
+  (let* ((lisp-dir (concat init-dir "lisp"))
+         (lisp-loaddefs-file (expand-file-name "hek-loaddefs" lisp-dir)))
+    (add-to-list 'load-path lisp-dir)
+    (load lisp-loaddefs-file nil t nil t))
+
+  ;; Load initialization scripts.
+  (let ((init-prefix (concat init-dir "init-"))
+        (init-list '("config" "compat" "system" "theme"
+                     "complete" "editor" "langs" "tools" "keymaps")))
+    (dolist (name init-list)
+      (load (concat init-prefix name) nil t nil t)))
+
+  ;; Load custom file.
+  (load custom-file t t)
+
+  )
 
 ;; init.el ends here.

@@ -177,8 +177,6 @@
      ("s" . hek-surround-region)
      ("x" . hek-unsurround-region)
      ("d" . hek-unsurround-region))))
-(autoload 'hek-surround-region "hek-surround")
-(autoload 'hek-unsurround-region "hek-surround")
 
 (fmakunbound #'+my-define-keys)
 

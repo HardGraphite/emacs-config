@@ -69,6 +69,7 @@ It shall take an argument SOURCE and switch to the source. Consider function
   (setq hek-exim--buffer-source source
         hek-exim--current-source source))
 
+;;;###autoload
 (defun hek-exim-toggle ()
   "Toggle input method."
   (interactive)
@@ -106,6 +107,7 @@ It shall take an argument SOURCE and switch to the source. Consider function
     ;; Rare if use modal editing. Probably switching window/buffer with a mouse?
     (hek-exim-switch hek-exim--buffer-source)))
 
+;;;###autoload
 (define-minor-mode hek-exim-auto-mode
   "Global minor mode that automatically switch input methods."
   :global t

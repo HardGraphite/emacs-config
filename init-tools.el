@@ -48,8 +48,6 @@
 
 (hek-usepkg hek-exim
   :from local
-  :init
-  (autoload 'hek-exim-toggle "hek-exim")
   :config
   ;; Fcitx 5, D-Bus
   (require 'dbus)

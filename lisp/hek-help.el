@@ -10,6 +10,7 @@
                  (remove nil items)
                  (or separator (propertize " | " 'face 'shadow)))))
 
+;;;###autoload
 (defun hek-describe-buffer-file ()
   (interactive)
   (hek-help-echo
