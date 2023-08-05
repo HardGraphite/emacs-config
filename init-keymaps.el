@@ -12,14 +12,19 @@
       (cdr pair)))
   map)
 
+(defvar +my-app-prefix-map
+  (+my-define-keys
+   '(("d" . dirvish) ;; dired
+     ("g" . magit)
+     ("t" . vterm) ;; shell
+     )))
+
 (defvar +my-goto-prefix-map
   (+my-define-keys
    '(("d" . xref-find-definitions)
      ("r" . xref-find-references)
      ("o" . xref-pop-marker-stack)
      ("O" . xref-pop-to-location)
-     ("e" . flymake-goto-next-error)
-     ("E" . flymake-goto-prev-error)
      ("h" . eldoc-doc-buffer)
      ("D" . eglot-find-declaration)
      ("I" . eglot-find-implementation)
@@ -27,6 +32,14 @@
      ("y" . consult-imenu) ;; imenu
      ("l" . consult-goto-line)
      ("m" . consult-mark))))
+
+(defvar +my-diagnose-prefix-map
+  (+my-define-keys
+   '(("e" . (lambda (prev) (interactive "P")
+              (if prev (flymake-goto-prev-error) (flymake-goto-next-error))))
+     ("f" . eglot-code-action-quickfix)
+     ("s" . flyspell-goto-next-error)
+     ("S" . flyspell-correct-word-before-point))))
 
 (defvar +my-editing-prefix-map
   (+my-define-keys
@@ -81,8 +94,10 @@
      ("." . delete-other-windows)
      ("2" . split-window-below)
      ("-" . split-window-below)
+     ("_" . (lambda () (interactive) (select-window (split-window-below))))
      ("3" . split-window-right)
      ("\\" . split-window-right)
+     ("|" . (lambda () (interactive) (select-window (split-window-right))))
      ("4" . ctl-x-4-map)
      ("5" . ctl-x-5-map)
      ("o" . other-window-prefix)
@@ -331,8 +346,10 @@
     '("8" . meow-digit-argument)
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
-    `("g" . ,+my-goto-prefix-map)
+    `("g" . ignore)
+    `("\\" . ,+my-app-prefix-map)
     `("j" . ,+my-goto-prefix-map)
+    `("d" . ,+my-diagnose-prefix-map)
     `("e" . ,+my-editing-prefix-map)
     `("t" . ,+my-tabbar-prefix-map)
     `("w" . ,+my-window-prefix-map)
@@ -342,6 +359,8 @@
     `("k" . ,+my-kmacro-prefix-map)
     `("p" . ,project-prefix-map)
     '("TAB" . other-window)
+    '("RET" . execute-extended-command)
+    '("SPC" . hek-describe-buffer-file)
     '("`" . mode-line-other-buffer)
     '("/" . meow-keypad-describe-key)
     '("?" . meow-cheatsheet)
