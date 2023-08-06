@@ -146,6 +146,7 @@
         hl-todo-keyword-faces
         '(("TODO"    warning bold italic underline)
           ("XXX"     warning bold italic underline)
+          ("HACK"    font-lock-constant-face bold italic underline)
           ("FIXME"   error   bold italic underline)
           ("NOTE"    success bold italic underline)))
   :hook
@@ -243,8 +244,7 @@
 (hek-usepkg project
   :from builtin
   :config
-  ;; --- hacks ---
-  ;; -- add a project find function
+  ;; --- HACK: add a project find function
   (defvar +project-root-marker-file-list
     '(".git" "Makefile" "CMakeLists.txt")
     "Files that may exist in project root.")
@@ -257,7 +257,7 @@
     (when-let ((root-path (locate-dominating-file path #'+project-root-marker-file-exists-p)))
       (cons 'transient root-path)))
   (add-to-list 'project-find-functions #'+project-root-marker-file-find-root)
-  ;; --- hacks end ---
+  ;; ---
   )
 
 
