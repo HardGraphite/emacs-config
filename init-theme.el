@@ -74,8 +74,7 @@
   :init
   (setq hek-yinyang-dark-theme  'hek-one-dark
         hek-yinyang-light-theme 'hek-one-light
-        hek-yinyang-sunrise     '(08 . 00)
-        hek-yinyang-sunset      '(17 . 00))
+        hek-yinyang-auto-sunrise-sunset t)
   :config
   (hek-yinyang-mode t))
 

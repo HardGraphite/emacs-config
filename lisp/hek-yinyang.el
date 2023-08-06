@@ -7,6 +7,9 @@
 
 ;;; Code:
 
+(declare-function calendar-current-date "calendar")
+(declare-function solar-sunrise-sunset "solar")
+
 (defgroup hek-yinyang nil
   "Auto dark/light theme switcher."
   :group 'faces
@@ -32,9 +35,33 @@
   "Time of sunset, after which dark theme will be used."
   :type '(cons natnum natnum))
 
+(defcustom hek-yinyang-auto-sunrise-sunset nil
+  "Calculate sunrise and sunset time with package `solar'.
+`calendar-latitude' and `calendar-longitude' shall have been set."
+  :type 'boolean)
+
 (defvar hek-yinyang-switch-hook
   nil
   "Hook run after theme switched.")
+
+(defun hek-yinyang--calc-sunrise-sunset ()
+  (let ((feat-list '(solar calendar cal-dst cal-julian cal-menu))
+        loaded-feat-list)
+    (dolist (feat feat-list)
+      (unless (featurep feat)
+        (push feat loaded-feat-list)))
+    (require 'solar)
+    (let* ((x (solar-sunrise-sunset (calendar-current-date)))
+           (r (caar x))
+           (s (caadr x)))
+      (when (and (numberp r) (numberp s))
+        (when (> (- s r) 2)
+          ;; NOTE: Use dark theme when it's dim but not dark.
+          (setq r (1+ r) s (1- s)))
+        (setq hek-yinyang-sunrise (let ((h (floor r))) (cons h (truncate (* (- r h) 60))))
+              hek-yinyang-sunset  (let ((h (floor s))) (cons h (truncate (* (- s h) 60)))))))
+    (dolist (feat loaded-feat-list)
+      (unload-feature feat t))))
 
 (defvar hek-yinyang--state nil) ;; t for light, nil for dark.
 (defvar hek-yinyang--timer nil) ;; (timer1 . timer2)
@@ -69,6 +96,8 @@
   :group  'hek-yinyang
   (if hek-yinyang-mode
     (unless hek-yinyang--timer
+      (when hek-yinyang-auto-sunrise-sunset
+        (hek-yinyang--calc-sunrise-sunset))
       (let ((current-time (let ((time (decode-time)))
                             (+ (decoded-time-second time)
                                (* 60 (decoded-time-minute time))
