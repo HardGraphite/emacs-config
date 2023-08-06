@@ -31,6 +31,7 @@
 ;;; Prepare `hek-usepkg', which helps to setup packages.
 (eval-when-compile
   (require 'hek-usepkg))
+(hek-usepkg-gitpkg-initialize)
 
 ;;; Install packages.
 (let ((package-install-switch "--install-packages"))
@@ -43,6 +44,7 @@
           native-comp-verbose 2)
     (when package-quickstart
       (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
+    (add-hook 'kill-emacs-hook #'hek-usepkg-gitpkg-quickstart-refresh)
     (package-refresh-contents)))
 
 

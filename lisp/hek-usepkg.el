@@ -8,6 +8,9 @@
 
 ;;; Code:
 
+
+;;; Basics
+
 (defvar hek-usepkg-debug nil
   "If non-nil, try to detect possible problems.")
 
@@ -26,6 +29,14 @@ returns the code which will be used by the macro. The handler can be nil.")
 
 (defvar hek-usepkg-ensure nil
   "If non-nil, ensure the packages are installed.")
+
+(defvar hek-usepkg-gitpkg-dir
+  (concat user-emacs-directory "git-packages")
+  "Directory to store Git repos.")
+
+(defvar hek-usepkg-gitpkg-quickstart-file
+  (concat user-emacs-directory "git-package-quickstart.el")
+  "Quickstart file for Git packages.")
 
 (defun hek-usepkg--error (pkg-name section problem detail)
   (error "%s/%s: %s: %S" pkg-name section problem detail))
@@ -133,7 +144,8 @@ t (use a new buffer) or a buffer object or name (use this buffer)."
         (switch-to-buffer buf-obj)))
     ret-val))
 
-;; ===== Keywords ======
+
+;;; Keywords
 
 (defun hek-usepkg--flag (_pkg-name args _flags)
   "Use flags. Syntax: `:flags FLAG1 FLAG2 ...'."
@@ -268,7 +280,8 @@ will be evaluated after package loaded."
         (:bind~ . hek-usepkg--bind~)
         (:config . hek-usepkg--config)))
 
-;; ====== Sources ======
+
+;;; Sources
 
 (defun hek-usepkg--from-package (pkg-name _args ensure)
   "From `package.el'. ARGS are unused."
@@ -281,11 +294,87 @@ will be evaluated after package loaded."
   (when args
     `(eval-and-compile (add-to-list 'load-path ,(car args)))))
 
+(defun hek-usepkg--from-git (pkg-name args ensure)
+  "Download with Git. ARGS are `URL [BRANCH]'."
+  (let* ((pkg-name-str (symbol-name pkg-name))
+         (dir (expand-file-name pkg-name-str hek-usepkg-gitpkg-dir))
+         (default-directory hek-usepkg-gitpkg-dir))
+    (when (and ensure (not (file-exists-p dir)))
+      ;; Prepare directory.
+      (unless (file-exists-p hek-usepkg-gitpkg-dir)
+        (make-directory hek-usepkg-gitpkg-dir))
+      ;; Download code.
+      (let ((url (car args))
+            (branch (cadr args))
+            options)
+        (with-temp-buffer
+          (setq options (list "--depth" "1" "--quiet" dir))
+          (when branch
+            (setq options (cons "-b" (cons branch options))))
+          (unless (= 0 (apply #'call-process "git" nil t nil "clone" url options))
+            (error (buffer-string)))))
+      ;; Delete useless files.
+      (delete-directory (expand-file-name ".git" dir) t)
+      (dolist (file (directory-files-recursively dir "" t))
+        (when (or (string-match-p "test" file)
+                  (not (string-match-p "\\.el$" file)))
+          (if (file-directory-p file)
+              (delete-directory file t)
+            (delete-file file))))
+      ;; Compile code.
+      (byte-recompile-directory dir 0 t)
+      ;; Make autoloads.
+      (let ((autoloads-file
+             (expand-file-name (concat pkg-name-str "-autoloads.el") dir)))
+        (loaddefs-generate dir autoloads-file)
+        (load autoloads-file t t)))
+    (hek-usepkg--from-local pkg-name (list dir) ensure)))
+
 ;; List package sources.
 (setq hek-usepkg-sources
       '((package . hek-usepkg--from-package)
         (local . hek-usepkg--from-local)
+        (git . hek-usepkg--from-git)
         (builtin . nil)))
+
+
+;;; Git package support
+
+(defun hek-usepkg-gitpkg-quickstart-refresh ()
+  "Regenerate quickstart file for Git packages."
+  (when (file-exists-p hek-usepkg-gitpkg-dir)
+    (with-temp-file hek-usepkg-gitpkg-quickstart-file
+      (emacs-lisp-mode)
+      ;; Insert autoload files.
+      (dolist (dir (directory-files hek-usepkg-gitpkg-dir))
+        (let* ((default-directory hek-usepkg-gitpkg-dir)
+               (pkg (file-name-base dir))
+               (file (expand-file-name (concat pkg "-autoloads.el") dir))
+               (pfile (prin1-to-string file)))
+          (when (and (not (file-symlink-p dir)) (file-exists-p file))
+            (insert "(let ((load-true-file-name " pfile ")(load-file-name " pfile "))\n")
+            (insert-file-contents file)
+            ;; Fixup the special #$ reader form and throw away comments.
+            (while (re-search-forward "#\\$\\|^;\\(.*\n\\)" nil 'move)
+              (unless (ppss-string-terminator (save-match-data (syntax-ppss)))
+                (replace-match (if (match-end 1) "" pfile) t t)))
+            (insert ")\n"))))
+      ;; Insert file variables.
+      (goto-char (point-min))
+      (insert ";; -*- lexical-binding:t -*-\n")
+      (goto-char (point-max))
+      (insert ?\n ";; Local\sVariables:
+;; version-control: never
+;; no-update-autoloads: t
+;; no-native-compile: t
+;; byte-compile-warnings: (not make-local)
+;; End:
+"))
+    (byte-compile-file hek-usepkg-gitpkg-quickstart-file)))
+
+(defun hek-usepkg-gitpkg-initialize ()
+  "Load Git packages."
+  (load hek-usepkg-gitpkg-quickstart-file t t))
 
 (provide 'hek-usepkg)
 ;;; hek-usepkg.el ends here
