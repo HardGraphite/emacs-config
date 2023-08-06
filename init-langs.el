@@ -40,8 +40,10 @@
           (toml "https://github.com/tree-sitter/tree-sitter-toml")
           (verilog "https://github.com/tree-sitter/tree-sitter-verilog")
           (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-  (mapc #'treesit-install-language-grammar
-        (mapcar #'car treesit-language-source-alist))
+  (dolist (x treesit-language-source-alist)
+    (let ((lang (car x)))
+      (unless (treesit-language-available-p lang)
+        (treesit-install-language-grammar lang))))
   :init
   (setq major-mode-remap-alist
         '((js-json-mode . json-ts-mode)
