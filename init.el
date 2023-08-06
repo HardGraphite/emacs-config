@@ -9,6 +9,10 @@
     (add-to-list 'load-path lisp-dir)
     (load lisp-autoloads-file nil t nil t))
 
+  ;; Load user info file.
+  (let ((userinfo-file (concat init-dir "userinfo")))
+    (load userinfo-file t t))
+
   ;; Load initialization scripts.
   (let ((init-prefix (concat init-dir "init-"))
         (init-list '("config" "compat" "system" "theme"

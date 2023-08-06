@@ -23,25 +23,32 @@ The followings are optional:
 
 ## How to setup
 
-1. Read `init-config.el`. Make sure the items there are reasonable.
-2. Create file `custom.el` and add platform-specific configurations.
-3. Run `make autoloads` to generate autoloads file for `./lisp` directory.
-4. Run `make packages` to install packages.
-5. Run `make compile` to byte-compile ELisp files in this directory.
+1. Read "`init-config.el`". Make sure the items there are reasonable.
+2. Create file "`userinfo.el`" and add personal information.
+3. Create file "`custom.el`" and add platform-specific configurations.
+4. Run "`make autoloads`" to generate autoloads file for "`./lisp`".
+5. Run "`make packages`" to install packages.
+6. Run "`make compile`" to byte-compile ELisp files in this directory.
+
+- Steps 2, 3, and 6 are optional.
+- For step 2, `calendar-latitude` and `calendar-longitude` are expected.
+- Do steps 4 and 6 after modifying "`lisp/*.el`"
 
 ## Files
 
-The "`init-*.el`" files in root directory is the configuration scripts,
-which will be loaded by the `init.el` file.
-They will never be byte-compiled.
+| File Name               | Description           | Must Exist | Version Control |
+|-------------------------|-----------------------|-----|-----|
+| `init-*.el`             | configuration scripts | YES | YES |
+| `custom.el`             | the `custom-file`     | NO  | NO  |
+| `userinfo.el`           | user's personal info  | NO  | NO  |
+| `themes/*.el`           | themes                | YES | YES |
+| `lisp/hek-autoloads.el` | autoloads for `list/` | YES | NO  |
+| `lisp/hek-*.el`         | self-written packages | YES | YES |
 
-The files under `lisp` directory are packages written by myself
-to implement specific functions.
-File "`lisp/hek-autoloads.el`" is the autoloads file
-and is excluded from version control system.
-The name prefix "`hek-`" means *HardGraphite's Emacs Kit*.
-
-The files under `themes` directory are Emacs themes.
+- "`init-*.el`", "`custome.el`", and "`userinfo.el`" will be loaded by "`init.el`".
+- Private data shall be put into "`userinfo.el`",
+which is excluded from the version control system.
+- Prefix "`hek-`" means "*HardGraphite's Emacs Kit*".
 
 ## Conventions
 
