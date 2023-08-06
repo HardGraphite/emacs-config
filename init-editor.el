@@ -50,17 +50,6 @@
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 
-;;; Indentation indicator.
-(hek-usepkg highlight-indent-guides
-  :from package
-  :config
-  (setq highlight-indent-guides-method 'bitmap ;; Emacs with xpm support is required.
-        highlight-indent-guides-bitmap-function #'highlight-indent-guides--bitmap-line
-        highlight-indent-guides-responsive 'top
-        highlight-indent-guides-delay 0.5)
-  :hook
-  ((prog-mode-hook tex-mode-hook) . highlight-indent-guides-mode))
-
 
 ;;;;; Brackets and pairs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
