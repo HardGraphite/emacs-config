@@ -1,4 +1,4 @@
-;;; hek-one-themes-common.el --- hek-one-xxx themes common code -*- lexical-binding: t -*-
+;;; hek-one-themes-common.el --- hek-one-xxx themes common code -*- lexical-binding: t; no-native-compile: t; -*-
 
 ;;; Commentary:
 
@@ -451,6 +451,16 @@ between 0 and 1)."
    (message-cited-text-2 :inherit 'gnus-cite-3)
    (message-cited-text-3 :inherit 'gnus-cite-4)
    (message-cited-text-4 :inherit 'gnus-cite-5)
+   ;;;; meow
+   (meow-normal-cursor :background highlight)
+   (meow-insert-cursor :background "#7AA874")
+   (meow-motion-cursor :background "#CC7149")
+   (meow-beacon-cursor :background "#C060A1")
+   (meow-normal-indicator :weight 'bold :foreground "#9BA3EB" :inverse-video t)
+   (meow-insert-indicator :weight 'bold :foreground "#7AA874" :inverse-video t)
+   (meow-motion-indicator :weight 'bold :foreground "#A9907E" :inverse-video t)
+   (meow-keypad-indicator :weight 'bold :foreground "#A8A72A" :inverse-video t)
+   (meow-beacon-indicator :weight 'bold :foreground "#C060A1" :inverse-video t)
    ;;;; orderless
    (orderless-match-face-0 :weight 'bold :foreground (hek-one-blend blue    fg 0.6) :background (hek-one-blend blue    bg 0.1))
    (orderless-match-face-1 :weight 'bold :foreground (hek-one-blend magenta fg 0.6) :background (hek-one-blend magenta bg 0.1))
