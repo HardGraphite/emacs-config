@@ -5,9 +5,9 @@
 
   ;; Add package path and define auto-loads.
   (let* ((lisp-dir (concat init-dir "lisp"))
-         (lisp-loaddefs-file (expand-file-name "hek-loaddefs" lisp-dir)))
+         (lisp-autoloads-file (expand-file-name "hek-autoloads" lisp-dir)))
     (add-to-list 'load-path lisp-dir)
-    (load lisp-loaddefs-file nil t nil t))
+    (load lisp-autoloads-file nil t nil t))
 
   ;; Load initialization scripts.
   (let ((init-prefix (concat init-dir "init-"))

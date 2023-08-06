@@ -17,4 +17,4 @@
 
 /legacy/
 /custom.el
-*loaddefs.el
+*autoloads.el

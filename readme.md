@@ -25,7 +25,7 @@ The followings are optional:
 
 1. Read `init-config.el`. Make sure the items there are reasonable.
 2. Create file `custom.el` and add platform-specific configurations.
-3. Run `make loaddefs` to generate loaddefs file for `./lisp` directory.
+3. Run `make autoloads` to generate autoloads file for `./lisp` directory.
 4. Run `make packages` to install packages.
 5. Run `make compile` to byte-compile ELisp files in this directory.
 
@@ -37,7 +37,7 @@ They will never be byte-compiled.
 
 The files under `lisp` directory are packages written by myself
 to implement specific functions.
-File "`lisp/hek-loaddefs.el`" is the loaddefs file
+File "`lisp/hek-autoloads.el`" is the autoloads file
 and is excluded from version control system.
 The name prefix "`hek-`" means *HardGraphite's Emacs Kit*.
 
