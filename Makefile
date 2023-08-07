@@ -7,12 +7,13 @@ HEK_XXX_FILES     := $(filter-out ${HEK_AUTOLOADS_FILE},${HEK_XXX_FILES})
 
 .PHONY: help
 help:
-	@echo 'make version    --- Print Emacs version info'
-	@echo 'make debug      --- Start Emacs with `--debug-init` and `debug-on-error=t`'
-	@echo 'make autoloads  --- Generate autoloads file for lisp/*.el files'
+	@echo 'make version    --- print Emacs version info'
+	@echo 'make debug      --- start Emacs with `--debug-init` and `debug-on-error=t`'
+	@echo 'make autoloads  --- generate autoloads file for lisp/*.el files'
 	@echo 'make compile    --- byte compile lisp/*.el and themes/*.el files'
-	@echo 'make clean      --- delete generated files'
-	@echo 'make packages   --- Install packages'
+	@echo 'make clean      --- delete generated *.elc and autoloads files'
+	@echo 'make packages   --- install packages'
+	@echo 'make pkgclean   --- delete installed packages'
 
 .PHONY: version
 version:
@@ -24,6 +25,12 @@ debug:
 
 .PNONY: autoloads
 autoloads: ${HEK_AUTOLOADS_FILE}
+
+${HEK_AUTOLOADS_FILE}: ${HEK_XXX_FILES}
+	@"${EMACS}" --batch \
+		--chdir "${HEK_XXX_DIR}" \
+		--funcall loaddefs-generate-batch \
+		"$(notdir $@)" .
 
 .PNONY: compile
 compile:
@@ -38,7 +45,7 @@ compile:
 
 .PHONY: clean
 clean:
-	@rm lisp/*.elc themes/*.elc "${HEK_AUTOLOADS_FILE}"
+	@rm -v lisp/*.elc themes/*.elc "${HEK_AUTOLOADS_FILE}"
 
 .PHONY: packages
 packages:
@@ -47,8 +54,14 @@ packages:
 		--debug-init \
 		--eval '(switch-to-buffer "*Messages*")'
 
-${HEK_AUTOLOADS_FILE}: ${HEK_XXX_FILES}
+.PHONY: pkgclean
+pkgclean:
 	@"${EMACS}" --batch \
-		--chdir "${HEK_XXX_DIR}" \
-		--funcall loaddefs-generate-batch \
-		"$(notdir $@)" .
+		--directory 'lisp' \
+		--load 'init-compat.el' \
+		--load 'init-config.el' \
+		--load 'init-system.el' \
+		--eval '(princ (concat package-user-dir "\0"))' \
+		--eval '(when package-quickstart-file (princ (concat package-quickstart-file "\0")))' \
+		--eval '(when (bound-and-true-p native-comp-eln-load-path) (princ (concat (car native-comp-eln-load-path) "\0")))' \
+	| xargs -0 -- rm -Rv
