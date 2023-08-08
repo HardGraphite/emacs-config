@@ -98,19 +98,45 @@
   (advice-add 'shell :override #'+shell-vterm)
   :config
   (setq vterm-shell *my-shell*
-        vterm-kill-buffer-on-exit t)
-  (when (boundp +solaire-mode-mode-list) ;; See init-theme.el
+        vterm-kill-buffer-on-exit t
+        vterm-keymap-exceptions ())
+  ;; Disable solaire-mode.
+  (when (boundp '+solaire-mode-mode-list) ;; See init-theme.el
     (add-to-list '+solaire-mode-mode-list 'vterm-mode))
+  ;; Key map for modal editing normal state.
+  (defvar +vterm-modal-normal-state-map (make-sparse-keymap))
+  (dolist (x '((yank . vterm-yank)
+               (undo . vterm-undo)
+               (xterm-paste . vterm-xterm-paste)
+               (yank-pop . vterm-yank-pop)
+               (mouse-yank-primary . vterm-yank-primary)
+               (self-insert-command . vterm--self-insert)
+               (beginning-of-defun . vterm-previous-prompt)
+               (end-of-defun . vterm-next-prompt)))
+    (define-key +vterm-modal-normal-state-map
+                (vector 'remap (car x)) (cdr x)))
+  ;; Buffer local configuration.
   (defun +vterm-local-init ()
+    ;; Use a different font.
     (buffer-face-set
      (list :family *my-term-font-family*
-           :height *my-term-font-height*)))
+           :height *my-term-font-height*))
+    ;; Meow integration.
+    (add-hook 'meow-insert-enter-hook
+              (lambda ()
+                (use-local-map vterm-mode-map)
+                (vterm-reset-cursor-point))
+              nil t)
+    (add-hook 'meow-insert-exit-hook
+              (lambda ()
+                (use-local-map +vterm-modal-normal-state-map))
+              nil t)
+    )
   :bind
   (("<f12>" . vterm-other-window))
   :bind~
   (vterm-mode-map
    ("C-<escape>" . vterm-send-next-key)
-   ("C-y" . vterm-copy-mode)
    ("C-x" . vterm--self-insert)
    ("C-c" . vterm--self-insert))
   :hook

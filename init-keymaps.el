@@ -384,7 +384,7 @@
         meow-keypad-ctrl-meta-prefix ?m
         meow-select-on-change nil)
   (setq meow-mode-state-list
-        '((vterm-mode . +shell)))
+        '((vterm-mode . insert)))
   ;; --- visual elements ---
   (setq meow-replace-state-name-list
     '((normal . "N")
@@ -398,17 +398,7 @@
   ;;(meow-setup-indicator) ;; Rendered by doom-modeline.
   ;;(meow-setup-line-number)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-  ;; --- shell state ---
-  (setq +meow-+shell-keymap (make-sparse-keymap))
-  (meow-define-state +shell
-    "meow state for shells"
-    :keymap +meow-+shell-keymap)
-  (meow-define-keys '+shell
-    '("C-SPC" . meow-keypad))
-  (setq meow-replace-state-name-list
-        (assq-delete-all '+shell meow-replace-state-name-list))
-  (add-to-list 'meow-replace-state-name-list '(+shell . "S") t)
-  (add-to-list 'meow-indicator-face-alist '(+shell . meow-insert-indicator) t))
+  )
 
 ;;;;; Keymap tools ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
