@@ -101,8 +101,8 @@
         vterm-kill-buffer-on-exit t
         vterm-keymap-exceptions ())
   ;; Disable solaire-mode.
-  (when (boundp '+solaire-mode-mode-list) ;; See init-theme.el
-    (add-to-list '+solaire-mode-mode-list 'vterm-mode))
+  (when (boundp '+solaire-mode-exclude-mode-list) ;; See init-theme.el
+    (add-to-list '+solaire-mode-exclude-mode-list 'vterm-mode))
   ;; Key map for modal editing normal state.
   (defvar +vterm-modal-normal-state-map (make-sparse-keymap))
   (dolist (x '((yank . vterm-yank)

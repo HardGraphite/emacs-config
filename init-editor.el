@@ -33,7 +33,7 @@
 ;; (setq-default display-line-numbers-width 4)
 (setq display-line-numbers-width-start 500)
 (custom-set-faces
- `(line-number ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 5) :slant italic)))
+ `(line-number ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10) :slant italic)))
  `(line-number-current-line ((t :inherit line-number :slant normal :foreground "olive drab"))))
 
 ;;; Highlight current line.
@@ -221,7 +221,7 @@
         tab-bar-separator "  "
         tab-bar-new-tab-choice "*scratch*")
   (custom-set-faces
-   `(tab-bar-tab ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height* :overline t)))
+   `(tab-bar-tab ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 5) :overline t)))
    '(tab-bar-tab-inactive ((t :slant italic :overline nil)))))
 
 ;;; Xref search

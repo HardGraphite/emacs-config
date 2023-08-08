@@ -14,13 +14,12 @@
 (defun +my-minibuffer-font-setup ()
   (set (make-local-variable 'face-remapping-alist)
        +my-minibuffer-font-remapping-alist))
+(add-hook 'minibuffer-setup-hook #'+my-minibuffer-font-setup)
 
 ;;; Mode line defualt font.
 (custom-set-faces
-  `(mode-line-active ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*)))
-  `(mode-line-inactive ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
-
-(add-hook 'minibuffer-setup-hook #'+my-minibuffer-font-setup)
+  `(mode-line-active ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10))))
+  `(mode-line-inactive ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10)))))
 
 ;;; Ligatures.
 (hek-usepkg hek-ligature
@@ -83,11 +82,15 @@
 (hek-usepkg solaire-mode
   :from package
   :init
-  (defvar +solaire-mode-mode-list ()
+  (defvar +solaire-mode-exclude-mode-list ()
     "List of extra modes to enable solaire-mode.")
   :config
   (setq solaire-mode-real-buffer-fn
         (lambda ()
           (or (buffer-file-name (buffer-base-buffer))
-              (memq major-mode +solaire-mode-mode-list))))
+              (memq major-mode +solaire-mode-exclude-mode-list))))
+  ;; Use a different font.
+  (custom-set-faces
+   `(solaire-default-face
+     ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
   (solaire-global-mode 1))
