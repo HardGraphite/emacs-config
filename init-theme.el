@@ -82,5 +82,12 @@
 ;;; https://github.com/hlissner/emacs-solaire-mode
 (hek-usepkg solaire-mode
   :from package
+  :init
+  (defvar +solaire-mode-mode-list ()
+    "List of extra modes to enable solaire-mode.")
   :config
+  (setq solaire-mode-real-buffer-fn
+        (lambda ()
+          (or (buffer-file-name (buffer-base-buffer))
+              (memq major-mode +solaire-mode-mode-list))))
   (solaire-global-mode 1))

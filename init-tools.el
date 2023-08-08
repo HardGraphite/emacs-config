@@ -99,8 +99,12 @@
   :config
   (setq vterm-shell *my-shell*
         vterm-kill-buffer-on-exit t)
+  (when (boundp +solaire-mode-mode-list) ;; See init-theme.el
+    (add-to-list '+solaire-mode-mode-list 'vterm-mode))
   (defun +vterm-local-init ()
-    (buffer-face-set :family *my-term-font-family* :height *my-term-font-height*))
+    (buffer-face-set
+     (list :family *my-term-font-family*
+           :height *my-term-font-height*)))
   :bind
   (("<f12>" . vterm-other-window))
   :bind~
