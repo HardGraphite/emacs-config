@@ -5,10 +5,15 @@ HEK_XXX_FILES      = $(wildcard ${HEK_XXX_DIR}/hek-*.el)
 HEK_AUTOLOADS_FILE = ${HEK_XXX_DIR}/hek-autoloads.el
 HEK_XXX_FILES     := $(filter-out ${HEK_AUTOLOADS_FILE},${HEK_XXX_FILES})
 
+Q_INIT_DIR ?= $(or ${TMPDIR},/tmp)/emacs-q.${USER}
+Q_INIT_FILE = ${Q_INIT_DIR}/init.el
+Q_LOAD_DIR ?= ${Q_INIT_DIR}/lisp
+
 .PHONY: help
 help:
 	@echo 'make version    --- print Emacs version info'
 	@echo 'make debug      --- start Emacs with `--debug-init` and `debug-on-error=t`'
+	@echo 'make Q          --- start Emacs with `-Q` at a temporary directory'
 	@echo 'make autoloads  --- generate autoloads file for lisp/*.el files'
 	@echo 'make compile    --- byte compile lisp/*.el and themes/*.el files'
 	@echo 'make clean      --- delete generated *.elc and autoloads files'
@@ -22,6 +27,26 @@ version:
 .PHONY: debug
 debug:
 	@"${EMACS}" --debug-init --eval '(setq debug-on-error t)'
+
+.PHONY: Q
+Q:
+	@[ -d "${Q_INIT_DIR}" ] || mkdir "${Q_INIT_DIR}"
+	@[ -d "${Q_LOAD_DIR}" ] || mkdir "${Q_LOAD_DIR}"
+	@[ -e "${Q_INIT_FILE}" ] \
+	|| echo -e ';; init.el -*- lexical-binding: t -*-' \
+		'\n\n(defun restart-emacs () (interactive) (kill-emacs 100))' \
+		'\n(global-set-key (kbd "<f4>") `kill-emacs)' \
+		'\n(global-set-key (kbd "<f5>") `restart-emacs)' \
+		'\n\n;;;\n\n' \
+	> "${Q_INIT_FILE}"
+	@echo "running Emacs at ${Q_INIT_DIR} ..."
+	@echo "the user load directory is: ${Q_LOAD_DIR}"
+	@while "${EMACS}" -Q \
+		--chdir="${Q_INIT_DIR}" --init-directory="${Q_INIT_DIR}" \
+		--directory="${Q_LOAD_DIR}" --load "${Q_INIT_FILE}" \
+		--eval "(find-file-other-window \"${Q_INIT_FILE}\")" \
+		--eval '(goto-char (point-max))'; \
+	[ $$? -eq 100 ]; do echo 'restarting Emacs...'; done; echo 'quit Emacs'
 
 .PNONY: autoloads
 autoloads: ${HEK_AUTOLOADS_FILE}
