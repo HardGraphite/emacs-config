@@ -346,7 +346,7 @@
     '("8" . meow-digit-argument)
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
-    `("g" . ignore)
+    '("g" . ignore)
     `("\\" . ,+my-app-prefix-map)
     `("j" . ,+my-goto-prefix-map)
     `("d" . ,+my-diagnose-prefix-map)
@@ -376,8 +376,8 @@
   (setf (alist-get 'meow-kill meow-selection-command-fallback) #'delete-char)
   ;; --- behaviors ---
   (setq meow-keypad-message nil
-        meow-display-thing-help nil
-        meow-keypad-describe-delay 2
+        meow-display-thing-help t ;; See the hack on `meow-thing-prompt' below.
+        meow-keypad-describe-delay 1
         meow-keypad-self-insert-undefined nil
         meow-keypad-start-keys '((?c . ?c) (?x . ?x))
         meow-keypad-meta-prefix ?M
@@ -385,6 +385,12 @@
         meow-select-on-change nil)
   (setq meow-mode-state-list
         '((vterm-mode . insert)))
+  ;; HACK: delay before xxx-of-thing help.
+  (defun meow-thing-prompt (prompt-text)
+    (if meow-display-thing-help
+        (or (read-char prompt-text nil meow-keypad-describe-delay)
+            (read-char (concat (meow--render-char-thing-table) "\n" prompt-text)))
+      (read-char prompt-text)))
   ;; --- visual elements ---
   (setq meow-replace-state-name-list
     '((normal . "N")
@@ -399,15 +405,3 @@
   ;;(meow-setup-line-number)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   )
-
-;;;;; Keymap tools ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; which-key, https://github.com/justbur/emacs-which-key
-(hek-usepkg which-key
-  :from package
-  :config
-  (setq which-key-idle-delay 1.5
-        which-key-popup-type 'side-window
-        which-key-side-window-location 'right
-        which-key-sort-order 'which-key-prefix-then-key-order)
-  (which-key-mode 1))
