@@ -2,198 +2,187 @@
 
 ;;;;; Customized keymaps ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun +my-define-keys (key-def-pairs &optional map)
-  (when (null map)
-    (setq map (make-sparse-keymap)))
-  (dolist (pair key-def-pairs)
-    (define-key map
-      (let ((key (car pair)))
-        (if (stringp key) (kbd key) key))
-      (cdr pair)))
-  map)
+(defvar-keymap +my-app-prefix-map
+  "d"  #'dirvish  ;; dired
+  "g"  #'magit
+  "t"  #'vterm  ;; shell
+  )
 
-(defvar +my-app-prefix-map
-  (+my-define-keys
-   '(("d" . dirvish) ;; dired
-     ("g" . magit)
-     ("t" . vterm) ;; shell
-     )))
+(defvar-keymap +my-goto-prefix-map
+  "d"  #'xref-find-definitions
+  "r"  #'xref-find-references
+  "o"  #'xref-pop-marker-stack
+  "O"  #'xref-pop-to-location
+  "h"  #'eldoc-doc-buffer
+  "D"  #'eglot-find-declaration
+  "I"  #'eglot-find-implementation
+  "T"  #'eglot-find-typeDefinition
+  "y"  #'consult-imenu ;; imenu
+  "l"  #'consult-goto-line
+  "m"  #'consult-mark
+  )
 
-(defvar +my-goto-prefix-map
-  (+my-define-keys
-   '(("d" . xref-find-definitions)
-     ("r" . xref-find-references)
-     ("o" . xref-pop-marker-stack)
-     ("O" . xref-pop-to-location)
-     ("h" . eldoc-doc-buffer)
-     ("D" . eglot-find-declaration)
-     ("I" . eglot-find-implementation)
-     ("T" . eglot-find-typeDefinition)
-     ("y" . consult-imenu) ;; imenu
-     ("l" . consult-goto-line)
-     ("m" . consult-mark))))
+(defvar-keymap +my-diagnose-prefix-map
+  "e"  (lambda (prev) (interactive "P")
+         (if prev (flymake-goto-prev-error) (flymake-goto-next-error)))
+  "f"  #'eglot-code-action-quickfix
+  "s"  #'flyspell-goto-next-error
+  "S"  #'flyspell-correct-word-before-point
+  )
 
-(defvar +my-diagnose-prefix-map
-  (+my-define-keys
-   '(("e" . (lambda (prev) (interactive "P")
-              (if prev (flymake-goto-prev-error) (flymake-goto-next-error))))
-     ("f" . eglot-code-action-quickfix)
-     ("s" . flyspell-goto-next-error)
-     ("S" . flyspell-correct-word-before-point))))
+(defvar-keymap +my-rectedit-prefix-map
+  "d"  #'kill-rectangle
+  "y"  #'copy-rectangle-as-kill
+  "D"  #'delete-rectangle
+  "p"  #'yank-rectangle
+  "C"  #'clear-rectangle
+  "o"  #'open-rectangle
+  "c"  #'string-rectangle
+  "i"  #'string-insert-rectangle
+  "SPC" #'rectangle-mark-mode
+  )
 
-(defvar +my-editing-prefix-map
-  (+my-define-keys
-   `(("l" . downcase-dwim)
-     ("u" . upcase-dwim)
-     ("U" . capitalize-dwim)
-     ("j" . join-line)
-     ("s" . isearch-forward)
-     ("S" . isearch-forward-regexp)
-     ("r" . query-replace)
-     ("R" . query-replace-regexp)
-     ("p" . consult-yank-from-kill-ring)
-     ("P" . clipboard-yank)
-     ("Y" . clipboard-kill-ring-save)
-     ("/" . comment-line)
-     ("?" . comment-or-uncomment-region)
-     ("e" . ,(+my-define-keys
-              '(("d" . kill-rectangle)
-                ("y" . copy-rectangle-as-kill)
-                ("D" . delete-rectangle)
-                ("p" . yank-rectangle)
-                ("C" . clear-rectangle)
-                ("o" . open-rectangle)
-                ("c" . string-rectangle)
-                ("i" . string-insert-rectangle)
-                ("SPC" . rectangle-mark-mode))))
-     )))
+(defvar-keymap +my-editing-prefix-map
+  "l"  #'downcase-dwim
+  "u"  #'upcase-dwim
+  "U"  #'capitalize-dwim
+  "j"  #'join-line
+  "s"  #'isearch-forward
+  "S"  #'isearch-forward-regexp
+  "r"  #'query-replace
+  "R"  #'query-replace-regexp
+  "p"  #'consult-yank-from-kill-ring
+  "P"  #'clipboard-yank
+  "Y"  #'clipboard-kill-ring-save
+  "/"  #'comment-line
+  "?"  #'comment-or-uncomment-region
+  "e"  +my-rectedit-prefix-map
+  )
 
-(defvar +my-tabbar-prefix-map
-  (+my-define-keys
-   '(("T" . tab-bar-mode)
-     ("t" . tab-switch)
-     ("D" . dired-other-tab)
-     ("F" . find-file-other-tab)
-     ("b" . switch-to-buffer-other-tab)
-     ("SPC" . other-tab-prefix)
-     ("+" . tab-new)
-     ("*" . tab-duplicate)
-     ("n" . tab-rename)
-     ("x" . tab-close)
-     ("." . tab-close-other)
-     ("u" . tab-undo)
-     ("m" . tab-move)
-     ("[" . tab-previous)
-     ("]" . tab-next)
-     ("l" . tab-list))))
+(defvar-keymap +my-tabbar-prefix-map
+   "T"  #'tab-bar-mode
+   "t"  #'tab-switch
+   "D"  #'dired-other-tab
+   "F"  #'find-file-other-tab
+   "b"  #'switch-to-buffer-other-tab
+   "SPC" #'other-tab-prefix
+   "+"  #'tab-new
+   "*"  #'tab-duplicate
+   "n"  #'tab-rename
+   "x"  #'tab-close
+   "."  #'tab-close-other
+   "u"  #'tab-undo
+   "m"  #'tab-move
+   "["  #'tab-previous
+   "]"  #'tab-next
+   "l"  #'tab-list
+   )
 
-(defvar +my-window-prefix-map
-  (+my-define-keys
-   '(("0" . delete-window)
-     ("1" . delete-other-windows)
-     ("." . delete-other-windows)
-     ("2" . split-window-below)
-     ("-" . split-window-below)
-     ("_" . (lambda () (interactive) (select-window (split-window-below))))
-     ("3" . split-window-right)
-     ("\\" . split-window-right)
-     ("|" . (lambda () (interactive) (select-window (split-window-right))))
-     ("4" . ctl-x-4-map)
-     ("5" . ctl-x-5-map)
-     ("o" . other-window-prefix)
-     ("w" . ace-select-window)
-     ("h" . windmove-left)
-     ("j" . windmove-down)
-     ("k" . windmove-up)
-     ("l" . windmove-right)
-     ("r" . ace-swap-window)
-     ("x" . delete-window)
-     ("H" . windmove-delete-left)
-     ("J" . windmove-delete-down)
-     ("K" . windmove-delete-up)
-     ("L" . windmove-delete-right)
-     ("^" . enlarge-window)
-     (">" . enlarge-window-horizontally)
-     ("v" . shrink-window)
-     ("<" . shrink-window-horizontally)
-     ("=" . balance-windows))))
+(defvar-keymap +my-window-prefix-map
+   "0"  #'delete-window
+   "1"  #'delete-other-windows
+   "."  #'delete-other-windows
+   "2"  #'split-window-below
+   "-"  #'split-window-below
+   "_"  (lambda () (interactive) (select-window (split-window-below)))
+   "3"  #'split-window-right
+   "\\" #'split-window-right
+   "|"  (lambda () (interactive) (select-window (split-window-right)))
+   "4"  #'ctl-x-4-map
+   "5"  #'ctl-x-5-map
+   "o"  #'other-window-prefix
+   "w"  #'ace-select-window
+   "h"  #'windmove-left
+   "j"  #'windmove-down
+   "k"  #'windmove-up
+   "l"  #'windmove-right
+   "r"  #'ace-swap-window
+   "x"  #'delete-window
+   "H"  #'windmove-delete-left
+   "J"  #'windmove-delete-down
+   "K"  #'windmove-delete-up
+   "L"  #'windmove-delete-right
+   "^"  #'enlarge-window
+   ">"  #'enlarge-window-horizontally
+   "v"  #'shrink-window
+   "<"  #'shrink-window-horizontally
+   "="  #'balance-windows
+   )
 
-(defvar +my-buffer-prefix-map
-  (+my-define-keys
-   '(("b" . consult-buffer)
-     ("B" . consult-buffer-other-window)
-     ("l" . list-buffers)
-     ("o" . mode-line-other-buffer)
-     ("j" . previous-buffer)
-     ("k" . next-buffer)
-     ("x" . kill-buffer)
-     ("s" . save-buffer)
-     ("S" . save-some-buffers)
-     ("R" . read-only-mode)
-     ("n" . narrow-to-region)
-     ("N" . widen))))
+(defvar-keymap +my-buffer-prefix-map
+   "b"  #'consult-buffer
+   "B"  #'consult-buffer-other-window
+   "l"  #'list-buffers
+   "o"  #'mode-line-other-buffer
+   "j"  #'previous-buffer
+   "k"  #'next-buffer
+   "x"  #'kill-buffer
+   "s"  #'save-buffer
+   "S"  #'save-some-buffers
+   "R"  #'read-only-mode
+   "n"  #'narrow-to-region
+   "N"  #'widen
+   )
 
-(defvar +my-file-prefix-map
-  (+my-define-keys
-   '(("f" . find-file)
-     ("F" . find-file-other-window)
-     ("R" . find-file-read-only)
-     ("r" . consult-recent-file)
-     ("s" . consult-find)
-     ("h" . hexl-find-file)
-     ("H" . hexl-mode)
-     ("n" . rename-file)
-     ("p" . copy-file)
-     ("d" . dired)
-     ("D" . dired-other-window))))
+(defvar-keymap +my-file-prefix-map
+   "f"  #'find-file
+   "F"  #'find-file-other-window
+   "R"  #'find-file-read-only
+   "r"  #'consult-recent-file
+   "s"  #'consult-find
+   "h"  #'hexl-find-file
+   "H"  #'hexl-mode
+   "n"  #'rename-file
+   "p"  #'copy-file
+   "d"  #'dired
+   "D"  #'dired-other-window
+   )
 
-(defvar +my-register-prefix-map
-  (+my-define-keys
-   '(("r" . consult-register)
-     ("l" . consult-register-load)
-     ("s" . consult-register-store)
-     ("." . point-to-register)
-     ("w" . window-configuration-to-register)
-     ("k" . kmacro-to-register)
-     ("j" . jump-to-register)
-     ("y" . copy-to-register)
-     ("x" . copy-rectangle-to-register)
-     ("n" . number-to-register)
-     ("p" . insert-register)
-     ("A" . append-to-register)
-     ("I" . prepend-to-register)
-     ("+" . increment-register))))
+(defvar-keymap +my-register-prefix-map
+  "r"  #'consult-register
+  "l"  #'consult-register-load
+  "s"  #'consult-register-store
+  "."  #'point-to-register
+  "w"  #'window-configuration-to-register
+  "k"  #'kmacro-to-register
+  "j"  #'jump-to-register
+  "y"  #'copy-to-register
+  "x"  #'copy-rectangle-to-register
+  "n"  #'number-to-register
+  "p"  #'insert-register
+  "A"  #'append-to-register
+  "I"  #'prepend-to-register
+  "+"  #'increment-register
+  )
 
-(defvar +my-kmacro-prefix-map
-  (+my-define-keys
-   '(("p" . consult-kmacro)
-     ("q" . kbd-macro-query)
-     ("n" . kmacro-name-last-macro)
-     ("d" . kmacro-delete-ring-head)
-     ("j" . kmacro-cycle-ring-next)
-     ("k" . kmacro-cycle-ring-previous)
-     ("e" . kmacro-edit-macro)
-     ("E" . kmacro-edit-lossage)
-     ("c" . kmacro-insert-counter)
-     ("C" . kmacro-set-counter)
-     ("+" . kmacro-add-counter)
-     ("F" . kmacro-set-format)
-     ("r" . kmacro-to-register))))
+(defvar-keymap +my-kmacro-prefix-map
+   "p"  #'consult-kmacro
+   "q"  #'kbd-macro-query
+   "n"  #'kmacro-name-last-macro
+   "d"  #'kmacro-delete-ring-head
+   "j"  #'kmacro-cycle-ring-next
+   "k"  #'kmacro-cycle-ring-previous
+   "e"  #'kmacro-edit-macro
+   "E"  #'kmacro-edit-lossage
+   "c"  #'kmacro-insert-counter
+   "C"  #'kmacro-set-counter
+   "+"  #'kmacro-add-counter
+   "F"  #'kmacro-set-format
+   "r"  #'kmacro-to-register
+   )
 
-(defvar +my-pair-edit-prefix-map
-  (+my-define-keys
-   '(("'" . hek-surround-region)
-     ("\"" . hek-surround-region)
-     ("`" . hek-surround-region)
-     ("(" . hek-surround-region)
-     ("[" . hek-surround-region)
-     ("{" . hek-surround-region)
-     ("<" . hek-surround-region)
-     ("s" . hek-surround-region)
-     ("x" . hek-unsurround-region)
-     ("d" . hek-unsurround-region))))
-
-(fmakunbound #'+my-define-keys)
+(defvar-keymap +my-pair-edit-prefix-map
+  "'"  #'hek-surround-region
+  "\"" #'hek-surround-region
+  "`"  #'hek-surround-region
+  "("  #'hek-surround-region
+  "["  #'hek-surround-region
+  "{"  #'hek-surround-region
+  "<"  #'hek-surround-region
+  "s"  #'hek-surround-region
+  "x"  #'hek-unsurround-region
+  "d"  #'hek-unsurround-region
+  )
 
 
 ;;;;; Modify pre-defined keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
