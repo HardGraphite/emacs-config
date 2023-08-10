@@ -7,6 +7,7 @@
   "g"  #'magit
   "t"  #'vterm  ;; shell
   )
+(fset '+my-app-prefix-map +my-app-prefix-map)
 
 (defvar-keymap +my-goto-prefix-map
   "d"  #'xref-find-definitions
@@ -21,6 +22,7 @@
   "l"  #'consult-goto-line
   "m"  #'consult-mark
   )
+(fset '+my-goto-prefix-map +my-goto-prefix-map)
 
 (defvar-keymap +my-diagnose-prefix-map
   "e"  (lambda (prev) (interactive "P")
@@ -29,6 +31,7 @@
   "s"  #'flyspell-goto-next-error
   "S"  #'flyspell-correct-word-before-point
   )
+(fset '+my-diagnose-prefix-map +my-diagnose-prefix-map)
 
 (defvar-keymap +my-rectedit-prefix-map
   "d"  #'kill-rectangle
@@ -41,6 +44,7 @@
   "i"  #'string-insert-rectangle
   "SPC" #'rectangle-mark-mode
   )
+(fset '+my-rectedit-prefix-map +my-rectedit-prefix-map)
 
 (defvar-keymap +my-editing-prefix-map
   "l"  #'downcase-dwim
@@ -58,6 +62,7 @@
   "?"  #'comment-or-uncomment-region
   "e"  +my-rectedit-prefix-map
   )
+(fset '+my-editing-prefix-map +my-editing-prefix-map)
 
 (defvar-keymap +my-tabbar-prefix-map
    "T"  #'tab-bar-mode
@@ -77,6 +82,7 @@
    "]"  #'tab-next
    "l"  #'tab-list
    )
+(fset '+my-tabbar-prefix-map +my-tabbar-prefix-map)
 
 (defvar-keymap +my-window-prefix-map
    "0"  #'delete-window
@@ -108,6 +114,7 @@
    "<"  #'shrink-window-horizontally
    "="  #'balance-windows
    )
+(fset '+my-window-prefix-map +my-window-prefix-map)
 
 (defvar-keymap +my-buffer-prefix-map
    "b"  #'consult-buffer
@@ -123,6 +130,7 @@
    "n"  #'narrow-to-region
    "N"  #'widen
    )
+(fset '+my-buffer-prefix-map +my-buffer-prefix-map)
 
 (defvar-keymap +my-file-prefix-map
    "f"  #'find-file
@@ -137,6 +145,9 @@
    "d"  #'dired
    "D"  #'dired-other-window
    )
+(fset '+my-file-prefix-map +my-file-prefix-map)
+
+(fset '+my-project-prefix-map project-prefix-map)
 
 (defvar-keymap +my-register-prefix-map
   "r"  #'consult-register
@@ -154,6 +165,7 @@
   "I"  #'prepend-to-register
   "+"  #'increment-register
   )
+(fset '+my-register-prefix-map +my-register-prefix-map)
 
 (defvar-keymap +my-kmacro-prefix-map
    "p"  #'consult-kmacro
@@ -170,8 +182,9 @@
    "F"  #'kmacro-set-format
    "r"  #'kmacro-to-register
    )
+(fset '+my-kmacro-prefix-map +my-kmacro-prefix-map)
 
-(defvar-keymap +my-pair-edit-prefix-map
+(defvar-keymap +my-pairedit-prefix-map
   "'"  #'hek-surround-region
   "\"" #'hek-surround-region
   "`"  #'hek-surround-region
@@ -183,6 +196,7 @@
   "x"  #'hek-unsurround-region
   "d"  #'hek-unsurround-region
   )
+(fset '+my-pairedit-prefix-map +my-pairedit-prefix-map)
 
 
 ;;;;; Modify pre-defined keymap ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -296,7 +310,7 @@
     '("q" . meow-quit)
     '("Q" . kill-current-buffer)
     '("'" . repeat)
-    `("\"" . ,+my-pair-edit-prefix-map)
+    '("\"" . +my-pairedit-prefix-map)
     '("<escape>" . ignore)
     )
   (setq meow-char-thing-table
@@ -336,17 +350,17 @@
     '("9" . meow-digit-argument)
     '("0" . meow-digit-argument)
     '("g" . ignore)
-    `("\\" . ,+my-app-prefix-map)
-    `("j" . ,+my-goto-prefix-map)
-    `("d" . ,+my-diagnose-prefix-map)
-    `("e" . ,+my-editing-prefix-map)
-    `("t" . ,+my-tabbar-prefix-map)
-    `("w" . ,+my-window-prefix-map)
-    `("b" . ,+my-buffer-prefix-map)
-    `("f" . ,+my-file-prefix-map)
-    `("r" . ,+my-register-prefix-map)
-    `("k" . ,+my-kmacro-prefix-map)
-    `("p" . ,project-prefix-map)
+    '("\\" . +my-app-prefix-map)
+    '("j" . +my-goto-prefix-map)
+    '("d" . +my-diagnose-prefix-map)
+    '("e" . +my-editing-prefix-map)
+    '("t" . +my-tabbar-prefix-map)
+    '("w" . +my-window-prefix-map)
+    '("b" . +my-buffer-prefix-map)
+    '("f" . +my-file-prefix-map)
+    '("r" . +my-register-prefix-map)
+    '("k" . +my-kmacro-prefix-map)
+    '("p" . +my-project-prefix-map)
     '("TAB" . other-window)
     '("RET" . execute-extended-command)
     '("SPC" . hek-describe-buffer-file)
