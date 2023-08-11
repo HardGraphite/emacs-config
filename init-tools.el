@@ -132,6 +132,13 @@
                 (use-local-map +vterm-modal-normal-state-map))
               nil t)
     )
+  ;; HACK: keep cursor-type unchanged.
+  ;; https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-1183650463
+  (advice-add
+   'vterm--redraw :around
+   (lambda (fn &rest args)
+     (let ((cursor-type cursor-type))
+       (apply fn args))))
   :bind
   (("<f12>" . vterm-other-window))
   :bind~
