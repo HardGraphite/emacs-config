@@ -170,7 +170,9 @@
         register-preview-function #'consult-register-format)
   (advice-add #'register-preview :override #'consult-register-window)
   :config
-  (setq consult-preview-key '(:debounce 0.3 any))
+  (setq consult-preview-key '(:debounce 0.25 any)
+        consult-fontify-max-size 65536
+        consult-preview-raw-size 65536)
   (consult-customize
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
