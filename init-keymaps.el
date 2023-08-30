@@ -132,20 +132,16 @@
    )
 (fset '+my-buffer-prefix-map +my-buffer-prefix-map)
 
-(defvar-keymap +my-file-prefix-map
+(defvar-keymap +my-open-prefix-map
    "f"  #'find-file
    "F"  #'find-file-other-window
-   "R"  #'find-file-read-only
    "r"  #'consult-recent-file
    "s"  #'consult-find
    "h"  #'hexl-find-file
-   "H"  #'hexl-mode
-   "n"  #'rename-file
-   "p"  #'copy-file
    "d"  #'dired
    "D"  #'dired-other-window
    )
-(fset '+my-file-prefix-map +my-file-prefix-map)
+(fset '+my-open-prefix-map +my-open-prefix-map)
 
 (fset '+my-project-prefix-map project-prefix-map)
 
@@ -357,7 +353,7 @@
     '("t" . +my-tabbar-prefix-map)
     '("w" . +my-window-prefix-map)
     '("b" . +my-buffer-prefix-map)
-    '("f" . +my-file-prefix-map)
+    '("o" . +my-open-prefix-map)
     '("r" . +my-register-prefix-map)
     '("k" . +my-kmacro-prefix-map)
     '("p" . +my-project-prefix-map)
