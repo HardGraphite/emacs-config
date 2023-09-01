@@ -54,7 +54,7 @@
   (strings        green)
   (variables      (hek-one-lighten magenta 0.4))
   (numbers        orange)
-  (region         (hek-one-lighten bg-alt 0.15))
+  (region         (hek-one-lighten bg-alt 0.18))
   (error          red)
   (warning        yellow)
   (success        green)

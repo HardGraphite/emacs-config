@@ -94,3 +94,10 @@
    `(solaire-default-face
      ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
   (solaire-global-mode 1))
+
+
+;;;;; Effects ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Pulse effects from package `pulse.el'.
+(setq pulse-delay 0.04
+      pulse-iterations 12)
