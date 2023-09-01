@@ -331,6 +331,10 @@ between 0 and 1)."
    (isearch-fail :background error :foreground base0 :weight 'bold)
    ;;;; vertico
    (vertico-current :background region :extend t)
+   (vertico-posframe
+    (&light :inherit 'default :background (hek-one-lighten bg-alt 0.15))
+    (&dark :inherit 'default :background (hek-one-darken bg-alt 0.12)))
+   (vertico-posframe-border :inherit 'mode-line)
    ;;;; js2-mode <modes:js2-mode,js2-jsx-mode>
    (js2-function-param    :foreground variables)
    (js2-function-call     :foreground functions)

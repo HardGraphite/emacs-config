@@ -24,25 +24,48 @@
 
 ;;;;; Minibuffer completion front-end ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; vertico, https://github.com/minad/vertico
+;;; vertico :: VERTical Interactive COmpletion
+;;; https://github.com/minad/vertico
 (hek-usepkg vertico
   :from package
-  :init
+  :defer 0 ;; load after init
+  :config
   (setq vertico-scroll-margin 2
         vertico-count 10
         vertico-cycle t)
   (vertico-mode 1)
-  :bind
+  :bind~
   (vertico-map
    ("M-j" . vertico-next)
    ("M-k" . vertico-previous)))
 (hek-usepkg vertico-directory
   :after vertico
-  :bind
+  :bind~
   (vertico-map
    ("RET" . vertico-directory-enter)))
 
-;;; marginalia, https://github.com/minad/marginalia
+;;; vertico-posframe :: an extension for `vertico' to show contents in a child frame
+;;; https://github.com/tumashu/vertico-posframe
+(hek-usepkg vertico-posframe
+  :when (display-graphic-p)
+  :from package
+  :after vertico
+  :config
+  (defun +vertico-posframe-size (buffer)
+    (let ((h (1+ vertico-count))
+          (w (min 120 (- (frame-width) 2))))
+      (list :height h :width w :min-height h :min-width w)))
+  (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center
+        vertico-posframe-size-function #'+vertico-posframe-size
+        vertico-posframe-border-width 3
+        vertico-posframe-parameters
+        '(;; (alpha-background . 72) ;; XXX: `alpha-background' may not work on some window systems
+          (left-fringe . 8)
+          (right-fringe . 8)))
+  (vertico-posframe-mode 1))
+
+;;; marginalia :: Marginalia in the minibuffer
+;;; https://github.com/minad/marginalia
 (hek-usepkg marginalia
   :from package
   :init
