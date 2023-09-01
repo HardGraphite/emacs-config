@@ -102,7 +102,7 @@
    "j"  #'windmove-down
    "k"  #'windmove-up
    "l"  #'windmove-right
-   "r"  #'ace-swap-window
+   "R"  #'ace-swap-window
    "x"  #'delete-window
    "H"  #'windmove-delete-left
    "J"  #'windmove-delete-down
@@ -113,6 +113,9 @@
    "v"  #'shrink-window
    "<"  #'shrink-window-horizontally
    "="  #'balance-windows
+   "r"  #'window-configuration-to-register
+   "u"  #'winner-undo
+   "U"  #'winner-redo
    )
 (fset '+my-window-prefix-map +my-window-prefix-map)
 

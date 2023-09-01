@@ -203,7 +203,14 @@
   ;; key bindings are defined in `init-keymaps.el'.
   )
 
-;;; ace-window, https://github.com/abo-abo/ace-window
+;;; Xref search
+(setq xref-search-program 'ripgrep)
+
+
+;;;;; Tabs, windows, and buffers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; ace-window :: select window by number
+;;; https://github.com/abo-abo/ace-window
 (hek-usepkg ace-window
   :from package
   :config
@@ -211,6 +218,15 @@
         aw-ignore-current  t)
   :bind
   (("C-x o" . ace-window)))
+
+;;; winner (builtin) :: records of the changes in window layout configuration
+(hek-usepkg winner
+  :from builtin
+  :init
+  (setq winner-ring-size 16
+        winner-dont-bind-my-keys t)
+  :hook
+  (emacs-startup-hook . winner-mode))
 
 ;;; Tab bar (builtin)
 (hek-usepkg tab-bar
@@ -225,9 +241,6 @@
   (custom-set-faces
    `(tab-bar-tab ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 5) :overline t)))
    '(tab-bar-tab-inactive ((t :slant italic :overline nil)))))
-
-;;; Xref search
-(setq xref-search-program 'ripgrep)
 
 
 ;;;;; Project ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
