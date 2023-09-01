@@ -20,6 +20,7 @@
 (defconst *my-nerd-font-family*  "Symbols Nerd Font")
 
 (defconst *my-fontset-fonts*
-  '((han . (font-spec :family "Source Han Sans CN"))))
+  '((han . (font-spec :family "Source Han Sans CN"))
+    (cjk-misc . (font-spec :family "Source Han Sans CN"))))
 
 (defconst *my-shell* "/usr/bin/fish")
