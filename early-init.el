@@ -18,10 +18,14 @@
       '(;; Use a dark background color before a theme is loaded.
         (background-color . "#282c34")
         (foreground-color . "#bbc2cf")
+        ;; Initial frame size.
+        (width . 88)
+        (height . 36)
         ;; Disable unwanted GUI elements.
         (menu-bar-lines . 0)
         (tool-bar-lines . 0)
-        (vertical-scroll-bars)))
+        (vertical-scroll-bars . nil)
+        ))
 ;; Inhibit some modes before they are enabled.
 (setq menu-bar-mode   nil
       tool-bar-mode   nil

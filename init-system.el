@@ -58,9 +58,6 @@
 (setq frame-resize-pixelwise t
       window-resize-pixelwise nil)
 
-;; Full screen.
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 ;; Window split.
 (setq split-width-threshold  (* 2 72)
       split-height-threshold (* 2 25))
