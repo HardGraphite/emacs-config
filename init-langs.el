@@ -124,8 +124,7 @@
         markdown-enable-wiki-links t
         markdown-mouse-follow-link nil
         markdown-command
-        '("pandoc" "--from=markdown" "--to=html5" "--standalone" "--mathjax"
-          "--metadata" "title=PREVIEW")
+        '("pandoc" "--from=markdown" "--to=html5" "--no-highlight")
         markdown-fontify-code-blocks-natively t
         markdown-code-lang-modes
         '(("c" . c-mode)
