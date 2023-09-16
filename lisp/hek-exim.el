@@ -105,6 +105,67 @@ for Fcitx 5.")
       (remove-hook (cdr hek-exim-automodal-hooks) #'hek-exim--automodal-leave-insert))))
 
 ;;;
+;;;;; Inline text
+;;;
+
+(defvar hek-exim-inlinetext-triggers '(?\  ?\\)
+  "List of characters that start inline text regions.")
+
+(defface hek-exim-inlinetext
+  '((t :inherit region :underline t))
+  "Inline text region face.")
+
+(defvar-local hek-exim--inlinetext-overlay nil) ;; Overlay or nil
+
+(defun hek-exim-inlinetext-commit ()
+  "Try to commit and delete an inline text region. Return `t' if success."
+  (interactive)
+  (when hek-exim--inlinetext-overlay
+    (hek-exim-switch t)
+    (delete-overlay hek-exim--inlinetext-overlay)
+    (setq hek-exim--inlinetext-overlay nil)
+    t))
+
+(defvar hek-exim--inlinetext-map
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap (kbd "RET") #'hek-exim-inlinetext-commit)
+    keymap))
+
+(defun hek-exim-inlinetext-create (&optional beginning end)
+  "Create (start) an inline text region."
+  (interactive)
+  (unless (and beginning end)
+    (setq beginning (point)
+          end beginning))
+  (hek-exim-switch nil)
+  (setq hek-exim--inlinetext-overlay (make-overlay beginning end nil t t))
+  (overlay-put hek-exim--inlinetext-overlay 'face 'hek-exim-inlinetext)
+  (overlay-put hek-exim--inlinetext-overlay 'keymap hek-exim--inlinetext-map))
+
+(defun hek-exim--inlinetext-post-self-insert ()
+  (let ((p (point)))
+    ;; Inactivate the region if point is out of the region.
+    (when (and hek-exim--inlinetext-overlay
+               (let ((p0 (overlay-start hek-exim--inlinetext-overlay))
+                     (p1 (overlay-end hek-exim--inlinetext-overlay)))
+                 (or (< p p0) (< p p1) (= p0 p1))))
+      (hek-exim-inlinetext-commit))
+    ;; Activate region if triggered.
+    (when (and (not hek-exim--inlinetext-overlay)
+               hek-exim--buffer-source ;; IM enabled
+               (memq last-command-event hek-exim-inlinetext-triggers))
+      (hek-exim-inlinetext-create (1- p) p))))
+
+;;;###autoload
+(define-minor-mode hek-exim-inlinetext-mode
+  "Global minor mode to type key sequences with IM disabled."
+  :global t
+  (if hek-exim-inlinetext-mode
+      (add-hook 'post-self-insert-hook #'hek-exim--inlinetext-post-self-insert)
+    (remove-hook 'post-self-insert-hook #'hek-exim--inlinetext-post-self-insert)
+    (hek-exim-inlinetext-commit)))
+
+;;;
 ;;;;; Utilities
 ;;;
 

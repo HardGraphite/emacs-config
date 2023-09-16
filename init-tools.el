@@ -57,9 +57,11 @@
     (setq hek-exim-automodal-hooks
           '(meow-insert-enter-hook . meow-insert-exit-hook))
     (hek-exim-automodal-mode))
+  (hek-exim-inlinetext-mode)
   (setq hek-exim-verbose t) ;; For debug.
   :bind
-  (("<f9>" . hek-exim-toggle)))
+  (("<f9>" . hek-exim-toggle)
+   ("S-<f9>" . hek-exim-inlinetext-create)))
 
 
 ;;;;; Directory view ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
