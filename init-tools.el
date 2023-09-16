@@ -51,13 +51,12 @@
   :config
   ;; Fcitx 5, D-Bus
   (require 'dbus)
-  (setq hek-exim-sources '((en . 1) (zh . 2)) ;; off and on
-        hek-exim-get-source-function #'hek-exim-fcitx5-dbus-get-state
+  (setq hek-exim-get-source-function #'hek-exim-fcitx5-dbus-get-state
         hek-exim-set-source-function #'hek-exim-fcitx5-dbus-set-state)
   (when (featurep 'meow)
-    (setq hek-exim-auto-modal-hooks
-          '(meow-insert-enter-hook . meow-insert-exit-hook)))
-  (hek-exim-auto-mode) ;; A global mode.
+    (setq hek-exim-automodal-hooks
+          '(meow-insert-enter-hook . meow-insert-exit-hook))
+    (hek-exim-automodal-mode))
   (setq hek-exim-verbose t) ;; For debug.
   :bind
   (("<f9>" . hek-exim-toggle)))
