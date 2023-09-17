@@ -389,6 +389,8 @@
         meow-select-on-change nil)
   (setq meow-mode-state-list
         '((vterm-mode . insert)))
+  (setq meow-grab-fill-commands
+        '(query-replace query-replace-regexp))
   ;; HACK: delay before xxx-of-thing help.
   (defun meow-thing-prompt (prompt-text)
     (if meow-display-thing-help
