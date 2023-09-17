@@ -38,8 +38,12 @@
 ;;; === segment: indicators ===
 
 (defvar hek-modeline--seg-indicators ;; list
-  '(;; macro recording
-    `(defining-kbd-macro ,(propertize " ● " 'face '(:inverse-video t)))
+  `(;; macro recording
+    (defining-kbd-macro
+     ,(concat hek-modeline--thinspc
+              (nerd-icons-mdicon
+               "nf-md-record_rec"
+               :face 'nerd-icons-dred)))
     "%n%e "))
 ;; meow state
 (when (package-installed-p 'meow)
@@ -58,10 +62,10 @@
 (defvar hek-modeline--seg-fileinfo ;; single
   '(:eval (hek-modeline--seg-fileinfo)))
 (defconst hek-modeline--seg-fileinfo-icons
-  (vector (nerd-icons-faicon "nf-fa-lock" :face 'nerd-icons-red)
-          (nerd-icons-faicon "nf-fa-save" :face 'nerd-icons-green)
-          (nerd-icons-faicon "nf-fa-edit" :face 'nerd-icons-yellow)
-          (nerd-icons-faicon "nf-fa-server")))
+  (vector (nerd-icons-mdicon "nf-md-lock" :face 'nerd-icons-lred)
+          (nerd-icons-mdicon "nf-md-content_save" :face 'nerd-icons-green)
+          (nerd-icons-mdicon "nf-md-pencil" :face 'nerd-icons-dyellow)
+          (nerd-icons-mdicon "nf-md-server_network")))
 (defun hek-modeline--seg-fileinfo ()
   (cons (aref hek-modeline--seg-fileinfo-icons
               (if (buffer-modified-p) 2 (if buffer-read-only 0 1)))
@@ -214,8 +218,8 @@
      hek-modeline--seg-bufinfo-init))
   "A list of formats. Each entry is like: (COND LEFT RIGHT [INIT-FN...]) .")
 
-(defvar-local hek-modeline--lfmt nil)
-(defvar-local hek-modeline--rfmt nil)
+(defvar-local hek-modeline--lfmt "%b")
+(defvar-local hek-modeline--rfmt '(:eval mode-name))
 
 (defun hek-modeline--init-local ()
   (catch 'found

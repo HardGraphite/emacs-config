@@ -68,6 +68,7 @@
   (modeline-bg-alt          (if hek-one-brighter-modeline (hek-one-darken base2 0.1) base2))
   (modeline-bg-inactive     (hek-one-darken bg 0.1))
   (modeline-bg-alt-inactive (hek-one-darken bg-alt 0.05))
+  (modeline-box             "gray72")
   (-modeline-pad            hek-one-modeline-padding))
 
  ;;;;; ===== faces =====

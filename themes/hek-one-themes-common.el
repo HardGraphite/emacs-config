@@ -89,7 +89,7 @@ between 0 and 1)."
    (font-lock-regexp-grouping-construct :inherit 'bold :foreground operators)
    ;;;; mode-line / header-line
    (mode-line           :background bg     :foreground fg     :distant-foreground bg)
-   (mode-line-active    :inherit 'mode-line)
+   (mode-line-active    :inherit 'mode-line :box `(:color ,modeline-box :line-width (0 . -1)))
    (mode-line-inactive  :background bg-alt :foreground fg-alt :distant-foreground bg-alt)
    (mode-line-emphasis  :foreground highlight :distant-foreground bg)
    (mode-line-highlight :inherit 'highlight :distant-foreground bg)
