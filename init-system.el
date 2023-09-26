@@ -86,7 +86,7 @@
 
 ;;; Message buffer, scratch buffer.
 (setq messages-buffer-max-lines 100
-      initial-scratch-message   nil
+      initial-scratch-message   ";; This buffer is NOT part of GNU Emacs.\n\n"
       initial-major-mode        #'fundamental-mode)
 
 

@@ -6,13 +6,17 @@
 ;; and erase buffer after first key stroke. Make sure `inhibit-startup-screen'
 ;; is non-nil so that the contents in scratch buffer is visible at startup.
 
+(defconst +my-scratch-hello-message initial-scratch-message)
+(setq initial-scratch-message nil)
+
 (defun +my-scratch-hello-clear ()
   (remove-hook 'pre-command-hook #'+my-scratch-hello-clear)
   (with-current-buffer "*scratch*"
-    (erase-buffer)
-    (lisp-interaction-mode)
-    (insert ";; " (buffer-name) " :: " mode-name ?\n ?\n ?\n)
-    (backward-char)))
+    (let ((inhibit-redisplay t))
+      (erase-buffer)
+      (lisp-interaction-mode)
+      (insert +my-scratch-hello-message ?\n)
+      (backward-char))))
 
 (defun +my-scratch-hello-setup ()
   (remove-hook 'emacs-startup-hook #'+my-scratch-hello-setup)
