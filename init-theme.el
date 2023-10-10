@@ -5,8 +5,9 @@
 ;;; Global default font.
 (custom-set-faces
  `(default ((t :family ,*my-code-font-family* :height ,*my-code-font-height*))))
-(dolist (conf *my-fontset-fonts*)
-  (set-fontset-font t (car conf) (eval (cdr conf))))
+(let ((spec (font-spec :family *my-cjkx-font-family*)))
+  (set-fontset-font t 'han spec)
+  (set-fontset-font t 'cjk-misc spec))
 
 ;;; Minibuffer default font.
 (defconst +my-minibuffer-font-remapping-alist

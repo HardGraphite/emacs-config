@@ -14,8 +14,10 @@ help:
 	@echo 'make version    --- print Emacs version info'
 	@echo 'make debug      --- start Emacs with `--debug-init` and `debug-on-error=t`'
 	@echo 'make Q          --- start Emacs with `-Q` at a temporary directory'
+	@echo 'make init       --- initialize (combination of several targets)'
 	@echo 'make autoloads  --- generate autoloads file for lisp/*.el files'
-	@echo 'make compile    --- byte compile lisp/*.el and themes/*.el files'
+	@echo 'make userconf   --- generate `userconf.el` from template'
+	@echo 'make bytecode   --- byte compile lisp/*.el and themes/*.el files'
 	@echo 'make clean      --- delete generated *.elc and autoloads files'
 	@echo 'make packages   --- install packages'
 	@echo 'make pkgclean   --- delete installed packages'
@@ -48,7 +50,10 @@ Q:
 		--eval '(goto-char (point-max))'; \
 	[ $$? -eq 100 ]; do echo 'restarting Emacs...'; done; echo 'quit Emacs'
 
-.PNONY: autoloads
+.PHONY: init
+init: userconf autoloads packages bytecode
+
+.PHONY: autoloads
 autoloads: ${HEK_AUTOLOADS_FILE}
 
 ${HEK_AUTOLOADS_FILE}: ${HEK_XXX_FILES}
@@ -57,12 +62,18 @@ ${HEK_AUTOLOADS_FILE}: ${HEK_XXX_FILES}
 		--funcall loaddefs-generate-batch \
 		"$(notdir $@)" .
 
-.PNONY: compile
-compile:
+.PHONY: userconf
+userconf: userconf.el
+
+userconf.el:
+	cp -n $@.0 $@
+
+.PHONY: bytecode
+bytecode:
 	@"${EMACS}" --batch \
 		--directory 'lisp' \
+		--load 'userconf.el' \
 		--load 'init-compat.el' \
-		--load 'init-config.el' \
 		--load 'init-system.el' \
 		--eval '(require `cus-edit)' \
 		--eval '(batch-byte-compile t)' \
@@ -83,8 +94,8 @@ packages:
 pkgclean:
 	@"${EMACS}" --batch \
 		--directory 'lisp' \
+		--load 'userconf.el' \
 		--load 'init-compat.el' \
-		--load 'init-config.el' \
 		--load 'init-system.el' \
 		--eval '(princ (concat package-user-dir "\0"))' \
 		--eval '(when package-quickstart-file (princ (concat package-quickstart-file "\0")))' \

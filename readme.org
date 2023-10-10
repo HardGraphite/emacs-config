@@ -1,4 +1,4 @@
-* Emacs configuratin
+* Emacs configuration
 
 #+ATTR_HTML: :width 100px
 [[https://www.gnu.org/software/emacs/images/emacs.png]]
@@ -10,7 +10,7 @@ for the GNU Emacs editor.
 
 - =GNU Emacs= 29
 - =GNU Make=
-- various fonts, see =init-config.el=
+- various fonts, see =userconf.el.0=
 
 The followings are optional:
 
@@ -24,16 +24,20 @@ The followings are optional:
 
 ** How to setup
 
-1. Read "=init-config.el=". Make sure the items there are reasonable.
-2. Create file "=userinfo.el=" and add personal information.
-3. Create file "=custom.el=" and add platform-specific configurations.
-4. Run "=make autoloads=" to generate autoloads file for "=./lisp=".
-5. Run "=make packages=" to install packages.
-6. Run "=make compile=" to byte-compile ELisp files in this directory.
+Run "=make init=" to setup.
 
-- Steps 2, 3, and 6 are optional.
-- For step 2, =calendar-latitude= and =calendar-longitude= are expected.
-- Do steps 4 and 6 after modifying "=lisp/*.el="
+Or,
+
+1. Run "=make userconf=" and edit "=userconf.el=" for customization.
+2. Run "=make autoloads=" to generate autoloads file for "=./lisp=".
+3. Run "=make packages=" to install packages.
+4. Run "=make bytecode=" to byte-compile ELisp files in this directory.
+
+Notes:
+
+- Steps 2, and 4 are optional.
+- Do steps 2 and 4 after modifying "=lisp/*.el=" files.
+- Do step 3 after introducing new packages.
 
 ** Files
 
@@ -41,13 +45,14 @@ The followings are optional:
 |-------------------------+-----------------------+------+------|
 | =init-*.el=             | configuration scripts | YES  | YES  |
 | =custom.el=             | the =custom-file=     | NO   | NO   |
-| =userinfo.el=           | user's personal info  | NO   | NO   |
+| =userconf.el=           | user's configuration  | NO   | NO   |
+| =userconf.el.0=         | template for userconf | YES  | YES  |
 | =themes/*.el=           | themes                | YES  | YES  |
 | =lisp/hek-autoloads.el= | autoloads for =list/= | YES  | NO   |
 | =lisp/hek-*.el=         | self-written packages | YES  | YES  |
 
-- "=init-*.el=", "=custome.el=", and "=userinfo.el=" will be loaded by "=init.el=".
-- Private data shall be put into "=userinfo.el=",
+- "=init-*.el=", "=custome.el=", and "=userconf.el=" will be loaded by "=init.el=".
+- Private data shall be put into "=userconf.el=",
   which is excluded from the version control system.
 - Prefix "=hek-=" means "/HardGraphite's Emacs Kit/".
 

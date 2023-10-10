@@ -17,5 +17,5 @@
 
 /legacy/
 /custom.el
-/userinfo.el
+/userconf.el
 *autoloads.el

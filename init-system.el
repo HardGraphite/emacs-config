@@ -17,14 +17,14 @@
 
 ;;; Step up built-in package manager.
 (require 'package)
-(cond ((eq *my-package-mirror* 'cn) ;; mirror in China
-       (setq package-archives
-       '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-         ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-         ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))))
-      ((eq *my-package-mirror* nil) ;; original
-       (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-      (t (error "illegal value of *my-package-mirror*")))
+(if *my-mirror-elpa*
+    (setq package-archives
+          `(("gnu"    . ,(car *my-mirror-elpa*))
+            ("nongnu" . ,(cdr *my-mirror-elpa*))
+            ("melpa"  . ,*my-mirror-melpa*)))
+  (add-to-list 'package-archives
+               (cons "melpa" *my-mirror-melpa*)
+               t))
 (setq package-quickstart t)
 (package-initialize)
 
