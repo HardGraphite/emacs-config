@@ -42,6 +42,18 @@
    ;;; --- tools ---
    (defconst *my-shell*  "/usr/bin/fish")
    )
-  ;;; === others ===
+  ;;; === MS Windows NT ===
+  ('windows-nt
+   ;;; --- dirs ---
+   (defconst *my-emacs-conf-dir*   "~/.emacs.d/")
+   (defconst *my-emacs-data-dir*   "~/.emacs.d/data/")
+   (defconst *my-emacs-cache-dir*  "~/.emacs.d/cache/")
+   ;;; --- tools ---
+   (defconst *my-shell*  "pwsh.exe")
+   ;;; --- others ---
+   (setq *my-term-font-family* "Consolas"
+         default-directory "~/Desktop/")
+   )
+  ;;; === other system ===
   (_
    (error "unknown system type")))

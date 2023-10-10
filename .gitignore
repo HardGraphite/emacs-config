@@ -13,6 +13,8 @@
 /eln-cache/
 /elpa/
 /eshell/
+/data/
+/cache/
 /package-quickstart.*
 
 /legacy/
