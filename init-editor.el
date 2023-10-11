@@ -26,24 +26,28 @@
 
 ;;;;; Line & column ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Line number.
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'text-mode-hook #'display-line-numbers-mode)
-;; (setq display-line-numbers-type 'relative)
-;; (setq-default display-line-numbers-width 4)
+;;; Line number, current line, unused lines.
+(add-hook
+ 'after-change-major-mode-hook
+ (lambda ()
+   (when (or buffer-file-name
+             (derived-mode-p 'prog-mode 'text-mode))
+     (display-line-numbers-mode 1)
+     (hl-line-mode 1)
+     (setq indicate-empty-lines t))))
+;; -- line number
 (setq display-line-numbers-width-start 500)
 (custom-set-faces
- `(line-number ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10) :slant italic)))
- `(line-number-current-line ((t :inherit line-number :slant normal :foreground "olive drab"))))
-
-;;; Highlight current line.
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
+ `(line-number
+   ((t :family ,*my-mono-font-family*
+       :height ,(- *my-mono-font-height* 10)
+       :slant italic)))
+ '(line-number-current-line
+   ((t :inherit line-number
+       :slant normal
+       :foreground "olive drab"))))
+;; -- current line
 (setq hl-line-sticky-flag nil) ;; Don't show highlights in all windows.
-
-;;; Column number.
-;; (column-number-mode 1)
-;; (setq column-number-indicator-zero-based nil) ;; 1 = 1.
 
 ;;; Column indicator.
 (setq-default display-fill-column-indicator-column 80)

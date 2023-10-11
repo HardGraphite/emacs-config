@@ -89,6 +89,7 @@
   (setq solaire-mode-real-buffer-fn
         (lambda ()
           (or (buffer-file-name (buffer-base-buffer))
+              (derived-mode-p 'prog-mode 'text-mode)
               (memq major-mode +solaire-mode-exclude-mode-list))))
   ;; Use a different font.
   (custom-set-faces

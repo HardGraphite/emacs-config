@@ -7,7 +7,8 @@
 
 ;;; Load init scripts.
 (let ((init-dir (file-name-directory load-file-name))
-      (file-name-handler-alist nil))
+      (file-name-handler-alist nil)
+      (inhibit-redisplay t))
 
   ;; Add package path and define auto-loads.
   (let* ((lisp-dir (concat init-dir "lisp"))
