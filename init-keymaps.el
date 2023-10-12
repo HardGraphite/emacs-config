@@ -64,6 +64,12 @@
   )
 (fset '+my-editing-prefix-map +my-editing-prefix-map)
 
+(defvar-keymap +my-search-prefix-map
+  "s"  #'rg-literal
+  "S"  #'rg
+  )
+(fset '+my-search-prefix-map +my-search-prefix-map)
+
 (defvar-keymap +my-tabbar-prefix-map
    "T"  #'tab-bar-mode
    "t"  #'tab-switch
@@ -353,6 +359,7 @@
     '("j" . +my-goto-prefix-map)
     '("d" . +my-diagnose-prefix-map)
     '("e" . +my-editing-prefix-map)
+    '("s" . +my-search-prefix-map)
     '("t" . +my-tabbar-prefix-map)
     '("w" . +my-window-prefix-map)
     '("b" . +my-buffer-prefix-map)

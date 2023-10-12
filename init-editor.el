@@ -162,6 +162,7 @@
 (setq recentf-auto-cleanup 'never)
 (add-hook 'emacs-startup-hook #'recentf-mode)
 
+
 ;;;;; Search and navigation ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; consult, https://github.com/minad/consult
@@ -194,6 +195,20 @@
    ("M-g g" . consult-goto-line)             ;; orig. goto-line
    ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
    ))
+
+;;; rg.el :: search tool based on ripgrep
+;;; https://github.com/dajva/rg.el
+(hek-usepkg rg
+  :from package
+  :config
+  ;; HACK: use package.el
+  (defun rg-project-root (file)
+    (project-root (project-current)))
+  :bind
+  (("C-x p g" . rg-project))
+  :bind~
+  (rg-mode-map
+   ("?" . rg-menu)))
 
 ;;; avy :: Jump to things in Emacs tree-style
 ;;; https://github.com/abo-abo/avy
