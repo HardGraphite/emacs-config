@@ -109,6 +109,73 @@ characters are in `hek-surround-pairs'."
   (pixel-scroll-interpolate-down))
 
 
+;;; Indentations.
+
+(defconst hek-indent-width-alist
+  '((awk-mode . c-basic-offset)
+    (c-mode . c-basic-offset)
+    (c-ts-mode . c-ts-mode-indent-offset)
+    (c++-mode . c-basic-offset)
+    (c++-ts-mode . c-ts-mode-indent-offset)
+    (cmake-mode . cmake-tab-width)
+    (cmake-ts-mode . cmake-ts-mode-indent-offset)
+    (csharp-mode . c-basic-offset)
+    (csharp-ts-mode . csharp-ts-mode-indent-offset)
+    (css-mode . css-indent-offset)
+    (css-ts-mode . css-indent-offset)
+    (emacs-lisp-mode . lisp-indent-offset)
+    (gdscript-mode . gdscript-indent-offset)
+    (go-ts-mode . go-ts-mode-indent-offset)
+    (haskell-mode . haskell-indent-spaces)
+    (html-ts-mode . html-ts-mode-indent-offset)
+    (java-mode . c-basic-offset)
+    (java-ts-mode . java-ts-mode-indent-offset)
+    (js-mode . js-indent-level)
+    (js-ts-mode . js-indent-level)
+    (js2-mode . js2-basic-offset)
+    (json-mode . js-indent-level)
+    (json-ts-mode . json-ts-mode-indent-offset)
+    (julia-mode . julia-indent-offset)
+    (kotlin-mode . kotlin-tab-width)
+    (kotlin-ts-mode . kotlin-ts-mode-indent-offset)
+    (latex-mode . tex-indent-basic)
+    (lisp-mode . lisp-indent-offset)
+    (lua-mode . lua-indent-level)
+    (matlab-mode . matlab-indent-level)
+    (nasm-mode . nasm-basic-offset)
+    (nginx-mode . nginx-indent-level)
+    (nxml-mode . nxml-child-indent)
+    (objc-mode . c-basic-offset)
+    (octave-mode . octave-block-offset)
+    (php-mode . c-basic-offset)
+    (python-mode . python-indent-offset)
+    (python-ts-mode . python-indent-offset)
+    (ruby-mode . ruby-indent-level)
+    (ruby-ts-mode . ruby-indent-level)
+    (rust-mode . rust-indent-offset)
+    (rust-ts-mode . rust-ts-mode-indent-offset)
+    (scala-mode . scala-indent:step)
+    (scss-mode . css-indent-offset)
+    (sh-mode . sh-basic-offset)
+    (bash-ts-mode . sh-basic-offset)
+    (tcl-mode . tcl-indent-level)
+    (toml-ts-mode . toml-ts-mode-indent-offset)
+    (verilog-mode . verilog-indent-level)
+    (web-mode . web-mode-indent-style)
+    (yaml-mode . yaml-indent-offset)
+    (yaml-ts-mode . yaml-indent-offset))
+  "Alist of indentation width by modes.")
+
+(defun hek-indent-width (&optional mode)
+  "Get indent width in MODE major mode."
+  (let ((var (cdr (assq (or mode major-mode) hek-indent-width-alist))))
+    (cond
+     ((symbolp var) (let ((n (symbol-value var)))
+                      (if (numberp n) n 4)))
+     ((integerp var) var)
+     ((null var) 4))))
+
+
 
 (provide 'hek-subr)
 ;;; hek-subr.el ends here

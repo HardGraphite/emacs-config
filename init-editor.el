@@ -59,6 +59,7 @@
  'prog-mode-hook
  (lambda ()
    (unless indent-tabs-mode
+     (setq hek-hl-indent-width (hek-indent-width))
      (hek-hl-indent-mode))))
 
 

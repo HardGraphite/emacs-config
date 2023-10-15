@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(require 'hek-subr)
+
 (defun hek-help-echo (items &optional separator)
   "Print ITEMS, a list of strings or `nil's, to echo area."
   (message "%s" (string-join
@@ -44,12 +46,7 @@
       (if indent-tabs-mode
           (setq type "TAB" size tab-width)
         (setq type "SPC" size 0)
-        (when (boundp 'editorconfig-indentation-alist)
-          (setq size
-                (symbol-value
-                 (seq-find
-                  (lambda (var) (and var (boundp var) (symbol-value var)))
-                  (cdr (assoc major-mode editorconfig-indentation-alist)) 'tab-width)))))
+        (setq size (hek-indent-width)))
       (concat type " " (number-to-string size)))
     ;; version control
     (when (and vc-mode buffer-file-name)
