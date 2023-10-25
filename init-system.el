@@ -98,6 +98,13 @@
 ;;; Inhibit fontification when inputing, helping a little with scrolling performance.
 (setq redisplay-skip-fontification-on-input t)
 
+;;; Disable bidi (Bidirectional Display) and decrease long line thresholds.
+(setq-default bidi-display-reordering nil)
+(setq bidi-inhibit-bpa t
+      long-line-threshold 1000
+      large-hscroll-threshold 1000
+      syntax-wholeline-max 1000)
+
 ;;; Clever carbage collection.
 (hek-usepkg gcmh
   :from package
