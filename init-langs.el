@@ -14,6 +14,7 @@
         '(((c-mode c++-mode c-ts-mode c++-ts-mode) "clangd")
           ((cmake-mode cmake-ts-mode) "cmake-language-server")
           (python-base-mode "pyright-langserver" "--stdio")
+          (lua-mode "lua-language-server")
           ((tex-mode bibtex-mode) "texlab")))
   ;; mode hooks
   (dolist (config eglot-server-programs)
@@ -110,6 +111,16 @@
   :bind~
   (cmake-mode-map
    ("C-c C-h" . cmake-help)))
+
+;;; --- Lua ---
+
+;;; lua mode
+;;; https://github.com/immerrr/lua-mode
+
+(hek-usepkg lua-mode
+  :from package
+  :defer t
+  )
 
 ;;; --- Markdown ---
 
