@@ -16,7 +16,10 @@
 
 (defface hek-hl-indent-indicator
   `((t ( :inherit fill-column-indicator
-         :stipple (4 6 ,(string 1 0 0 4 0 0)) )))
+         :stipple (4 6 ,(string 1 0 0 4 0 0))
+         ;; `:stipple' has reversed foreground/background when using PGTK
+         :inverse-video ,(if (eq window-system 'pgtk) t nil)
+         )))
   "Indentation highlighting.")
 
 (defun hek-hl-indent-redraw (start end)
