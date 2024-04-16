@@ -11,9 +11,11 @@
         eglot-events-buffer-size 0)
   ;; LSP servers
   (setq eglot-server-programs
-        '(((c-mode c++-mode c-ts-mode c++-ts-mode) "clangd")
+        '(((c-mode c++-mode c-ts-mode c++-ts-mode)
+           "clangd" "--function-arg-placeholders=0" "--header-insertion=never")
           ((cmake-mode cmake-ts-mode) "cmake-language-server")
           (python-base-mode "pyright-langserver" "--stdio")
+          (bash-ts-mode "bash-language-server" "start")
           (lua-mode "lua-language-server")
           ((tex-mode bibtex-mode) "texlab")))
   ;; mode hooks
@@ -59,7 +61,8 @@
   :init
   (setq major-mode-remap-alist
         '((js-json-mode . json-ts-mode)
-          (python-mode . python-ts-mode)))
+          (python-mode . python-ts-mode)
+          (sh-mode . bash-ts-mode)))
   )
 
 ;;;;; Specific languages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
