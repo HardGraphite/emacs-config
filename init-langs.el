@@ -27,6 +27,17 @@
   :hook ;; DO NOT delete this line.
   )
 
+;;; ElDoc box :: displays ElDoc documentations in a childframe
+;;; https://github.com/casouri/eldoc-box/tree/master
+(hek-usepkg eldoc-box
+  :from package
+  :config
+  (custom-set-faces
+   `(eldoc-box-body ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
+  :hook
+  (eglot-managed-mode-hook . eldoc-box-hover-at-point-mode)
+  )
+
 ;;;;; Tree-sitter ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Tree-sitter
