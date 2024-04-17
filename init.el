@@ -2,8 +2,11 @@
 
 ;;; Unset frame initial colors. These are set in the `early-init.el'.
 ;;; The initial frame's face shall has been initialized.
-(assq-delete-all 'background-color default-frame-alist)
-(assq-delete-all 'foreground-color default-frame-alist)
+(setq default-frame-alist
+      (seq-reduce
+       (lambda (lst item) (assq-delete-all item lst))
+       '(background-color foreground-color)
+       default-frame-alist))
 
 ;;; Load init scripts.
 (let ((init-dir (file-name-directory load-file-name))
