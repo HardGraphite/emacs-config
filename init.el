@@ -1,14 +1,14 @@
 ;; -*- lexical-binding: t; no-byte-compile: t -*-
 
-;;; Unset frame initial colors. These are set in the `early-init.el'.
-;;; The initial frame's face shall has been initialized.
+;; Unset frame initial colors. These are set in the `early-init.el'.
+;; The initial frame's face shall has been initialized.
 (setq default-frame-alist
       (seq-reduce
        (lambda (lst item) (assq-delete-all item lst))
        '(background-color foreground-color)
        default-frame-alist))
 
-;;; Load init scripts.
+;; Load init scripts.
 (let ((init-dir (file-name-directory load-file-name))
       (file-name-handler-alist nil)
       (inhibit-redisplay t))
@@ -19,19 +19,11 @@
     (add-to-list 'load-path lisp-dir)
     (load lisp-autoloads-file nil t nil t))
 
-  ;; Load user config file.
+  ;; Load configurations.
   (load (concat init-dir "userconf") t t)
-
-  ;; Load initialization scripts.
-  (let ((init-prefix (concat init-dir "init-"))
-        (init-list '("compat" "system" "theme" "complete"
-                     "editor" "langs" "tools" "keymaps")))
-    (dolist (name init-list)
-      (load (concat init-prefix name) nil t nil t)))
+  (load (concat init-dir "config") nil t nil t)
 
   ;; Load custom file.
   (load custom-file t t)
 
   )
-
-;; init.el ends here.
