@@ -34,6 +34,7 @@
               (push object result)))
           result)))))
 
+;;;###autoload
 (defun hek-tempel-snippets ()
   "A TempEl templates loader."
   (let* ((this-mode major-mode))

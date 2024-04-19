@@ -692,7 +692,7 @@
 ;;   (lsp-snippet-tempel-eglot-init))
 
 ;; FIXME: Since `lsp-snippet' is not so stable until now, while `eglot' itself
-;; only supports `yasnippet' as the template engine, I use `yasnippet' for
+;; only supports `yasnippet' as the template engine, `yasnippet' is used for
 ;; `eglot' completion only at present, until there is a better solution.
 
 ;;; YASnippet :: A template system
@@ -701,9 +701,10 @@
   :from package
   :defer t
   :init
-  (setq yas-snippet-dirs nil)
-  :hook
-  (eglot-managed-mode-hook . yas-minor-mode))
+  (setq yas-snippet-dirs nil
+        yas-verbosity 0)
+  (fset 'yas--message #'ignore)
+  )
 
 
 ;;;;;** Spell / grammar check
