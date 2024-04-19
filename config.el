@@ -17,20 +17,22 @@
 
 ;;;;;** Emacs directories and files
 
+;;;###batch-config-begin
 (setq user-emacs-directory        *my-emacs-data-dir*
       custom-theme-directory      (concat *my-emacs-conf-dir* "themes/")
       package-user-dir            (concat *my-emacs-data-dir* "packages")
       package-quickstart-file     (concat *my-emacs-data-dir* "package-quickstart.el")
       auto-save-list-file-prefix  nil ;; (concat *my-emacs-data-dir* "auto-save-list/saves-")
       custom-file                 (concat *my-emacs-conf-dir* "custom.el"))
-
 (when (boundp 'native-comp-eln-load-path)
   (startup-redirect-eln-cache (concat *my-emacs-data-dir* "eln-cache/")))
+;;;###batch-config-end
 
 
 ;;;;;** Package management
 
 ;;; Step up built-in package manager.
+;;;###batch-config-begin
 (require 'package)
 (if *my-mirror-elpa*
     (setq package-archives
@@ -42,6 +44,7 @@
                t))
 (setq package-quickstart t)
 (package-initialize)
+;;;###batch-config-end
 
 ;;; Prepare `hek-usepkg', which helps to setup packages.
 (eval-when-compile

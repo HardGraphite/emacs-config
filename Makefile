@@ -9,6 +9,12 @@ Q_INIT_DIR ?= $(or ${TMPDIR},/tmp)/emacs-q.${USER}
 Q_INIT_FILE = ${Q_INIT_DIR}/init.el
 Q_LOAD_DIR ?= ${Q_INIT_DIR}/lisp
 
+BATCH_CONF = $(or ${TMPDIR},/tmp)/emacs-batch-init.${USER}.el
+
+${BATCH_CONF}: userconf.el config.el
+	cp userconf.el $@
+	sed '/^;;;###batch-config-begin$$/,/^;;;###batch-config-end$$/{//!b};d' config.el >> $@
+
 .PHONY: help
 help:
 	@echo 'make version    --- print Emacs version info'
@@ -69,12 +75,10 @@ userconf.el:
 	cp -n $@.0 $@
 
 .PHONY: bytecode
-bytecode:
+bytecode: ${BATCH_CONF}
 	@"${EMACS}" --batch \
 		--directory 'lisp' \
-		--load 'userconf.el' \
-		--load 'init-compat.el' \
-		--load 'init-system.el' \
+		--load '${BATCH_CONF}' \
 		--eval '(require `cus-edit)' \
 		--eval '(batch-byte-compile t)' \
 		lisp/*.el themes/*.el
@@ -91,12 +95,10 @@ packages:
 		--eval '(switch-to-buffer "*Messages*")'
 
 .PHONY: pkgclean
-pkgclean:
+pkgclean: ${BATCH_CONF}
 	@"${EMACS}" --batch \
 		--directory 'lisp' \
-		--load 'userconf.el' \
-		--load 'init-compat.el' \
-		--load 'init-system.el' \
+		--load '${BATCH_CONF}' \
 		--eval '(princ (concat package-user-dir "\0"))' \
 		--eval '(when package-quickstart-file (princ (concat package-quickstart-file "\0")))' \
 		--eval '(when (bound-and-true-p native-comp-eln-load-path) (princ (concat (car native-comp-eln-load-path) "\0")))' \
