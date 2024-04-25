@@ -22,7 +22,6 @@ help:
 	@echo 'make Q          --- start Emacs with `-Q` at a temporary directory'
 	@echo 'make init       --- initialize (combination of several targets)'
 	@echo 'make autoloads  --- generate autoloads file for lisp/*.el files'
-	@echo 'make userconf   --- generate `userconf.el` from template'
 	@echo 'make bytecode   --- byte compile lisp/*.el and themes/*.el files'
 	@echo 'make clean      --- delete generated *.elc and autoloads files'
 	@echo 'make packages   --- install packages'
@@ -67,12 +66,6 @@ ${HEK_AUTOLOADS_FILE}: ${HEK_XXX_FILES}
 		--chdir "${HEK_XXX_DIR}" \
 		--funcall loaddefs-generate-batch \
 		"$(notdir $@)" .
-
-.PHONY: userconf
-userconf: userconf.el
-
-userconf.el:
-	cp -n $@.0 $@
 
 .PHONY: bytecode
 bytecode: ${BATCH_CONF}

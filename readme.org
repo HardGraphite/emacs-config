@@ -42,18 +42,19 @@ Notes:
 ** Files
 
 | File Name               | Description           | Must Exist | Version Control |
-|-------------------------+-----------------------+------+------|
-| =custom.el=             | the =custom-file=     | NO   | NO   |
-| =config.el=             | configuration         | YES  | YES  |
-| =userconf.el=           | user's configuration  | NO   | NO   |
-| =userconf.el.0=         | template for userconf | YES  | YES  |
-| =themes/*.el=           | themes                | YES  | YES  |
-| =lisp/hek-autoloads.el= | autoloads for =list/= | YES  | NO   |
-| =lisp/hek-*.el=         | self-written packages | YES  | YES  |
+|-------------------------+-----------------------+------------+-----------------|
+| =[early-]init.el=       | Emacs init file       | YES        | YES             |
+| =config.el=             | configuration         | YES        | YES             |
+| =userconf.el=           | user's configuration  | NO         | NO              |
+| =custom.el=             | the =custom-file=     | NO         | NO              |
+| =themes/*.el=           | themes                | YES        | YES             |
+| =lisp/hek-*.el=         | self-written packages | YES        | YES             |
+| =lisp/hek-autoloads.el= | autoloads for =list/= | YES        | NO              |
 
-- "=config.el=", "=custome.el=", and "=userconf.el=" will be loaded by "=init.el=".
-- Private data shall be put into "=userconf.el=",
-  which is excluded from the version control system.
+- "=config.el=" and "=custome.el=" are loaded by "=init.el=".
+  "=userconf.el=" is loaded by "=config.el=", before other configuration entries.
+- Private data shall be put into "=userconf.el=" or "=custom.el=",
+  which are excluded from the version control system.
 - Prefix "=hek-=" means "/HardGraphite's Emacs Kit/".
 
 ** Tools

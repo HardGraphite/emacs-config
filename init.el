@@ -20,7 +20,6 @@
     (load lisp-autoloads-file nil t nil t))
 
   ;; Load configurations.
-  (load (concat init-dir "userconf") t t)
   (load (concat init-dir "config") nil t nil t)
 
   ;; Load custom file.

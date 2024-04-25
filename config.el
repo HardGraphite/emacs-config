@@ -13,6 +13,60 @@
   )
 
 
+;;;;;* USER CONF
+
+;;;;;** Default values
+
+;;; Location info
+(setq calendar-latitude  30
+      calendar-longitude 120)
+
+;;; Package achieves (mirrors)
+;; + default
+;;(defconst *my-mirror-elpa* nil)                          ; `nil' or `(gnu . nongnu)'
+;;(defconst *my-mirror-melpa* "https://melpa.org/packages/")
+;; + China
+(defconst *my-mirror-elpa* '("https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/" .
+                             "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
+(defconst *my-mirror-melpa* "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+
+;;; Fonts
+(defconst *my-code-font-family*  "JetBrains Mono")         ; Mono font for coding.
+(defconst *my-code-font-height*  150)
+(defconst *my-mono-font-family*  "Iosevka Fixed Slab")     ; Mono font for UI.
+(defconst *my-mono-font-height*  155)
+(defconst *my-term-font-family*  "Ubuntu Mono")            ; Mono font for terminal.
+(defconst *my-term-font-height*  165)
+(defconst *my-text-font-family*  "sans")                   ; Sans font for other text.
+(defconst *my-text-font-height*  160)
+(defconst *my-nerd-font-family*  "Symbols Nerd Font")      ; Nerd font for icons
+(defconst *my-cjkx-font-family*  "Sarasa Mono Slab SC")    ; CJK chars font
+
+;;; Directories and paths
+(defconst *my-emacs-conf-dir*    "~/.config/emacs/")
+(defconst *my-emacs-data-dir*    "~/.local/share/emacs/")
+(defconst *my-emacs-cache-dir*   "~/.cache/emacs/")
+
+;;; Others
+(defconst *my-shell*  "/usr/bin/fish")
+
+;;; System specific
+(pcase system-type
+  ('windows-nt ;; MS Windows NT
+   (setq *my-term-font-family*  "Consolas"
+         *my-emacs-conf-dir*    "~/.emacs.d/"
+         *my-emacs-data-dir*    "~/.emacs.d/data/"
+         *my-emacs-cache-dir*   "~/.emacs.d/cache/"
+         *my-shell*             "pwsh.exe"
+         default-directory      "~/Desktop/"))
+  )
+
+
+;;;;;** Load custom files
+
+(load (concat *my-emacs-conf-dir* "userconf") t t)
+
+
 ;;;;;* SYSTEM
 
 ;;;;;** Emacs directories and files
