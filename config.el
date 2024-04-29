@@ -156,18 +156,6 @@
 (setq-default cursor-in-non-selected-windows nil)
 (blink-cursor-mode -1)
 
-;; Convenient tools for special platforms.
-(when (eq system-type 'android)
-  (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
-  (menu-bar-mode)
-  (tool-bar-mode)
-  (modifier-bar-mode)
-  (setq touch-screen-display-keyboard t)
-  (global-set-key (kbd "<volume-up>")
-                  (lambda ()
-                    (interactive)
-                    (setq touch-screen-display-keyboard
-                          (not touch-screen-display-keyboard)))))
 
 ;;;;;** System misc
 
@@ -209,6 +197,31 @@
     (gcmh-mode 1))
   :hook
   (emacs-startup-hook . +gcmh-setup))
+
+
+;;;;;** Specific system
+
+(pcase system-type
+  ('android
+   ;; Work with Termux.
+   (when (eq system-type 'android)
+     (let ((termux-bin-dir "/data/data/com.termux/files/usr/bin"))
+       (setenv "PATH" (concat termux-bin-dir ":" (getenv "PATH")))
+       (push termux-bin-dir exec-path)))
+   ;; Convenient bars and key bindings.
+   (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
+   (menu-bar-mode)
+   (tool-bar-mode)
+   (modifier-bar-mode)
+   (setq touch-screen-display-keyboard t)
+   (global-set-key (kbd "<volume-up>")
+                   (lambda ()
+                     (interactive)
+                     (setq touch-screen-display-keyboard
+                           (not touch-screen-display-keyboard))))
+   (global-set-key (kbd "<volume-down>")
+                   #'keyboard-quit)
+   ))
 
 
 ;;;;;* THEME
