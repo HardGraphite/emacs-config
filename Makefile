@@ -11,16 +11,15 @@ Q_LOAD_DIR ?= ${Q_INIT_DIR}/lisp
 
 BATCH_CONF = $(or ${TMPDIR},/tmp)/emacs-batch-init.${USER}.el
 
-${BATCH_CONF}: userconf.el config.el
-	cp userconf.el $@
-	sed '/^;;;###batch-config-begin$$/,/^;;;###batch-config-end$$/{//!b};d' config.el >> $@
+${BATCH_CONF}: config.el
+	sed '/^;;;###batch-config-begin$$/,/^;;;###batch-config-end$$/{//!b};d' config.el > $@
 
 .PHONY: help
 help:
 	@echo 'make version    --- print Emacs version info'
 	@echo 'make debug      --- start Emacs with `--debug-init` and `debug-on-error=t`'
 	@echo 'make Q          --- start Emacs with `-Q` at a temporary directory'
-	@echo 'make init       --- initialize (combination of several targets)'
+	@echo 'make setup      --- do setup (combination of several targets)'
 	@echo 'make autoloads  --- generate autoloads file for lisp/*.el files'
 	@echo 'make bytecode   --- byte compile lisp/*.el and themes/*.el files'
 	@echo 'make clean      --- delete generated *.elc and autoloads files'
@@ -55,8 +54,8 @@ Q:
 		--eval '(goto-char (point-max))'; \
 	[ $$? -eq 100 ]; do echo 'restarting Emacs...'; done; echo 'quit Emacs'
 
-.PHONY: init
-init: userconf autoloads packages bytecode
+.PHONY: setup
+setup: autoloads packages bytecode
 
 .PHONY: autoloads
 autoloads: ${HEK_AUTOLOADS_FILE}

@@ -15,6 +15,8 @@
 
 ;;;;;* USER CONF
 
+;;;###batch-config-begin
+
 ;;;;;** Default values
 
 ;;; Location info
@@ -37,34 +39,41 @@
 (defconst *my-mono-font-height*  155)
 (defconst *my-term-font-family*  "Ubuntu Mono")            ; Mono font for terminal.
 (defconst *my-term-font-height*  165)
-(defconst *my-text-font-family*  "sans")                   ; Sans font for other text.
+(defconst *my-text-font-family*  "Roboto")                 ; Sans font for other text.
 (defconst *my-text-font-height*  160)
 (defconst *my-nerd-font-family*  "Symbols Nerd Font")      ; Nerd font for icons
 (defconst *my-cjkx-font-family*  "Sarasa Mono Slab SC")    ; CJK chars font
 
 ;;; Directories and paths
-(defconst *my-emacs-conf-dir*    "~/.config/emacs/")
-(defconst *my-emacs-data-dir*    "~/.local/share/emacs/")
-(defconst *my-emacs-cache-dir*   "~/.cache/emacs/")
+(pcase system-type
+  ('gnu/linux
+   (defconst *my-emacs-conf-dir*    "~/.config/emacs/")
+   (defconst *my-emacs-data-dir*    "~/.local/share/emacs/")
+   (defconst *my-emacs-cache-dir*   "~/.cache/emacs/"))
+  (_
+   (defconst *my-emacs-conf-dir*    "~/.emacs.d/")
+   (defconst *my-emacs-data-dir*    "~/.emacs.d/data/")
+   (defconst *my-emacs-cache-dir*   "~/.emacs.d/cache/")))
 
 ;;; Others
 (defconst *my-shell*  "/usr/bin/fish")
 
 ;;; System specific
 (pcase system-type
-  ('windows-nt ;; MS Windows NT
+  ('windows-nt
    (setq *my-term-font-family*  "Consolas"
-         *my-emacs-conf-dir*    "~/.emacs.d/"
-         *my-emacs-data-dir*    "~/.emacs.d/data/"
-         *my-emacs-cache-dir*   "~/.emacs.d/cache/"
          *my-shell*             "pwsh.exe"
          default-directory      "~/Desktop/"))
+  ('android
+   (setq default-directory      "/sdcard"))
   )
 
 
 ;;;;;** Load custom files
 
 (load (concat *my-emacs-conf-dir* "userconf") t t)
+
+;;;###batch-config-end
 
 
 ;;;;;* SYSTEM
@@ -147,6 +156,18 @@
 (setq-default cursor-in-non-selected-windows nil)
 (blink-cursor-mode -1)
 
+;; Convenient tools for special platforms.
+(when (eq system-type 'android)
+  (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
+  (menu-bar-mode)
+  (tool-bar-mode)
+  (modifier-bar-mode)
+  (setq touch-screen-display-keyboard t)
+  (global-set-key (kbd "<volume-up>")
+                  (lambda ()
+                    (interactive)
+                    (setq touch-screen-display-keyboard
+                          (not touch-screen-display-keyboard)))))
 
 ;;;;;** System misc
 
@@ -767,11 +788,17 @@
 ;;;;;** Spell / grammar check
 
 ;;; Spell check
-(add-hook 'prog-mode-hook #'flyspell-prog-mode) ;; TODO: Check spells in identifiers.
-(add-hook 'text-mode-hook #'flyspell-mode)
-(with-eval-after-load "flyspell"
-  (require 'hek-spell)
-  (hek-spell-mode 1))
+(defun +flyspell-setup ()
+  (require 'ispell)
+  (if (not (executable-find ispell-program-name))
+      (unload-feature 'ispell)
+    (add-hook 'prog-mode-hook #'flyspell-prog-mode) ;; TODO: Check spells in identifiers.
+    (add-hook 'text-mode-hook #'flyspell-mode)
+    (require 'flyspell)
+    (require 'hek-spell)
+    (hek-spell-mode 1))
+  (fmakunbound '+flyspell-setup))
+(add-hook 'emacs-startup-hook #'+flyspell-setup)
 
 ;; TODO: better spell checks.
 

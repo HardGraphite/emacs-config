@@ -24,20 +24,24 @@ The followings are optional:
 
 ** How to setup
 
-Run "=make init=" to setup.
+Run "=make setup=" to setup.
 
 Or,
 
-1. Run "=make userconf=" and edit "=userconf.el=" for customization.
-2. Run "=make autoloads=" to generate autoloads file for "=./lisp=".
-3. Run "=make packages=" to install packages.
-4. Run "=make bytecode=" to byte-compile ELisp files in this directory.
+1. Run "=make autoloads=" to generate autoloads file for "=./lisp=".
+2. Run "=make packages=" to install packages.
+3. Run "=make bytecode=" to byte-compile ELisp files in this directory.
 
 Notes:
 
-- Steps 2, and 4 are optional.
-- Do steps 2 and 4 after modifying "=lisp/*.el=" files.
-- Do step 3 after introducing new packages.
+- Do step 2 after introducing new packages.
+- Do steps 1 and 3 after modifying "=lisp/*.el=" files.
+- Step 3 is optional.
+
+On some special platforms like Android,
+Emacs cannot be called from the command line, let alone doing setup using =make=.
+The script =misc/init-setup.el= can be used as an alternative solution.
+Read the commentary part of that file for usage.
 
 ** Files
 
