@@ -44,17 +44,6 @@
 (defconst *my-nerd-font-family*  "Symbols Nerd Font")      ; Nerd font for icons
 (defconst *my-cjkx-font-family*  "Sarasa Mono Slab SC")    ; CJK chars font
 
-;;; Directories and paths
-(pcase system-type
-  ('gnu/linux
-   (defconst *my-emacs-conf-dir*    "~/.config/emacs/")
-   (defconst *my-emacs-data-dir*    "~/.local/share/emacs/")
-   (defconst *my-emacs-cache-dir*   "~/.cache/emacs/"))
-  (_
-   (defconst *my-emacs-conf-dir*    "~/.emacs.d/")
-   (defconst *my-emacs-data-dir*    "~/.emacs.d/data/")
-   (defconst *my-emacs-cache-dir*   "~/.emacs.d/cache/")))
-
 ;;; Others
 (defconst *my-shell*  "/usr/bin/fish")
 
@@ -71,7 +60,7 @@
 
 ;;;;;** Load custom files
 
-(load (concat *my-emacs-conf-dir* "userconf") t t)
+(load (concat user-emacs-directory "userconf") t t)
 
 ;;;###batch-config-end
 
@@ -81,14 +70,28 @@
 ;;;;;** Emacs directories and files
 
 ;;;###batch-config-begin
-(setq user-emacs-directory        *my-emacs-data-dir*
-      custom-theme-directory      (concat *my-emacs-conf-dir* "themes/")
-      package-user-dir            (concat *my-emacs-data-dir* "packages")
-      package-quickstart-file     (concat *my-emacs-data-dir* "package-quickstart.el")
-      auto-save-list-file-prefix  nil ;; (concat *my-emacs-data-dir* "auto-save-list/saves-")
-      custom-file                 (concat *my-emacs-conf-dir* "custom.el"))
+(if (and (file-equal-p user-emacs-directory "~/.config/emacs/")
+         (file-directory-p "~/.config/emacs/") ;; `file-equal-p': if files do not exist, the return value is unspecified.
+         (file-directory-p "~/.local/share/"))
+    (progn
+      (defconst config/emacs-conf-dir "~/.config/emacs/")
+      (defconst config/emacs-data-dir "~/.local/share/emacs/"))
+   (defconst config/emacs-conf-dir user-emacs-directory)
+   (defconst config/emacs-data-dir (concat user-emacs-directory "data/")))
+;;;###batch-config-end
+
+(unless (file-equal-p (concat config/emacs-conf-dir "config.el") load-file-name)
+  (error "`config/emacs-conf-dir' is incorrect"))
+
+;;;###batch-config-begin
+(setq user-emacs-directory        config/emacs-data-dir
+      custom-theme-directory      (concat config/emacs-conf-dir "themes/")
+      package-user-dir            (concat config/emacs-data-dir "packages")
+      package-quickstart-file     (concat config/emacs-data-dir "package-quickstart.el")
+      auto-save-list-file-prefix  nil ;; (concat config/emacs-data-dir "auto-save-list/saves-")
+      custom-file                 (concat config/emacs-conf-dir "custom.el"))
 (when (boundp 'native-comp-eln-load-path)
-  (startup-redirect-eln-cache (concat *my-emacs-data-dir* "eln-cache/")))
+  (startup-redirect-eln-cache (concat config/emacs-data-dir "eln-cache/")))
 ;;;###batch-config-end
 
 
@@ -212,7 +215,7 @@
    (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
    (menu-bar-mode)
    (tool-bar-mode)
-   (let ((img-dir (concat *my-emacs-conf-dir* "images/")))
+   (let ((img-dir (concat config/emacs-conf-dir "images/")))
      (hek-touchscreen-bar-add 'esc "Esc key" #'hek-touchscreen-esc (concat img-dir "esc.xpm"))
      (hek-touchscreen-bar-add 'tab "Tab key" #'hek-touchscreen-tab (concat img-dir "tab.xpm"))
      (hek-touchscreen-bar-mode))
@@ -762,7 +765,7 @@
 (hek-usepkg tempel
   :from package
   :config
-  (setq hek-tempel-snippets-dir (concat *my-emacs-conf-dir* "snippets/"))
+  (setq hek-tempel-snippets-dir (concat config/emacs-conf-dir "snippets/"))
   (require 'hek-tempel-snippets)
   (push #'hek-tempel-snippets tempel-template-sources)
   :bind
@@ -1033,7 +1036,7 @@
     (insert ?\n)
 
     ;; Emacs logo.
-    (insert-image (create-image (concat *my-emacs-conf-dir* "images/gnu_emacs.png")))
+    (insert-image (create-image (concat config/emacs-conf-dir "images/gnu_emacs.png")))
     (hek-center-line)
     (insert ?\n)
 
