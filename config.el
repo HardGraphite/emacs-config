@@ -25,36 +25,33 @@
 
 ;;; Package achieves (mirrors)
 ;; + default
-;;(defconst *my-mirror-elpa* nil)                          ; `nil' or `(gnu . nongnu)'
-;;(defconst *my-mirror-melpa* "https://melpa.org/packages/")
+;;(defconst config/pkg-mirror-elpa nil)                    ; `nil' or `(gnu . nongnu)'
+;;(defconst config/pkg-mirror-melpa "https://melpa.org/packages/")
 ;; + China
-(defconst *my-mirror-elpa* '("https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/" .
-                             "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
-(defconst *my-mirror-melpa* "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+(defconst config/pkg-mirror-elpa
+  '("https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/" .
+    "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
+(defconst config/pkg-mirror-melpa
+  "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
 
 ;;; Fonts
-(defconst *my-code-font-family*  "JetBrains Mono")         ; Mono font for coding.
-(defconst *my-code-font-height*  150)
-(defconst *my-mono-font-family*  "Iosevka Fixed Slab")     ; Mono font for UI.
-(defconst *my-mono-font-height*  155)
-(defconst *my-term-font-family*  "Ubuntu Mono")            ; Mono font for terminal.
-(defconst *my-term-font-height*  165)
-(defconst *my-text-font-family*  "Roboto")                 ; Sans font for other text.
-(defconst *my-text-font-height*  160)
-(defconst *my-nerd-font-family*  "Symbols Nerd Font")      ; Nerd font for icons
-(defconst *my-cjkx-font-family*  "Sarasa Mono Slab SC")    ; CJK chars font
+(defconst config/code-font '("JetBrains Mono"      . 150)) ; Mono font for coding.
+(defconst config/mono-font '("Iosevka Fixed Slab"  . 155)) ; Mono font for UI.
+(defconst config/term-font '("Ubuntu Mono"         . 165)) ; Mono font for terminal.
+(defconst config/text-font '("Roboto"              . 160)) ; Sans font for other text.
+(defconst config/nerd-font '("Symbols Nerd Font"   . 150)) ; Nerd font for icons.
+(defconst config/cjkx-font '("Sarasa Mono Slab SC" . 150)) ; CJK chars font.
 
 ;;; Others
-(defconst *my-shell*  "/usr/bin/fish")
+(defconst config/shell "/usr/bin/fish")
 
 ;;; System specific
 (pcase system-type
   ('windows-nt
-   (setq *my-term-font-family*  "Consolas"
-         *my-shell*             "pwsh.exe"
-         default-directory      "~/Desktop/"))
+   (setq config/shell         "pwsh.exe"
+         default-directory    "~/Desktop/"))
   ('android
-   (setq default-directory      "/sdcard"))
+   (setq default-directory    "/sdcard/"))
   )
 
 
@@ -100,13 +97,13 @@
 ;;; Step up built-in package manager.
 ;;;###batch-config-begin
 (require 'package)
-(if *my-mirror-elpa*
+(if config/pkg-mirror-elpa
     (setq package-archives
-          `(("gnu"    . ,(car *my-mirror-elpa*))
-            ("nongnu" . ,(cdr *my-mirror-elpa*))
-            ("melpa"  . ,*my-mirror-melpa*)))
+          `(("gnu"    . ,(car config/pkg-mirror-elpa))
+            ("nongnu" . ,(cdr config/pkg-mirror-elpa))
+            ("melpa"  . ,config/pkg-mirror-melpa)))
   (add-to-list 'package-archives
-               (cons "melpa" *my-mirror-melpa*)
+               (cons "melpa" config/pkg-mirror-melpa)
                t))
 (setq package-quickstart t)
 (package-initialize)
@@ -233,14 +230,14 @@
 
 ;;; Global default font.
 (custom-set-faces
- `(default ((t :family ,*my-code-font-family* :height ,*my-code-font-height*))))
-(let ((spec (font-spec :family *my-cjkx-font-family*)))
+ `(default ((t :family ,(car config/code-font) :height ,(cdr config/code-font)))))
+(let ((spec (font-spec :family (car config/cjkx-font))))
   (set-fontset-font t 'han spec)
   (set-fontset-font t 'cjk-misc spec))
 
 ;;; Minibuffer default font.
 (defconst +my-minibuffer-font-remapping-alist
-  `((default :family ,*my-mono-font-family* :height ,*my-mono-font-height*)))
+  `((default :family ,(car config/mono-font) :height ,(cdr config/mono-font))))
 (defun +my-minibuffer-font-setup ()
   (set (make-local-variable 'face-remapping-alist)
        +my-minibuffer-font-remapping-alist))
@@ -248,8 +245,8 @@
 
 ;;; Mode line defualt font.
 (custom-set-faces
-  `(mode-line-active ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10))))
-  `(mode-line-inactive ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 10)))))
+  `(mode-line-active ((t :family ,(car config/mono-font) :height ,(- (cdr config/mono-font) 10))))
+  `(mode-line-inactive ((t :family ,(car config/mono-font) :height ,(- (cdr config/mono-font) 10)))))
 
 ;;; Ligatures.
 (hek-usepkg hek-ligature
@@ -290,7 +287,7 @@
 (hek-usepkg nerd-icons
   :from package
   :init
-  (setq nerd-icons-font-family *my-nerd-font-family*))
+  (setq nerd-icons-font-family (car config/nerd-font)))
 
 
 ;;;;;** Color theme
@@ -321,7 +318,7 @@
   ;; Use a different font.
   (custom-set-faces
    `(solaire-default-face
-     ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
+     ((t :family ,(car config/mono-font) :height ,(cdr config/mono-font)))))
   (solaire-global-mode 1))
 
 
@@ -372,8 +369,8 @@
 (setq display-line-numbers-width-start 500)
 (custom-set-faces
  `(line-number
-   ((t :family ,*my-mono-font-family*
-       :height ,(- *my-mono-font-height* 10)
+   ((t :family ,(car config/mono-font)
+       :height ,(- (cdr config/mono-font) 10)
        :slant italic)))
  '(line-number-current-line
    ((t :inherit line-number
@@ -509,7 +506,7 @@
         tab-bar-separator "  "
         tab-bar-new-tab-choice "*scratch*")
   (custom-set-faces
-   `(tab-bar-tab ((t :family ,*my-mono-font-family* :height ,(- *my-mono-font-height* 5) :overline t)))
+   `(tab-bar-tab ((t :family ,(car config/mono-font) :height ,(- (cdr config/mono-font) 5) :overline t)))
    '(tab-bar-tab-inactive ((t :slant italic :overline nil)))))
 
 
@@ -856,7 +853,7 @@
   :from package
   :config
   (custom-set-faces
-   `(eldoc-box-body ((t :family ,*my-mono-font-family* :height ,*my-mono-font-height*))))
+   `(eldoc-box-body ((t :family ,(car config/mono-font) :height ,(cdr config/mono-font)))))
   :hook
   (eglot-managed-mode-hook . eldoc-box-hover-at-point-mode)
   )
@@ -1123,7 +1120,7 @@
       (vterm)))
   (advice-add 'shell :override #'+shell-vterm)
   :config
-  (setq vterm-shell *my-shell*
+  (setq vterm-shell config/shell
         vterm-kill-buffer-on-exit t
         vterm-keymap-exceptions ())
   ;; Disable solaire-mode.
@@ -1145,8 +1142,8 @@
   (defun +vterm-local-init ()
     ;; Use a different font.
     (buffer-face-set
-     (list :family *my-term-font-family*
-           :height *my-term-font-height*))
+     (list :family (car config/term-font)
+           :height (cdr config/term-font)))
     ;; Meow integration.
     (add-hook 'meow-insert-enter-hook
               (lambda ()
