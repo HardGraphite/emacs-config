@@ -54,6 +54,7 @@ Read the commentary part of that file for usage.
 | =themes/*.el=           | themes                | YES        | YES             |
 | =lisp/hek-*.el=         | self-written packages | YES        | YES             |
 | =lisp/hek-autoloads.el= | autoloads for =list/= | YES        | NO              |
+| =tools/*.el=            | tool scripts          | YES        | YES             |
 
 - "=config.el=" and "=custome.el=" are loaded by "=init.el=".
   "=userconf.el=" is loaded by "=config.el=", before other configuration entries.

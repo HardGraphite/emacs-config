@@ -1033,7 +1033,7 @@
     (insert ?\n)
 
     ;; Emacs logo.
-    (insert-image (create-image (concat *my-emacs-conf-dir* "misc/gnu_emacs.png")))
+    (insert-image (create-image (concat *my-emacs-conf-dir* "images/gnu_emacs.png")))
     (hek-center-line)
     (insert ?\n)
 
