@@ -25,7 +25,8 @@
 It shall take no argument and return nil for disable or a non-nil value
 representing IM enabled.
 Consider function `w32-get-ime-open-status' on MS Windows, `mac-input-source'
-on Darwin (macOS), `hek-exim-fcitx5-dbus-get-state' for Fcitx 5.")
+on Darwin (macOS), `hek-exim-fcitx5-dbus-get-state' for Fcitx 5,
+`hek-exim-textconv-get-state' on Android.")
 
 (defvar hek-exim-set-source-function
   nil
@@ -34,7 +35,7 @@ on Darwin (macOS), `hek-exim-fcitx5-dbus-get-state' for Fcitx 5.")
 It shall take an argument STATE (nil or non-nil) and switch to the state.
 Consider function `w32-set-ime-open-status' on MS Windows,
 `mac-select-input-source' on Darwin (macOS), `hek-exim-fcitx5-dbus-set-state'
-for Fcitx 5.")
+for Fcitx 5, `hek-exim-textconv-set-state' on Android.")
 
 (defvar-local hek-exim--buffer-source nil) ;; Cached buffer-local IM source state.
 (defvar hek-exim--current-source nil) ;; Cached global IM source state.
@@ -180,6 +181,9 @@ for Fcitx 5.")
 
   (declare-function dbus-call-method "dbus")
 
+  (defun hek-exim-fcitx5-dbus-init-state ()
+    (require 'dbus))
+
   (defun hek-exim-fcitx5-dbus-get-state ()
     (= (dbus-call-method
         :session "org.fcitx.Fcitx5"
@@ -192,6 +196,26 @@ for Fcitx 5.")
      :session "org.fcitx.Fcitx5"
      "/controller" "org.fcitx.Fcitx.Controller1"
      (if state "Activate" "Deactivate")))
+
+  )
+
+(when (eval-when-compile (eq system-type 'android))
+
+  ;; Modifying `overriding-text-conversion-style' to enable or disable the input method.
+  ;; FIXME: this does not work as expected.
+
+  (defun hek-exim-textconv-init-state ()
+    (setq overriding-text-conversion-style nil))
+
+  (defun hek-exim-textconv-get-state ()
+    (if overriding-text-conversion-style t nil))
+
+  (defun hek-exim-textconv-set-state (state)
+    (if state
+        (unless overriding-text-conversion-style
+          (setq overriding-text-conversion-style t))
+      (when overriding-text-conversion-style
+        (setq overriding-text-conversion-style nil))))
 
   )
 

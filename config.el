@@ -219,7 +219,7 @@
    (setq touch-screen-display-keyboard t)
    (global-set-key (kbd "<volume-up>") #'hek-touchscreen-toggle-disp-kbd)
    (global-set-key (kbd "<volume-down>") #'hek-touchscreen-C-g)
-   ;; Disable text conversion by default.
+   ;; Disable text conversion by default. Will be handled later by pakcage `hek-exim'.
    (setq overriding-text-conversion-style nil)
    ))
 
@@ -1060,10 +1060,21 @@
 (hek-usepkg hek-exim
   :from local
   :config
-  ;; Fcitx 5, D-Bus
-  (require 'dbus)
-  (setq hek-exim-get-source-function #'hek-exim-fcitx5-dbus-get-state
-        hek-exim-set-source-function #'hek-exim-fcitx5-dbus-set-state)
+  (pcase system-type
+    ('gnu/linux
+     (hek-exim-fcitx5-dbus-init-state)
+     (setq hek-exim-get-source-function #'hek-exim-fcitx5-dbus-get-state
+           hek-exim-set-source-function #'hek-exim-fcitx5-dbus-set-state))
+    ('windows-nt
+     (setq hek-exim-get-source-function #'w32-get-ime-open-status
+           hek-exim-set-source-function #'w32-set-ime-open-status))
+    ('android
+     (hek-exim-textconv-init-state)
+     (setq hek-exim-get-source-function #'hek-exim-textconv-get-state
+           hek-exim-set-source-function #'hek-exim-textconv-set-state))
+    (_
+     (user-error "input method is not available"))
+    )
   (when (featurep 'meow)
     (setq hek-exim-automodal-hooks
           '(meow-insert-enter-hook . meow-insert-exit-hook))
@@ -1071,8 +1082,8 @@
   (hek-exim-inlinetext-mode)
   (setq hek-exim-verbose t) ;; For debug.
   :bind
-  (("<f9>" . hek-exim-toggle)
-   ("S-<f9>" . hek-exim-inlinetext-create)))
+  (("M-SPC" . hek-exim-toggle)
+   ("M-S-SPC" . hek-exim-inlinetext-create)))
 
 
 ;;;;;** Directory view
