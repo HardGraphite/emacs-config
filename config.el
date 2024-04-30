@@ -204,10 +204,9 @@
 (pcase system-type
   ('android
    ;; Work with Termux.
-   (when (eq system-type 'android)
-     (let ((termux-bin-dir "/data/data/com.termux/files/usr/bin"))
-       (setenv "PATH" (concat termux-bin-dir ":" (getenv "PATH")))
-       (push termux-bin-dir exec-path)))
+   (let ((termux-bin-dir "/data/data/com.termux/files/usr/bin"))
+     (setenv "PATH" (concat termux-bin-dir ":" (getenv "PATH")))
+     (push termux-bin-dir exec-path))
    ;; Convenient bars and key bindings.
    (require 'hek-touchscreen)
    (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
