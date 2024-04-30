@@ -209,18 +209,19 @@
        (setenv "PATH" (concat termux-bin-dir ":" (getenv "PATH")))
        (push termux-bin-dir exec-path)))
    ;; Convenient bars and key bindings.
+   (require 'hek-touchscreen)
    (add-to-list 'default-frame-alist '(tool-bar-position . bottom))
    (menu-bar-mode)
    (tool-bar-mode)
-   (modifier-bar-mode)
+   (let ((img-dir (concat *my-emacs-conf-dir* "images/")))
+     (hek-touchscreen-bar-add 'esc "Esc key" #'hek-touchscreen-esc (concat img-dir "esc.xpm"))
+     (hek-touchscreen-bar-add 'tab "Tab key" #'hek-touchscreen-tab (concat img-dir "tab.xpm"))
+     (hek-touchscreen-bar-mode))
    (setq touch-screen-display-keyboard t)
-   (global-set-key (kbd "<volume-up>")
-                   (lambda ()
-                     (interactive)
-                     (setq touch-screen-display-keyboard
-                           (not touch-screen-display-keyboard))))
-   (global-set-key (kbd "<volume-down>")
-                   #'keyboard-quit)
+   (global-set-key (kbd "<volume-up>") #'hek-touchscreen-toggle-disp-kbd)
+   (global-set-key (kbd "<volume-down>") #'hek-touchscreen-C-g)
+   ;; Disable text conversion by default.
+   (setq overriding-text-conversion-style nil)
    ))
 
 
