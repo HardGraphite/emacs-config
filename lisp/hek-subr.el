@@ -9,7 +9,7 @@
 
 ;;; Text manipulation.
 
-(defun hek-center-line (&optional line-number)
+(defun hek-center-line (&optional line-number line-char-count)
   "Center the line by adding line prefix property."
   (save-excursion
     (when line-number
@@ -17,9 +17,11 @@
       (forward-line (1- line-number)))
     (let* ((beg-pos (line-beginning-position))
            (end-pos (line-end-position))
-           (half-width (/ (car (window-text-pixel-size nil beg-pos end-pos))
-                          (frame-char-width)
-                          2))
+           (half-width (if (integerp line-char-count)
+                           line-char-count
+                         (/ (car (window-text-pixel-size nil beg-pos end-pos))
+                            (frame-char-width)
+                            2)))
            (padding (propertize " "
                                 'display
                                 `(space :align-to (- center ,half-width)))))

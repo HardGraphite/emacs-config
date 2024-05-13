@@ -1034,18 +1034,18 @@
 
     ;; Emacs logo.
     (insert-image (create-image (concat config/emacs-conf-dir "images/gnu_emacs.png")))
-    (hek-center-line)
+    (hek-center-line nil (when (daemonp) 14))
     (insert ?\n)
 
     ;; Emacs version.
     (insert (propertize
              (concat "GNU Emacs "
                      emacs-version
-                     (when (daemonp) " (client)"))
+                     (when (daemonp) " (server)"))
              'face '(variable-pitch
                      (:slant italic :height 120))))
     (hek-center-line)
-    (insert ?\n ?\n)
+    (insert ?\n)
 
     (goto-char (point-min))))
 
