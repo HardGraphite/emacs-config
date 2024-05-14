@@ -132,8 +132,8 @@
 ;;;;;** Frame and basic UI
 
 ;; Title.
-(setq frame-title-format '("%b — Emacs")
-      icon-title-format frame-title-format)
+(setq frame-title-format (list (concat "%b — Emacs" (when (daemonp) " Client")))
+      icon-title-format t)
 
 ;; Resize method.
 (setq frame-resize-pixelwise t
