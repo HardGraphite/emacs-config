@@ -192,7 +192,8 @@
   :from package
   :init
   (defun +gcmh-setup ()
-    (setq gcmh-idle-delay 10
+    (setq gcmh-idle-delay 'auto
+          gcmh-auto-idle-delay-factor 16
           gcmh-high-cons-threshold #x1000000) ;; 16 MiB
     (gcmh-mode 1))
   :hook
