@@ -886,6 +886,14 @@
           (python-mode . python-ts-mode)
           (sh-mode . bash-ts-mode))))
 
+;;; Dape :: DAP (Debug Adapter Protocol) support
+;;; https://github.com/svaante/dape
+(hek-usepkg dape
+  :from package
+  :defer t
+  :config
+  (setq dape-buffer-window-arrangment 'right)
+  )
 
 ;;;;;** C-like languages
 
