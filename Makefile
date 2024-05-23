@@ -91,7 +91,7 @@ pkgclean: ${BATCH_CONF}
 	@"${EMACS}" --batch \
 		--directory 'lisp' \
 		--load '${BATCH_CONF}' \
-		--eval '(princ (concat package-user-dir "\0"))' \
-		--eval '(when package-quickstart-file (princ (concat package-quickstart-file "\0")))' \
-		--eval '(when (bound-and-true-p native-comp-eln-load-path) (princ (concat (car native-comp-eln-load-path) "\0")))' \
+		--eval '(princ (concat (expand-file-name package-user-dir) "\0"))' \
+		--eval '(when package-quickstart-file (princ (concat (expand-file-name package-quickstart-file) "\0")))' \
+		--eval '(when (bound-and-true-p native-comp-eln-load-path) (princ (concat (expand-file-name (car native-comp-eln-load-path)) "\0")))' \
 	| xargs -0 -- rm -Rv
