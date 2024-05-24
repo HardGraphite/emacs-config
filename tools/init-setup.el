@@ -20,7 +20,7 @@
 (add-to-list 'command-line-args "--install-packages")
 
 (defun isetup--after-init ()
-  (batch-maint--cmdcall 'hek/bytecomp)
+  (batch-maint--cmdcall 'hek/compile)
 
   (if (not (and package-native-compile (native-comp-available-p)))
       (isetup--done)

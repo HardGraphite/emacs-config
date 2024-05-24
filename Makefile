@@ -20,9 +20,9 @@ Makefile: tools/batch-maint.el
 hek/gen-aloads:
 	${EMACS_BATCH_MAINT_EXEC} hek/gen-aloads
 
-.PHONY: hek/bytecomp
-hek/bytecomp:
-	${EMACS_BATCH_MAINT_EXEC} hek/bytecomp
+.PHONY: hek/compile
+hek/compile:
+	${EMACS_BATCH_MAINT_EXEC} hek/compile
 
 .PHONY: hek/clean-up
 hek/clean-up:

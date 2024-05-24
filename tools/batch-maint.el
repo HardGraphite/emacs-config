@@ -67,11 +67,24 @@
     (batch-maint--log "generating `hek-autoloads.el'...")
     (loaddefs-generate lisp-dir (expand-file-name "hek-autoloads.el" lisp-dir))))
 
-(batch-maint--defcmd hek/bytecomp
-  "Byte-compile lisp/*.el and themes/*.el files."
-  (dolist (dir '("lisp" "themes"))
-    (batch-maint--log "byte-compiling directory `%s'..." dir)
-    (byte-recompile-directory (expand-file-name dir batch-maint--root-dir) 0)))
+(batch-maint--defcmd hek/compile
+  "Byte (and native if available) compile lisp/*.el and themes/*.el files."
+  (let ((default-directory batch-maint--root-dir)
+        (do-native-comp (native-comp-available-p)))
+    (batch-maint--load-batch-config)
+    (dolist (dir '("lisp" "themes"))
+      (dolist (el-file (file-expand-wildcards (concat dir "/*.el") t))
+        (batch-maint--log "checking `%s'..." el-file)
+        (when (file-newer-than-file-p el-file (concat el-file "c"))
+          (batch-maint--log "byte-compiling `%s'..." el-file)
+          (byte-compile-file el-file))
+        (when (and do-native-comp
+                   (file-exists-p (concat el-file "c"))
+                   (let ((eln-file (comp-lookup-eln el-file)))
+                     (or (null eln-file)
+                         (file-newer-than-file-p el-file eln-file))))
+          (batch-maint--log "native-compiling `%s'..." el-file)
+          (native-compile el-file))))))
 
 (batch-maint--defcmd hek/clean-up
   "Delete generated files in lisp/ and themes/."
@@ -121,7 +134,7 @@
   (let ((command-line-args-left
          '( hek/gen-aloads
             pkg/install
-            hek/bytecomp )))
+            hek/compile )))
    (batch-maint-exec t)))
 
 (batch-maint--defcmd clean-up

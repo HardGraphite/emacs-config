@@ -30,7 +30,7 @@ Or,
 
 1. Run "=make hek/gen-aloads=" to generate autoloads file for "=./lisp=".
 2. Run "=make pkg/install=" to install packages.
-3. Run "=make hek/bytecomp=" to byte-compile ELisp files in this directory.
+3. Run "=make hek/compile=" to byte-compile ELisp files in this directory.
 
 Notes:
 
