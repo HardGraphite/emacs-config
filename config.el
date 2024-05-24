@@ -78,7 +78,7 @@
 ;;;###batch-config-end
 
 (unless (file-equal-p (concat config/emacs-conf-dir "config.el") load-file-name)
-  (error "`config/emacs-conf-dir' is incorrect"))
+  (error "`config/emacs-conf-dir' is incorrect: %S" config/emacs-conf-dir))
 
 ;;;###batch-config-begin
 (setq user-emacs-directory        config/emacs-data-dir
@@ -120,9 +120,8 @@
     (setq command-line-args (delete package-install-switch command-line-args)) ;; Remove the switch.
     (setq hek-usepkg-ensure t
           hek-usepkg-debug t)
-    (setq package-native-compile t)
-    (setq native-comp-async-query-on-exit t
-          native-comp-verbose 2)
+    (setq package-native-compile t
+          native-comp-async-query-on-exit t)
     (when package-quickstart
       (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
     (add-hook 'kill-emacs-hook #'hek-usepkg-gitpkg-quickstart-refresh)
@@ -673,7 +672,6 @@
 ;;; vertico-posframe :: an extension for `vertico' to show contents in a child frame
 ;;; https://github.com/tumashu/vertico-posframe
 (hek-usepkg vertico-posframe
-  :when (display-graphic-p)
   :from package
   :after vertico
   :config

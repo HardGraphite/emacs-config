@@ -28,13 +28,13 @@ Run "=make setup=" to setup.
 
 Or,
 
-1. Run "=make autoloads=" to generate autoloads file for "=./lisp=".
-2. Run "=make packages=" to install packages.
-3. Run "=make bytecode=" to byte-compile ELisp files in this directory.
+1. Run "=make hek/gen-aloads=" to generate autoloads file for "=./lisp=".
+2. Run "=make pkg/install=" to install packages.
+3. Run "=make hek/bytecomp=" to byte-compile ELisp files in this directory.
 
 Notes:
 
-- Do step 2 after introducing new packages.
+- Do step 2 after adding new packages.
 - Do steps 1 and 3 after modifying "=lisp/*.el=" files.
 - Step 3 is optional.
 
@@ -64,5 +64,5 @@ Read the commentary part of that file for usage.
 
 ** Tools
 
-A few tools are available in the Makefile.
-Use command "=make help=" to list it usage.
+A few tools are available in =tools/=.
+The =Makefile= is a wrapper of =tools/batch-maint.el=.
