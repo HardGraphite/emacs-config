@@ -10,39 +10,31 @@
 
 ;;; Code:
 
-(defconst isetup--conf-dir user-emacs-directory)
+(load (expand-file-name "tools/batch-maint.el" user-emacs-directory))
 
-(message "setup: autoloads...")
-(loaddefs-generate (concat isetup--conf-dir "lisp")
-                   (concat isetup--conf-dir "lisp/hek-autoloads.el"))
-(message "setup: autoloads done")
+(setq inhibit-redisplay nil)
+(switch-to-buffer "*Messages*")
 
-(message "setup: packages...")
+(batch-maint--cmdcall 'hek/gen-aloads)
+
 (add-to-list 'command-line-args "--install-packages")
 
 (defun isetup--after-init ()
-  (message "setup: packages done")
-
-  (message "setup: bytecode...")
-  (byte-recompile-directory (concat isetup--conf-dir "lisp") 0)
-  (message "setup: bytecode done")
+  (batch-maint--cmdcall 'hek/compile)
 
   (if (not (and package-native-compile (native-comp-available-p)))
       (isetup--done)
-    (when (bound-and-true-p isetup--wait-native-comp-timer)
-      (cancel-timer isetup--wait-native-comp-timer))
-    (setq isetup--wait-native-comp-timer
-          (run-with-timer 10 10 #'isetup--wait-native-comp))
-    (message "setup: native-compiling packages...")))
-(add-hook 'after-init-hook #'isetup--after-init)
-
-(defun isetup--wait-native-comp ()
-  (unless (or byte-native-compiling comp-native-compiling)
-    (cancel-timer isetup--wait-native-comp-timer)
-    (setq isetup--wait-native-comp-timer nil)
-    (isetup--done)))
+    (message "** waiting for native-compiling")
+    (add-hook 'native-comp-async-all-done-hook #'isetup--done)))
+(run-with-idle-timer 3 nil #'isetup--after-init)
 
 (defun isetup--done ()
-  (message "== Emacs is ready! ==\n\nDO NOT forget to remove \"init-setup.el\"-loading code from init file."))
+  (message "
++-------------------------------------+
+|  ======== Emacs is ready! ========  |
+| DO NOT forget to remove the code to |
+| load 'init-setup.el' script.        |
++-------------------------------------+
+"))
 
 ;;; init-setup.el ends here
