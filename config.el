@@ -1062,6 +1062,55 @@
           ("sh" . sh-mode)
           ("shell" . sh-mode))))
 
+;;;;;** Org Mode
+
+(hek-usepkg org
+  :from builtin
+  :defer t
+  :config
+  (defface +org-num '((t :height 0.9 :slant italic)) "")
+  (setq org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-tags-column 0 ; don't flushright tags
+        org-num-face '+org-num)
+  (defun +org-mode-buffer-setup ()
+    (org-num-mode)
+    (org-modern-mode)
+    (org-appear-mode)
+    (when display-fill-column-indicator-mode
+      (display-fill-column-indicator-mode -1))
+    (when (> (buffer-size) 0) ; default read-only if not empty
+      (read-only-mode)))
+  (add-hook 'org-mode-hook #'+org-mode-buffer-setup 90))
+
+;;; org-modern :: Modern Org Style
+;;; https://github.com/minad/org-modern
+(hek-usepkg org-modern
+  :from package
+  :defer t
+  :config
+  (setq org-modern-star 'replace
+        org-modern-replace-stars "◉◈◇"
+        org-modern-table-vertical 1
+        org-modern-table-horizontal 1.0 ; default height, to make the `org-modern--table-overline' hacking below work well; the author of this package seems to try to decrease the line height of horizontal table lines, which some how does not work in my configuration
+        org-modern--table-overline '(:strike-through t) ; WARNING: this variable is defined with a defconst form
+        org-modern-list '((?+ . "◦") (?- . "•") (?* . "◦"))
+        org-modern-block-name '("◾" . "◽")
+        org-modern-block-fringe nil ; `display-line-numbers-mode' makes this ugly
+        ))
+
+;; org-appear :: Make invisible parts of Org elements appear visible
+;; https://github.com/awth13/org-appear
+(hek-usepkg org-appear
+  :from package
+  :defer t
+  :config
+  (setq org-appear-trigger 'on-change
+        org-appear-autoemphasis t
+        org-appear-autolinks t
+        org-appear-autoentities t
+        org-appear-autosubmarkers t))
+
 ;;;;;** Verilog HDL / SystemVerilog
 
 (hek-usepkg verilog-mode

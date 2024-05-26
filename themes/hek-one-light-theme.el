@@ -109,6 +109,11 @@
    ;;;; outline <built-in>
   (outline-1 &override :foreground red)
   (outline-2 &override :foreground orange)
+  ;;;; org <built-in>
+  (org-block &override :background (hek-one-lighten base0 0.4))
+  (org-block-begin-line &override :foreground comments :background (hek-one-blend base0 base1 0.5) :slant 'italic)
+  (org-ellipsis :underline nil :background bg :foreground red)
+  (org-quote &override :background base1)
    ;;;; vertico
   (vertico-current :background base2)
    ;;;; solaire-mode
