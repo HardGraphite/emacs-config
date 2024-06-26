@@ -1223,6 +1223,16 @@
    ("M-S-SPC" . hek-exim-inlinetext-create)))
 
 
+;;;;;** Undo-redo
+
+;;; vundo :: visual undo true
+;;; https://github.com/casouri/vundo
+(hek-usepkg vundo
+  :from package
+  :config
+  (setq vundo-glyph-alist vundo-unicode-symbols))
+
+
 ;;;;;** Directory view
 
 ;;; dirvish :: an improved version of `dired'
@@ -1629,7 +1639,7 @@
     '("M" . recenter-top-bottom)
     ;; -- undo/redo --
     '("u" . meow-undo)
-    '("U" . undo-redo) ;;'("U" . meow-undo-in-selection)
+    '("U" . vundo) ;; candidates undo-redo / meow-undo-in-selection
     ;; -- enter insert mode --
     '("a" . meow-append)
     '("A" . meow-open-below)
