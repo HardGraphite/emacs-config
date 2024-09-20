@@ -385,12 +385,19 @@
 (add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 
 ;;; Indentation indicator.
-(add-hook
- 'prog-mode-hook
- (lambda ()
-   (unless indent-tabs-mode
-     (setq hek-hl-indent-width (hek-indent-width))
-     (hek-hl-indent-mode))))
+(hek-usepkg indent-bars
+  :from package
+  :config
+  (setq indent-bars-width-frac 0.2
+        indent-bars-pattern "."
+        indent-bars-highlight-current-depth nil
+        indent-bars-display-on-blank-lines nil ;; for better performance
+        indent-bars-starting-column 0
+        indent-bars-color '(highlight :face-bg t :blend 0.2))
+  (when (and (eq window-system 'pgtk)
+             (< emacs-major-version 30))
+    (setq indent-bars-prefer-character t))
+  :hook ((prog-mode-hook tex-mode-hook) . indent-bars-mode))
 
 ;;;;;*** Brackets and pairs
 
