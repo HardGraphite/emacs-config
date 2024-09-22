@@ -17,7 +17,7 @@
   (expand-file-name load-file-name))
 (defconst batch-maint--root-dir
   (expand-file-name "../" (file-name-directory batch-maint--this-file)))
-(unless (file-exists-p (expand-file-name "config.el" batch-maint--root-dir))
+(unless (file-exists-p (expand-file-name "init.el" batch-maint--root-dir))
   (error "batch-maint: wrong config root directory: %s" batch-maint--root-dir))
 
 (defvar batch-maint--log t)
@@ -28,20 +28,10 @@
     (apply 'message (concat "** [batch-maint] " msg) args)))
 
 (defun batch-maint--load-batch-config (&optional force)
-  "Evaluate code between \";;;###batch-config-begin\" and \";;;###batch-config-end\" in config.el."
   (when (or force (not (boundp 'config/emacs-conf-dir)))
-    (batch-maint--log "loading batch-config...")
-    (add-to-list 'load-path (expand-file-name "lisp" batch-maint--root-dir))
-    (with-current-buffer (generate-new-buffer "*batch-maint batch-config*" t)
-      (insert-file-contents (expand-file-name "config.el" batch-maint--root-dir))
-      (goto-char (point-min))
-      (let ((last-pos (point)))
-        (while-let ((block-begin (search-forward ";;;###batch-config-begin" nil t)))
-          (delete-region last-pos block-begin)
-          (when (search-forward ";;;###batch-config-end" nil t)
-            (setq last-pos (match-beginning 0))))
-        (delete-region last-pos (point-max)))
-      (eval-buffer))))
+    (batch-maint--log "loading batch config...")
+    (let ((command-line-args '("--minimal")))
+      (load (expand-file-name "init.el" batch-maint--root-dir) nil t t))))
 
 (defvar batch-maint--cmd-list nil)
 
@@ -97,13 +87,10 @@
 
 (batch-maint--defcmd pkg/install
   "Install packages."
-  (batch-maint--load-batch-config)
-  (let ((command-line-args '("--install-packages"))
-        (user-emacs-directory config/emacs-conf-dir)
-        (package-native-compile t)
-        (native-comp-jit-compilation nil))
-    (load (expand-file-name "lisp/hek-autoloads.el" batch-maint--root-dir) nil t t)
-    (load (expand-file-name "config.el" batch-maint--root-dir) nil t t))
+  (let ((command-line-args '("--install-packages")))
+    (setq package-native-compile t
+          native-comp-jit-compilation nil)
+    (load (expand-file-name "init.el" batch-maint--root-dir) nil t t))
   (when (native-comp-available-p)
     (batch-maint--log "waiting for native-comp...")
     (setq batch-maint--native-comp-async t)
@@ -140,9 +127,9 @@
 (batch-maint--defcmd clean-up
   "Do cleanup (combination of several commands)."
   (let ((command-line-args-left
-         '( hek/clean-up
-            pkg/delete
-            eln/delete )))
+         '( pkg/delete
+            eln/delete
+            hek/clean-up )))
    (batch-maint-exec t)))
 
 (defun batch-maint-list-commands ()
@@ -161,7 +148,7 @@
         (cmd-name-prefix (symbol-name (batch-maint--cmdfun ""))))
     (with-current-buffer (generate-new-buffer "*batch-maint gen-makefile*" t)
       (insert "EMACS ?= emacs\n")
-      (insert "EMACS_BATCH_MAINT = ${EMACS} --batch --init-directory '" batch-maint--root-dir "' --load '" this-file-path "'\n")
+      (insert "EMACS_BATCH_MAINT = ${EMACS} --batch --init-directory . --load '" this-file-path "'\n")
       (insert "EMACS_BATCH_MAINT_EXEC = ${EMACS_BATCH_MAINT} --funcall batch-maint-exec\n")
       (insert "\nall: help\n\n")
       (insert ".PHONY: help\n"

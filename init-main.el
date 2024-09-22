@@ -1,113 +1,11 @@
 ;;; -*- lexical-binding: t; no-byte-compile: t; outline-regexp: ";;;;;\\*+"; -*-
 
-;;; Configuring statements are grouped by outline heading lines like ";;;;;* ...".
-;;; You may want to enable `outline-minor-mode' to navigate between the headings.
-
-
 (require 'hek-subr)
 
-
-;;;;;* COMPAT
-
-(unless (>= emacs-major-version 30) ;; before Emacs 30
-  )
-
-
-;;;;;* USER CONF
-
-;;;###batch-config-begin
-
-;;;;;** Default values
-
-;;; Location info
-(setq calendar-latitude  30
-      calendar-longitude 120)
-
-;;; Package achieves (mirrors)
-;; + default
-;;(defconst config/pkg-mirror-elpa nil)                    ; `nil' or `(gnu . nongnu)'
-;;(defconst config/pkg-mirror-melpa "https://melpa.org/packages/")
-;; + China
-(defconst config/pkg-mirror-elpa
-  '("https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/" .
-    "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
-(defconst config/pkg-mirror-melpa
-  "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-
-;;; Fonts
-(defconst config/code-font '("JetBrains Mono"      . 150)) ; Mono font for coding.
-(defconst config/mono-font '("Iosevka Fixed Slab"  . 155)) ; Mono font for UI.
-(defconst config/term-font '("Ubuntu Mono"         . 165)) ; Mono font for terminal.
-(defconst config/text-font '("Roboto"              . 160)) ; Sans font for other text.
-(defconst config/nerd-font '("Symbols Nerd Font"   . 150)) ; Nerd font for icons.
-(defconst config/cjkx-font '("Sarasa Mono Slab SC" . 150)) ; CJK chars font.
-
-;;; Others
-(defconst config/shell "/usr/bin/fish")
-
-;;; System specific
-(pcase system-type
-  ('windows-nt
-   (setq config/shell         "pwsh.exe"
-         default-directory    "~/Desktop/"))
-  ('android
-   (setq default-directory    "/sdcard/"))
-  )
-
-
-;;;;;** Load custom files
-
-(load (concat user-emacs-directory "userconf") t t)
-
-;;;###batch-config-end
-
-
+
 ;;;;;* SYSTEM
 
-;;;;;** Emacs directories and files
-
-;;;###batch-config-begin
-(if (and (file-equal-p user-emacs-directory "~/.config/emacs/")
-         (file-directory-p "~/.config/emacs/") ;; `file-equal-p': if files do not exist, the return value is unspecified.
-         (file-directory-p "~/.local/share/"))
-    (progn
-      (defconst config/emacs-conf-dir "~/.config/emacs/")
-      (defconst config/emacs-data-dir "~/.local/share/emacs/"))
-   (defconst config/emacs-conf-dir user-emacs-directory)
-   (defconst config/emacs-data-dir (concat user-emacs-directory "data/")))
-;;;###batch-config-end
-
-(unless (file-equal-p (concat config/emacs-conf-dir "config.el") load-file-name)
-  (error "`config/emacs-conf-dir' is incorrect: %S" config/emacs-conf-dir))
-
-;;;###batch-config-begin
-(setq user-emacs-directory        config/emacs-data-dir
-      custom-theme-directory      (concat config/emacs-conf-dir "themes/")
-      package-user-dir            (concat config/emacs-data-dir "packages")
-      package-quickstart-file     (concat config/emacs-data-dir "package-quickstart.el")
-      auto-save-list-file-prefix  nil ;; (concat config/emacs-data-dir "auto-save-list/saves-")
-      custom-file                 (concat config/emacs-conf-dir "custom.el"))
-(when (boundp 'native-comp-eln-load-path)
-  (startup-redirect-eln-cache (concat config/emacs-data-dir "eln-cache/")))
-;;;###batch-config-end
-
-
 ;;;;;** Package management
-
-;;; Step up built-in package manager.
-;;;###batch-config-begin
-(require 'package)
-(if config/pkg-mirror-elpa
-    (setq package-archives
-          `(("gnu"    . ,(car config/pkg-mirror-elpa))
-            ("nongnu" . ,(cdr config/pkg-mirror-elpa))
-            ("melpa"  . ,config/pkg-mirror-melpa)))
-  (add-to-list 'package-archives
-               (cons "melpa" config/pkg-mirror-melpa)
-               t))
-(setq package-quickstart t)
-(package-initialize)
-;;;###batch-config-end
 
 ;;; Prepare `hek-usepkg', which helps to setup packages.
 (eval-when-compile
@@ -115,17 +13,15 @@
 (hek-usepkg-gitpkg-initialize)
 
 ;;; Install packages.
-(let ((package-install-switch "--install-packages"))
-  (when (member package-install-switch command-line-args)
-    (setq command-line-args (delete package-install-switch command-line-args)) ;; Remove the switch.
-    (setq hek-usepkg-ensure t
-          hek-usepkg-debug t)
-    (setq package-native-compile t
-          native-comp-async-query-on-exit t)
-    (when package-quickstart
-      (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
-    (add-hook 'kill-emacs-hook #'hek-usepkg-gitpkg-quickstart-refresh)
-    (package-refresh-contents)))
+(when (bound-and-true-p option/install-packages)
+  (setq hek-usepkg-ensure t
+        hek-usepkg-debug t)
+  (setq package-native-compile t
+        native-comp-async-query-on-exit t)
+  (when package-quickstart
+    (add-hook 'kill-emacs-hook #'package-quickstart-refresh))
+  (add-hook 'kill-emacs-hook #'hek-usepkg-gitpkg-quickstart-refresh)
+  (package-refresh-contents))
 
 
 ;;;;;** Frame and basic UI
@@ -223,7 +119,7 @@
    (setq overriding-text-conversion-style nil)
    ))
 
-
+
 ;;;;;* THEME
 
 ;;;;;** Fonts
@@ -328,7 +224,7 @@
 (setq pulse-delay 0.04
       pulse-iterations 12)
 
-
+
 ;;;;;* EDITOR
 
 ;;;;;** Appearance & behavior
@@ -821,7 +717,7 @@
 
 ;; TODO: better spell checks.
 
-
+
 ;;;;;* LANGUAGES
 
 ;;;;;** Common programming support
@@ -1148,7 +1044,7 @@
   (when (ignore-errors (hek-flymake-verilator-setup) t)
     (flymake-mode 1)))
 
-
+
 ;;;;;* APPLICATIONS
 
 ;;;;;** Dashboard
@@ -1345,6 +1241,7 @@
   (magit-pre-refresh-hook . diff-hl-magit-pre-refresh)
   (magit-post-refresh-hook . diff-hl-magit-post-refresh))
 
+
 ;;;;;* KEY BINDINGS
 
 ;;;;;** Customized keymaps

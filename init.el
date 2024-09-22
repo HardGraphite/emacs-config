@@ -8,10 +8,18 @@
        '(background-color foreground-color)
        default-frame-alist))
 
-;; Load init scripts.
+;; Initialize.
 (let ((init-dir (file-name-directory load-file-name))
       (file-name-handler-alist nil)
       (inhibit-redisplay t))
+
+  ;; Parse options.
+  (dolist (name-and-switch
+           '((option/install-packages . "--install-packages")
+             (option/minimal          . "--minimal")))
+    (when (member (cdr name-and-switch) command-line-args)
+      (setq command-line-args (delete (cdr name-and-switch) command-line-args))
+      (set (car name-and-switch) t)))
 
   ;; Add package path and define auto-loads.
   (let* ((lisp-dir (concat init-dir "lisp"))
@@ -19,10 +27,9 @@
     (add-to-list 'load-path lisp-dir)
     (load lisp-autoloads-file nil t nil t))
 
-  ;; Load configurations.
-  (load (concat init-dir "config") nil t nil t)
-
-  ;; Load custom file.
-  (load custom-file t t)
-
-  )
+  ;; Execute init scripts.
+  (load (concat init-dir "userconf") t t)
+  (load (concat init-dir "init-base") nil t nil t)
+  (unless (bound-and-true-p option/minimal)
+    (load (concat init-dir "init-main") nil t nil t)
+    (load custom-file t t)))

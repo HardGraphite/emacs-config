@@ -1,5 +1,5 @@
 EMACS ?= emacs
-EMACS_BATCH_MAINT = ${EMACS} --batch --init-directory '/home/yd/.config/emacs/' --load 'tools/batch-maint.el'
+EMACS_BATCH_MAINT = ${EMACS} --batch --init-directory . --load 'tools/batch-maint.el'
 EMACS_BATCH_MAINT_EXEC = ${EMACS_BATCH_MAINT} --funcall batch-maint-exec
 
 all: help

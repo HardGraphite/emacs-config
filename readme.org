@@ -48,7 +48,7 @@ Read the commentary part of that file for usage.
 | File Name               | Description           | Must Exist | Version Control |
 |-------------------------+-----------------------+------------+-----------------|
 | =[early-]init.el=       | Emacs init file       | YES        | YES             |
-| =config.el=             | configuration         | YES        | YES             |
+| =init-*.el=             | init scripts          | YES        | YES             |
 | =userconf.el=           | user's configuration  | NO         | NO              |
 | =custom.el=             | the =custom-file=     | NO         | NO              |
 | =themes/*.el=           | themes                | YES        | YES             |
@@ -56,8 +56,7 @@ Read the commentary part of that file for usage.
 | =lisp/hek-autoloads.el= | autoloads for =list/= | YES        | NO              |
 | =tools/*.el=            | tool scripts          | YES        | YES             |
 
-- "=config.el=" and "=custome.el=" are loaded by "=init.el=".
-  "=userconf.el=" is loaded by "=config.el=", before other configuration entries.
+- "=userconf.el=" and "=custome.el=" are loaded by "=init.el=".
 - Private data shall be put into "=userconf.el=" or "=custom.el=",
   which are excluded from the version control system.
 - Prefix "=hek-=" means "/HardGraphite's Emacs Kit/".
