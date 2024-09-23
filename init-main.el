@@ -603,8 +603,7 @@
 ;;; corfu, https://github.com/minad/corfu
 (hek-usepkg corfu
   :from package
-  :init
-  (global-corfu-mode 1)
+  :defer 0
   :config
   (setq corfu-cycle t
         corfu-auto t
@@ -618,7 +617,11 @@
   (require 'hek-corfu-nerd-icons)
   (add-to-list 'corfu-margin-formatters
                #'hek-corfu-nerd-icons-margin-formatter)
-  :bind
+  (global-corfu-mode 1)
+  ;; extension: corfu-popupinfo
+  (setq corfu-popupinfo-delay '(1.0 . 0.6))
+  (corfu-popupinfo-mode 1)
+  :bind~
   (corfu-map
    ("M-<escape>" . corfu-quit)
    ("<escape>" . (lambda () (interactive) (meow-insert-exit) (corfu-quit))) ;; for meow-mode
