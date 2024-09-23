@@ -565,37 +565,15 @@
   :bind~
   (vertico-map
    ("M-j" . vertico-next)
-   ("M-k" . vertico-previous)))
-(hek-usepkg vertico-directory
-  :after vertico
-  :bind~
-  (vertico-map
-   ("RET" . vertico-directory-enter)))
-
-;;; vertico-posframe :: an extension for `vertico' to show contents in a child frame
-;;; https://github.com/tumashu/vertico-posframe
-(hek-usepkg vertico-posframe
-  :from package
-  :after vertico
-  :config
-  (defun +vertico-posframe-size (buffer)
-    (let ((h (1+ vertico-count))
-          (w (min 120 (- (frame-width) 2))))
-      (list :height h :width w :min-height h :min-width w)))
-  (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center
-        vertico-posframe-size-function #'+vertico-posframe-size
-        vertico-posframe-border-width 3
-        vertico-posframe-parameters
-        '(;; (alpha-background . 72) ;; XXX: `alpha-background' may not work on some window systems
-          (left-fringe . 8)
-          (right-fringe . 8)))
-  (vertico-posframe-mode 1))
+   ("M-k" . vertico-previous)
+   ("M-DEL" . vertico-directory-delete-word)))
 
 ;;; marginalia :: Marginalia in the minibuffer
 ;;; https://github.com/minad/marginalia
 (hek-usepkg marginalia
   :from package
-  :init
+  :after vertico
+  :config
   (marginalia-mode 1))
 
 ;;;;;*** Code (in-buffer) completion
